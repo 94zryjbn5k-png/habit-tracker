@@ -305,6 +305,7 @@ input,textarea{-webkit-appearance:none;appearance:none;}
   .step-btn{width:38px;height:42px;font-size:20px;}
   .num-input{width:46px;font-size:16px;}
   .stepper{gap:1px;}
+  .edit-controls .icon-btn{min-width:34px;font-size:16px;}
   .stat-table th,.stat-table td{padding-left:7px;padding-right:7px;}
   .stat-table td:first-child{max-width:150px;}
   .view-title{font-size:24px;}
@@ -357,13 +358,34 @@ input,textarea{-webkit-appearance:none;appearance:none;}
 .wk-off{opacity:.45;}
 .wk-hfreq{display:block;font-size:10.5px;font-weight:600;color:var(--muted);}
 .wk-okwk{color:var(--green);}
+.cal-seg{max-width:260px;margin:0 auto 12px;}
+.hm.vacday{background:transparent;border:1.5px dashed var(--line);color:var(--muted);}
+.vac-card{color:var(--muted);font-size:14px;border:1.5px dashed var(--line);box-shadow:none;background:transparent;}
+.vac-row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:5px 0 5px 2px;border-bottom:1px solid var(--line);font-size:15px;}
+.vac-row:last-child{border-bottom:0;}
+.vac-row .icon-btn{box-shadow:none;background:transparent;font-size:17px;min-width:40px;min-height:40px;}
 .plan-text{white-space:pre-wrap;word-break:break-word;font-size:15px;line-height:1.55;margin:0;}
-.plan-ta{
+.plan-head{font-size:17.5px;font-weight:800;letter-spacing:-.01em;margin:22px 4px 10px;}
+.plan-head:first-child{margin-top:2px;}
+details.plan-day{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:8px;padding:0 14px;}
+details.plan-day.today{box-shadow:var(--shadow), inset 0 0 0 1.5px var(--green);}
+.plan-day summary{list-style:none;display:flex;align-items:center;gap:10px;min-height:54px;cursor:pointer;font-weight:600;font-size:15px;user-select:none;-webkit-user-select:none;}
+.plan-day summary::-webkit-details-marker{display:none;}
+.day-tag{flex:0 0 auto;min-width:36px;padding:5px 8px;border-radius:9px;color:#fff;font-size:12.5px;font-weight:800;text-align:center;letter-spacing:.02em;}
+.day-tag.d0{background:#0a84ff;}.day-tag.d1{background:#5e5ce6;}.day-tag.d2{background:#af52de;}.day-tag.d3{background:#ff375f;}
+.day-tag.d4{background:#ff9f0a;}.day-tag.d5{background:#30d158;}.day-tag.d6{background:#64d2ff;}
+.plan-day-title{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text);}
+.today-tag{flex:0 0 auto;font-size:10.5px;font-weight:800;color:var(--green);background:var(--green-soft);padding:3px 8px;border-radius:999px;text-transform:uppercase;letter-spacing:.06em;}
+.chev{flex:0 0 auto;color:var(--muted);transition:transform .18s ease;font-size:19px;line-height:1;}
+details[open] > summary .chev{transform:rotate(90deg);}
+.plan-day .plan-body{border-top:1px solid var(--line);padding:10px 2px 14px;}
+.plan-ta,.meal-ta{
   width:100%;min-height:56vh;min-height:56dvh;resize:vertical;display:block;
   border:1.5px solid var(--line);border-radius:12px;background:var(--bg);color:var(--text);
   font:inherit;font-size:16px;line-height:1.5;padding:12px;
 }
-.plan-ta:focus{border-color:var(--accent);outline:none;}
+.meal-ta{min-height:42vh;min-height:42dvh;}
+.plan-ta:focus,.meal-ta:focus{border-color:var(--accent);outline:none;}
 .modal-actions{display:flex;gap:10px;margin-top:20px;}
 .modal-actions .btn{flex:1;}
 .modal-actions.col{flex-direction:column;}
@@ -392,8 +414,8 @@ input,textarea{-webkit-appearance:none;appearance:none;}
   <div id="storage-banner" hidden>⚠️ Ukládání dat tu není dostupné — změny se po zavření neuloží. Otevřete tracker z jeho webové adresy v Safari, nejlépe z ikony přidané na plochu.</div>
   <main>
     <section id="view-day"></section>
-    <section id="view-week" hidden></section>
-    <section id="view-month" hidden></section>
+    <section id="view-cal" hidden></section>
+    <section id="view-meals" hidden></section>
     <section id="view-stats" hidden></section>
     <section id="view-plan" hidden></section>
   </main>
@@ -401,10 +423,10 @@ input,textarea{-webkit-appearance:none;appearance:none;}
 <nav class="tabbar">
   <div class="tabbar-inner">
     <button class="tab-btn on" data-action="tab" data-tab="day"><span class="tab-ico">✅</span>Dnes</button>
-    <button class="tab-btn" data-action="tab" data-tab="week"><span class="tab-ico">📅</span>Týden</button>
-    <button class="tab-btn" data-action="tab" data-tab="month"><span class="tab-ico">🟩</span>Měsíc</button>
-    <button class="tab-btn" data-action="tab" data-tab="stats"><span class="tab-ico">📊</span>Přehled</button>
+    <button class="tab-btn" data-action="tab" data-tab="cal"><span class="tab-ico">📅</span>Kalendář</button>
+    <button class="tab-btn" data-action="tab" data-tab="meals"><span class="tab-ico">🍽️</span>Jídlo</button>
     <button class="tab-btn" data-action="tab" data-tab="plan"><span class="tab-ico">📋</span>Plán</button>
+    <button class="tab-btn" data-action="tab" data-tab="stats"><span class="tab-ico">📊</span>Přehled</button>
   </div>
 </nav>
 <div id="toast" role="status"></div>
@@ -418,6 +440,8 @@ const STORAGE_KEY = 'habit-tracker-data-v1';
 const WD = ['Po','Út','St','Čt','Pá','So','Ne'];
 const EMOJI_PICKS = ['✅','💪','🏃','🚶','🧘','😴','📖','✍️','📓','💧','🥗','🍎','🚫','💊','🦉','🎓','💼','🎸','🧹','🧠'];
 const FREQ_NAMES = { daily: 'denně', days: 'vybrané dny', weekly: '1× týdně', monthly: '1× měsíčně' };
+const WDFULL = ['Pondělí','Úterý','Středa','Čtvrtek','Pátek','Sobota','Neděle'];
+const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 const DEFAULT_PLAN = `🗓️ TÝDENNÍ HARMONOGRAM (10 FÁZÍ)
 • PONDĚLÍ
 • 08:30 | Fáze 1: Běh – Intervaly (VO2 Max)
@@ -521,6 +545,7 @@ let pendingImport = null;
 let dragFrom = null;
 let planEdit = false;
 let planDraft = '';
+let calView = 'week';
 
 /* ============ Utility ============ */
 const $ = sel => document.querySelector(sel);
@@ -620,9 +645,11 @@ function defaultData(){
       archived: false,
       order: i,
       createdAt: now,
-      freq: { type: 'daily' }
+      freq: { type: 'daily' },
+      vacations: []
     })),
     entries: {},
+    meals: {},
     plan: DEFAULT_PLAN
   };
 }
@@ -647,6 +674,19 @@ function validateData(obj){
       if (['daily', 'days', 'weekly', 'monthly'].indexOf(f.type) === -1) return 'Návyk „' + h.name + '“ má neznámou frekvenci.';
       if (f.type === 'days' && (!Array.isArray(f.days) || !f.days.length || f.days.some(d => !Number.isInteger(d) || d < 0 || d > 6))) return 'Návyk „' + h.name + '“ má neplatné dny v týdnu.';
     }
+    if (h.vacations != null){
+      if (!Array.isArray(h.vacations)) return 'Návyk „' + h.name + '“ má neplatné prázdniny.';
+      for (const v of h.vacations){
+        if (!v || typeof v !== 'object' || !DATE_RE.test(String(v.from)) || !DATE_RE.test(String(v.to)) || String(v.from) > String(v.to)) return 'Návyk „' + h.name + '“ má neplatné rozmezí prázdnin.';
+      }
+    }
+  }
+  if (obj.meals != null){
+    if (typeof obj.meals !== 'object' || Array.isArray(obj.meals)) return 'Jídelníček („meals“) má špatný formát.';
+    for (const k of Object.keys(obj.meals)){
+      if (!DATE_RE.test(k) || dateKey(parseKey(k)) !== k) return 'Neplatné datum v jídelníčku: ' + k;
+      if (typeof obj.meals[k] !== 'string') return 'Záznam jídelníčku pro ' + k + ' není text.';
+    }
   }
   if (obj.entries != null){
     if (typeof obj.entries !== 'object' || Array.isArray(obj.entries)) return 'Záznamy („entries“) mají špatný formát.';
@@ -668,6 +708,7 @@ function normalizeData(obj){
     version: 1,
     habits: [],
     entries: {},
+    meals: {},
     plan: typeof obj.plan === 'string' ? obj.plan.slice(0, 50000) : DEFAULT_PLAN
   };
   obj.habits.forEach((h, i) => {
@@ -681,9 +722,16 @@ function normalizeData(obj){
       archived: !!h.archived,
       order: typeof h.order === 'number' && isFinite(h.order) ? h.order : i,
       createdAt: typeof h.createdAt === 'number' ? h.createdAt : Date.now(),
-      freq: normFreq(h.freq)
+      freq: normFreq(h.freq),
+      vacations: normVacs(h.vacations)
     });
   });
+  if (obj.meals){
+    for (const k of Object.keys(obj.meals)){
+      const v = obj.meals[k];
+      if (typeof v === 'string' && v.trim()) out.meals[k] = v.slice(0, 20000);
+    }
+  }
   if (obj.entries){
     for (const k of Object.keys(obj.entries)){
       const src = obj.entries[k], day = {};
@@ -788,10 +836,59 @@ function isPeriodic(h){
   return t === 'weekly' || t === 'monthly';
 }
 function isScheduled(h, d){
+  if (onVacation(h, d)) return false; // prázdniny = nenaplánováno
   const f = habitFreq(h);
   if (f.type === 'daily') return true;
   if (f.type === 'days') return f.days.indexOf(weekdayIdx(d)) !== -1;
   return false; // týdenní/měsíční nemají pevné dny
+}
+
+/* ============ Prázdniny ============ */
+function vacList(h){
+  return Array.isArray(h.vacations) ? h.vacations : [];
+}
+function normVacs(v){
+  if (!Array.isArray(v)) return [];
+  const out = [];
+  for (const r of v){
+    if (!r || typeof r !== 'object') continue;
+    const from = String(r.from || ''), to = String(r.to || '');
+    if (!DATE_RE.test(from) || !DATE_RE.test(to)) continue;
+    if (dateKey(parseKey(from)) !== from || dateKey(parseKey(to)) !== to) continue;
+    if (from > to) continue;
+    out.push({ from, to });
+    if (out.length >= 100) break;
+  }
+  out.sort((a, b) => (a.from < b.from ? -1 : a.from > b.from ? 1 : 0));
+  return out;
+}
+function onVacation(h, d){
+  const k = dateKey(d);
+  return vacList(h).some(v => v.from <= k && k <= v.to);
+}
+function vacUntil(h, d){
+  const k = dateKey(d);
+  const r = vacList(h).find(v => v.from <= k && k <= v.to);
+  return r ? r.to : null;
+}
+function weekAllVacation(h, mon){
+  for (let i = 0; i < 7; i++){
+    if (!onVacation(h, addDays(mon, i))) return false;
+  }
+  return true;
+}
+function monthAllVacation(h, first){
+  const days = new Date(first.getFullYear(), first.getMonth() + 1, 0).getDate();
+  for (let i = 1; i <= days; i++){
+    if (!onVacation(h, new Date(first.getFullYear(), first.getMonth(), i))) return false;
+  }
+  return true;
+}
+function periodicPaused(h, refDate){
+  const f = habitFreq(h);
+  if (f.type === 'weekly') return weekAllVacation(h, startOfWeek(refDate));
+  if (f.type === 'monthly') return monthAllVacation(h, firstOfMonth(refDate));
+  return false;
 }
 function freqLabel(h){
   const f = habitFreq(h);
@@ -823,23 +920,23 @@ function currentStreak(habit){
   const f = habitFreq(habit);
   if (f.type === 'weekly'){
     let mon = startOfWeek(today());
-    if (!doneInWeek(habit, mon)) mon = addDays(mon, -7); // běžící týden streak nepřerušuje
-    let n = 0;
-    while (doneInWeek(habit, mon)){
-      n++;
-      mon = addDays(mon, -7);
-      if (n > 3000) break;
+    let n = 0, guard = 0, current = true;
+    while (guard++ < 3000){
+      if (doneInWeek(habit, mon)){ n++; mon = addDays(mon, -7); current = false; continue; }
+      if (weekAllVacation(habit, mon)){ mon = addDays(mon, -7); current = false; continue; } // prázdniny nepřerušují
+      if (current){ current = false; mon = addDays(mon, -7); continue; } // běžící týden streak nepřerušuje
+      break;
     }
     return n;
   }
   if (f.type === 'monthly'){
     let first = firstOfMonth(today());
-    if (!doneInMonth(habit, first)) first = new Date(first.getFullYear(), first.getMonth() - 1, 1); // běžící měsíc nepřerušuje
-    let n = 0;
-    while (doneInMonth(habit, first)){
-      n++;
-      first = new Date(first.getFullYear(), first.getMonth() - 1, 1);
-      if (n > 1200) break;
+    let n = 0, guard = 0, current = true;
+    while (guard++ < 1200){
+      if (doneInMonth(habit, first)){ n++; first = new Date(first.getFullYear(), first.getMonth() - 1, 1); current = false; continue; }
+      if (monthAllVacation(habit, first)){ first = new Date(first.getFullYear(), first.getMonth() - 1, 1); current = false; continue; }
+      if (current){ current = false; first = new Date(first.getFullYear(), first.getMonth() - 1, 1); continue; }
+      break;
     }
     return n;
   }
@@ -847,7 +944,7 @@ function currentStreak(habit){
   if (isScheduled(habit, d) && !isDone(habit, dateKey(d))) d = addDays(d, -1); // dnešek zatím nesplněný streak nepřerušuje
   let n = 0, guard = 0;
   while (guard++ < 20000){
-    if (!isScheduled(habit, d)){ d = addDays(d, -1); continue; } // nenaplánované dny se přeskakují
+    if (!isScheduled(habit, d)){ d = addDays(d, -1); continue; } // nenaplánované a prázdninové dny se přeskakují
     if (!isDone(habit, dateKey(d))) break;
     n++;
     d = addDays(d, -1);
@@ -862,40 +959,33 @@ function longestStreak(habit){
     .sort((a, b) => a - b);
   if (!doneDays.length) return 0;
   if (f.type === 'weekly'){
-    const weeks = [...new Set(doneDays.map(d => dateKey(startOfWeek(d))))];
-    let best = 0, run = 0, prev = null;
-    for (const w of weeks){
-      run = (prev && sameDay(addDays(parseKey(prev), 7), parseKey(w))) ? run + 1 : 1;
-      if (run > best) best = run;
-      prev = w;
+    let mon = startOfWeek(doneDays[0]);
+    const end = startOfWeek(today());
+    let best = 0, run = 0, guard = 0;
+    while (mon <= end && guard++ < 3000){
+      if (doneInWeek(habit, mon)){ run++; if (run > best) best = run; }
+      else if (!weekAllVacation(habit, mon)) run = 0; // prázdninový týden nepřerušuje
+      mon = addDays(mon, 7);
     }
     return best;
   }
   if (f.type === 'monthly'){
-    const months = [...new Set(doneDays.map(d => d.getFullYear() * 12 + d.getMonth()))];
-    let best = 0, run = 0, prev = null;
-    for (const m of months){
-      run = (prev !== null && m === prev + 1) ? run + 1 : 1;
-      if (run > best) best = run;
-      prev = m;
-    }
-    return best;
-  }
-  if (f.type === 'days'){
+    let first = firstOfMonth(doneDays[0]);
+    const end = firstOfMonth(today());
     let best = 0, run = 0, guard = 0;
-    const end = today();
-    for (let d = doneDays[0]; d <= end && guard++ < 20000; d = addDays(d, 1)){
-      if (!isScheduled(habit, d)) continue;
-      if (isDone(habit, dateKey(d))){ run++; if (run > best) best = run; }
-      else run = 0;
+    while (first <= end && guard++ < 1200){
+      if (doneInMonth(habit, first)){ run++; if (run > best) best = run; }
+      else if (!monthAllVacation(habit, first)) run = 0;
+      first = new Date(first.getFullYear(), first.getMonth() + 1, 1);
     }
     return best;
   }
-  let best = 0, run = 0, prev = null;
-  for (const d of doneDays){
-    run = (prev && sameDay(addDays(prev, 1), d)) ? run + 1 : 1;
-    if (run > best) best = run;
-    prev = d;
+  let best = 0, run = 0, guard = 0;
+  const end = today();
+  for (let d = doneDays[0]; d <= end && guard++ < 20000; d = addDays(d, 1)){
+    if (!isScheduled(habit, d)) continue; // nenaplánované a prázdninové dny se přeskakují
+    if (isDone(habit, dateKey(d))){ run++; if (run > best) best = run; }
+    else run = 0;
   }
   return best;
 }
@@ -920,19 +1010,25 @@ function rateOverDays(n){
 function habitRate(habit){
   const f = habitFreq(habit);
   if (f.type === 'weekly'){
-    let done = 0;
-    for (let i = 1; i <= 4; i++){ // poslední 4 uzavřené týdny
-      if (doneInWeek(habit, addDays(startOfWeek(today()), -7 * i))) done++;
+    let done = 0, total = 0;
+    for (let i = 1; i <= 12 && total < 4; i++){ // poslední 4 hodnotitelné uzavřené týdny
+      const mon = addDays(startOfWeek(today()), -7 * i);
+      if (weekAllVacation(habit, mon)) continue;
+      total++;
+      if (doneInWeek(habit, mon)) done++;
     }
-    return Math.round(done / 4 * 100);
+    return total ? Math.round(done / total * 100) : 0;
   }
   if (f.type === 'monthly'){
-    let done = 0;
+    let done = 0, total = 0;
     const t = today();
-    for (let i = 1; i <= 3; i++){ // poslední 3 uzavřené měsíce
-      if (doneInMonth(habit, new Date(t.getFullYear(), t.getMonth() - i, 1))) done++;
+    for (let i = 1; i <= 9 && total < 3; i++){ // poslední 3 hodnotitelné uzavřené měsíce
+      const first = new Date(t.getFullYear(), t.getMonth() - i, 1);
+      if (monthAllVacation(habit, first)) continue;
+      total++;
+      if (doneInMonth(habit, first)) done++;
     }
-    return Math.round(done / 3 * 100);
+    return total ? Math.round(done / total * 100) : 0;
   }
   let done = 0, total = 0;
   for (let i = 0; i < 30; i++){
@@ -1023,7 +1119,8 @@ function periodicRow(h, key){
 }
 function editRow(h, idx, count){
   const goalTxt = h.type === 'number' ? 'cíl ' + fmtNum(h.goal) + (h.unit ? ' ' + esc(h.unit) : '') : 'ano / ne';
-  const meta = goalTxt + ' · ' + esc(freqLabel(h));
+  const vacNow = vacUntil(h, today());
+  const meta = goalTxt + ' · ' + esc(freqLabel(h)) + (vacNow ? ' · 🏖️ do ' + fmtKeyShort(vacNow) : '');
   return '<div class="habit-row edit" draggable="true" data-idx="' + idx + '" data-id="' + esc(h.id) + '">'
     + '<span class="drag-handle" title="Přetáhnout" aria-hidden="true">⠿</span>'
     + habitBadge(h)
@@ -1031,6 +1128,7 @@ function editRow(h, idx, count){
     + '<span class="edit-controls">'
     +   '<button class="icon-btn" data-action="moveUp" data-id="' + esc(h.id) + '" aria-label="Posunout nahoru"' + (idx === 0 ? ' disabled' : '') + '>↑</button>'
     +   '<button class="icon-btn" data-action="moveDown" data-id="' + esc(h.id) + '" aria-label="Posunout dolů"' + (idx === count - 1 ? ' disabled' : '') + '>↓</button>'
+    +   '<button class="icon-btn" data-action="vacHabit" data-id="' + esc(h.id) + '" aria-label="Prázdniny">🏖️</button>'
     +   '<button class="icon-btn" data-action="editHabit" data-id="' + esc(h.id) + '" aria-label="Upravit">✏️</button>'
     +   '<button class="icon-btn" data-action="confirmDelete" data-id="' + esc(h.id) + '" aria-label="Smazat">🗑️</button>'
     + '</span>'
@@ -1041,9 +1139,10 @@ function renderDay(){
   const isToday = sameDay(selectedDate, today());
   const hs = activeHabits();
   const dayHs = hs.filter(h => !isPeriodic(h) && isScheduled(h, selectedDate));
-  const offCnt = hs.filter(h => !isPeriodic(h) && !isScheduled(h, selectedDate)).length;
-  const weekHs = hs.filter(h => habitFreq(h).type === 'weekly');
-  const monthHs = hs.filter(h => habitFreq(h).type === 'monthly');
+  const offCnt = hs.filter(h => !isPeriodic(h) && !isScheduled(h, selectedDate) && !onVacation(h, selectedDate)).length;
+  const weekHs = hs.filter(h => habitFreq(h).type === 'weekly' && !periodicPaused(h, selectedDate));
+  const monthHs = hs.filter(h => habitFreq(h).type === 'monthly' && !periodicPaused(h, selectedDate));
+  const vacHs = hs.filter(h => isPeriodic(h) ? periodicPaused(h, selectedDate) : onVacation(h, selectedDate));
   const st = dayStats(key);
   let html = '<div class="daynav">'
     + '<button class="icon-btn" data-action="prevDay" aria-label="Předchozí den">‹</button>'
@@ -1060,6 +1159,7 @@ function renderDay(){
   }
 
   html += '<div class="toolbar">'
+    + '<button class="btn small" data-action="vacAll" aria-label="Hromadné prázdniny" title="Hromadné prázdniny">🏖️</button>'
     + '<button class="btn small' + (editMode ? ' primary' : '') + '" data-action="toggleEdit">' + (editMode ? '✓ Hotovo' : '✏️ Upravit') + '</button>'
     + '<button class="btn small" data-action="addHabit">＋ Přidat návyk</button>'
     + '</div>';
@@ -1068,7 +1168,7 @@ function renderDay(){
     html += '<div class="card empty">Zatím tu nejsou žádné návyky.<br>Začněte tlačítkem <strong>＋ Přidat návyk</strong>.</div>';
   } else if (editMode){
     html += '<div class="habit-list">' + hs.map((h, i) => editRow(h, i, hs.length)).join('') + '</div>'
-      + '<p class="hint">Pořadí změníte přetažením (na počítači) nebo šipkami ↑ ↓.</p>';
+      + '<p class="hint">Pořadí změníte přetažením (na počítači) nebo šipkami ↑ ↓. Ikonou 🏖️ nastavíte návyku prázdniny.</p>';
   } else {
     const hasSections = weekHs.length || monthHs.length;
     if (dayHs.length){
@@ -1082,6 +1182,11 @@ function renderDay(){
     }
     if (monthHs.length){
       html += '<div class="sec-title">Jednou měsíčně</div><div class="habit-list">' + monthHs.map(h => periodicRow(h, key)).join('') + '</div>';
+    }
+    if (vacHs.length){
+      html += '<div class="card vac-card">🏖️ <strong>Na prázdninách:</strong> '
+        + vacHs.map(h => esc(h.name) + (vacUntil(h, selectedDate) ? ' (do ' + fmtKeyShort(vacUntil(h, selectedDate)) + ')' : '')).join(', ')
+        + '</div>';
     }
   }
 
@@ -1100,8 +1205,8 @@ function renderDay(){
   $('#view-day').innerHTML = html;
 }
 
-/* ============ Render: Týden ============ */
-function renderWeek(){
+/* ============ Render: Kalendář (týden + měsíc) ============ */
+function weekHtml(){
   const mon = weekAnchor;
   const hs = activeHabits();
   const t = today();
@@ -1114,9 +1219,7 @@ function renderWeek(){
     + '</div>';
 
   if (!hs.length){
-    html += '<div class="card empty">Žádné aktivní návyky.</div>';
-    $('#view-week').innerHTML = html;
-    return;
+    return html + '<div class="card empty">Žádné aktivní návyky.</div>';
   }
 
   let grid = '<div class="wk-cell name"></div>';
@@ -1127,24 +1230,27 @@ function renderWeek(){
   for (const h of hs){
     const f = habitFreq(h);
     const wkOk = f.type === 'weekly' && doneInWeek(h, mon);
+    const paused = isPeriodic(h) && periodicPaused(h, mon);
     const nameExtra = isPeriodic(h)
-      ? '<span class="wk-hfreq">1×/' + (f.type === 'weekly' ? 'týd' : 'měs') + (wkOk ? ' <span class="wk-okwk">✓</span>' : '') + '</span>'
+      ? '<span class="wk-hfreq">1×/' + (f.type === 'weekly' ? 'týd' : 'měs') + (wkOk ? ' <span class="wk-okwk">✓</span>' : '') + (paused ? ' 🏖️' : '') + '</span>'
       : '';
     grid += '<div class="wk-cell name" title="' + esc(h.name) + ' — ' + esc(freqLabel(h)) + '">' + habitBadge(h) + '<span class="wk-hname">' + esc(h.name) + nameExtra + '</span></div>';
     for (let i = 0; i < 7; i++){
       const d = addDays(mon, i);
       const key = dateKey(d);
       const future = d > t;
+      const vac = !isPeriodic(h) && onVacation(h, d);
       const off = !isPeriodic(h) && !isScheduled(h, d);
+      const vt = vac ? ' title="Prázdniny 🏖️"' : '';
       if (h.type === 'check'){
         const on = isDone(h, key);
-        grid += '<button class="wk-cell" data-action="cellToggle" data-id="' + esc(h.id) + '" data-key="' + key + '"' + (future ? ' disabled' : '') + ' aria-label="' + esc(h.name) + ' ' + d.getDate() + '.' + (d.getMonth() + 1) + '.">'
-          + '<span class="wk-dot' + (on ? ' on' : '') + (off && !on ? ' off' : '') + '">' + (on ? '✓' : '') + '</span></button>';
+        grid += '<button class="wk-cell" data-action="cellToggle" data-id="' + esc(h.id) + '" data-key="' + key + '"' + (future ? ' disabled' : '') + vt + ' aria-label="' + esc(h.name) + ' ' + d.getDate() + '.' + (d.getMonth() + 1) + '.">'
+          + '<span class="wk-dot' + (on ? ' on' : '') + (off && !on ? ' off' : '') + '">' + (on ? '✓' : (vac ? '' : '')) + '</span></button>';
       } else {
         const v = numVal(h, key);
         const on = isDone(h, key);
         const cls = (on ? ' on' : (v > 0 ? ' part' : '')) + (off && !on && v <= 0 ? ' wk-off' : '');
-        grid += '<button class="wk-cell" data-action="gotoDay" data-key="' + key + '"' + (future ? ' disabled' : '') + '>'
+        grid += '<button class="wk-cell" data-action="gotoDay" data-key="' + key + '"' + (future ? ' disabled' : '') + vt + '>'
           + '<span class="wk-num' + cls + '">' + (v > 0 ? fmtNum(v) : '·') + '</span></button>';
       }
     }
@@ -1157,12 +1263,12 @@ function renderWeek(){
   }
 
   html += '<div class="card grid-card"><div class="wk-scroll"><div class="wk-grid" style="grid-template-columns:minmax(84px,1.3fr) repeat(7,minmax(34px,46px));">' + grid + '</div></div>'
-    + '<p class="hint">Ano/ne návyky odškrtnete klepnutím přímo v mřížce, číselné otevřou daný den.</p></div>';
-  $('#view-week').innerHTML = html;
+    + '<p class="hint">Ano/ne návyky odškrtnete klepnutím přímo v mřížce, číselné otevřou daný den. Čárkované dny = nenaplánováno nebo prázdniny.</p></div>';
+  return html;
 }
 
 /* ============ Render: Měsíc ============ */
-function renderMonth(){
+function monthHtml(){
   const first = monthAnchor;
   const t = today();
   const days = new Date(first.getFullYear(), first.getMonth() + 1, 0).getDate();
@@ -1188,6 +1294,10 @@ function renderMonth(){
       continue;
     }
     const s = dayStats(key);
+    if (!s.total && activeHabits().length){
+      cells += '<button class="hm vacday' + (sameDay(d, t) ? ' today' : '') + '" data-action="gotoDay" data-key="' + key + '" title="' + day + '. ' + (first.getMonth() + 1) + '. — nic naplánováno (prázdniny / volno)">' + day + '</button>';
+      continue;
+    }
     sumPct += s.pct; cnt++;
     let lvl = 'l0';
     if (s.total && s.done){
@@ -1200,7 +1310,14 @@ function renderMonth(){
     + '<div class="hm-foot"><span class="hm-legend">Méně <i class="hm l0"></i><i class="hm l1"></i><i class="hm l2"></i><i class="hm l3"></i><i class="hm l4"></i> Více</span>'
     + '<span class="hm-avg">Průměr: <strong>' + avg + ' %</strong></span></div>'
     + '<p class="hint">Barva dne odpovídá podílu splněných návyků. Klepnutím den otevřete.</p></div>';
-  $('#view-month').innerHTML = html;
+  return html;
+}
+function renderCal(){
+  const seg = '<div class="cal-seg"><div class="seg">'
+    + '<button class="seg-btn' + (calView === 'week' ? ' on' : '') + '" data-action="calWeek">Týden</button>'
+    + '<button class="seg-btn' + (calView === 'month' ? ' on' : '') + '" data-action="calMonth">Měsíc</button>'
+    + '</div></div>';
+  $('#view-cal').innerHTML = seg + (calView === 'week' ? weekHtml() : monthHtml());
 }
 
 /* ============ Render: Přehled ============ */
@@ -1241,7 +1358,77 @@ function renderStats(){
   $('#view-stats').innerHTML = html;
 }
 
+/* ============ Render: Jídlo ============ */
+function renderMeals(){
+  const key = dateKey(selectedDate);
+  const isToday = sameDay(selectedDate, today());
+  const future = selectedDate > today();
+  let html = '<div class="daynav">'
+    + '<button class="icon-btn" data-action="prevDay" aria-label="Předchozí den">‹</button>'
+    + '<div class="daynav-mid"><div class="daynav-date">' + (isToday ? 'Dnes' : fmtDateFull(selectedDate)) + '</div>'
+    + (isToday ? '<div class="daynav-sub">' + fmtDateFull(selectedDate) + '</div>'
+               : '<div class="daynav-sub"><button class="linklike" data-action="goToday">Zpět na dnešek</button></div>')
+    + '</div>'
+    + '<button class="icon-btn" data-action="nextDay" aria-label="Další den">›</button>'
+    + '</div>';
+  html += '<div class="card"><textarea id="meal-ta" class="meal-ta" maxlength="20000" aria-label="Jídelníček dne" placeholder="Snídaně: …&#10;Oběd: …&#10;Večeře: …&#10;Svačiny: …">' + esc(data.meals[key] || '') + '</textarea></div>';
+  html += '<p class="hint">' + (future ? 'Plánujete dopředu — záznam se uloží k tomuto dni.' : 'Ukládá se automaticky, pro každý den zvlášť.') + ' Mezi dny listujete šipkami nahoře.</p>';
+  $('#view-meals').innerHTML = html;
+}
+
 /* ============ Render: Plán ============ */
+function planSections(text){
+  const dayMap = { 'PONDĚLÍ': 0, 'ÚTERÝ': 1, 'STŘEDA': 2, 'ČTVRTEK': 3, 'PÁTEK': 4, 'SOBOTA': 5, 'NEDĚLE': 6 };
+  const dayRe = /^\s*[•\-–—*]*\s*(PONDĚLÍ|ÚTERÝ|STŘEDA|ČTVRTEK|PÁTEK|SOBOTA|NEDĚLE)(?!\p{L})[:\s–—-]*(.*)$/iu;
+  const headRe = /^\s*(\p{Extended_Pictographic}(?:[\uFE0F\u200D]|\p{Extended_Pictographic})*)\s*(\S.*)$/u;
+  const secs = [];
+  let cur = { kind: 'text', lines: [] };
+  const push = () => { if (cur.kind !== 'text' || cur.lines.some(l => l.trim())) secs.push(cur); };
+  for (const line of String(text).split('\n')){
+    let m = line.match(dayRe);
+    if (m){
+      push();
+      cur = { kind: 'day', day: dayMap[m[1].toUpperCase()], sub: (m[2] || '').trim(), lines: [] };
+      continue;
+    }
+    m = line.match(headRe);
+    if (m){
+      push();
+      cur = { kind: 'head', title: line.trim(), lines: [] };
+      continue;
+    }
+    cur.lines.push(line);
+  }
+  push();
+  return secs;
+}
+function planPrettyHtml(text){
+  const secs = planSections(text);
+  if (!secs.some(s => s.kind === 'day')){
+    return '<div class="card"><p class="plan-text">' + esc(text) + '</p></div>';
+  }
+  const tIdx = weekdayIdx(today());
+  let html = '';
+  for (const s of secs){
+    const body = s.lines.join('\n').replace(/^\n+|\n+$/g, '');
+    if (s.kind === 'head'){
+      html += '<div class="plan-head">' + esc(s.title) + '</div>';
+      if (body) html += '<div class="card"><p class="plan-text">' + esc(body) + '</p></div>';
+    } else if (s.kind === 'day'){
+      const isT = s.day === tIdx;
+      html += '<details class="plan-day' + (isT ? ' today' : '') + '"' + (isT ? ' open' : '') + '>'
+        + '<summary><span class="day-tag d' + s.day + '">' + WD[s.day] + '</span>'
+        + '<span class="plan-day-title">' + esc(s.sub || WDFULL[s.day]) + '</span>'
+        + (isT ? '<span class="today-tag">dnes</span>' : '')
+        + '<span class="chev">›</span></summary>'
+        + (body ? '<div class="plan-body plan-text">' + esc(body) + '</div>' : '')
+        + '</details>';
+    } else if (body){
+      html += '<div class="card"><p class="plan-text">' + esc(body) + '</p></div>';
+    }
+  }
+  return html;
+}
 function renderPlan(){
   let html = '<div class="view-title">Plán</div>';
   if (planEdit){
@@ -1249,13 +1436,14 @@ function renderPlan(){
       + '<textarea id="plan-ta" class="plan-ta" maxlength="50000" aria-label="Text plánu">' + esc(planDraft) + '</textarea>'
       + '<div class="row-btns" style="margin-top:12px"><button class="btn" data-action="cancelPlan">Zrušit</button>'
       + '<button class="btn primary" data-action="savePlan">💾 Uložit</button></div>'
+      + '<p class="hint">Tip: řádky začínající názvem dne (PONDĚLÍ, ÚTERÝ…) se zobrazí jako barevné rozbalovací karty, řádky začínající emoji jako nadpisy sekcí.</p>'
       + '</div>';
   } else {
     html += '<div class="toolbar"><button class="btn small" data-action="editPlan">✏️ Upravit plán</button></div>';
     html += (data.plan && data.plan.trim())
-      ? '<div class="card"><p class="plan-text">' + esc(data.plan) + '</p></div>'
+      ? planPrettyHtml(data.plan)
       : '<div class="card empty">Plán je zatím prázdný.<br>Klepněte na <strong>✏️ Upravit plán</strong> a napište si sem cokoli — tréninky, jídelníček, poznámky.</div>';
-    html += '<p class="hint">Volný text jen pro vás. Ukládá se v tomto zařízení a je součástí exportu dat.</p>';
+    html += '<p class="hint">Karta dnešního dne je zvýrazněná a otevřená, ostatní rozbalíte klepnutím. Volný text jen pro vás, součást exportu dat.</p>';
   }
   $('#view-plan').innerHTML = html;
 }
@@ -1299,6 +1487,54 @@ function openHabitModal(habit){
   );
   const nameEl = $('#f-name');
   if (isNew && nameEl) setTimeout(() => nameEl.focus(), 50);
+}
+function vacDateFields(){
+  const from = dateKey(today());
+  const to = dateKey(addDays(today(), 7));
+  return '<div class="two-col">'
+    + '<label class="field"><span class="field-lbl">Od</span><input type="date" id="f-vac-from" value="' + from + '"></label>'
+    + '<label class="field"><span class="field-lbl">Do (včetně)</span><input type="date" id="f-vac-to" value="' + to + '"></label>'
+    + '</div>';
+}
+function readVacDates(){
+  const from = ($('#f-vac-from') && $('#f-vac-from').value || '').trim();
+  const to = ($('#f-vac-to') && $('#f-vac-to').value || '').trim();
+  if (!DATE_RE.test(from) || !DATE_RE.test(to)){ toast('Vyplňte obě data', true); return null; }
+  if (from > to){ toast('Datum „od“ musí být před „do“', true); return null; }
+  return { from, to };
+}
+function openVacModal(h){
+  const tk = dateKey(today());
+  const upcoming = vacList(h).filter(v => v.to >= tk);
+  const past = vacList(h).length - upcoming.length;
+  const rows = upcoming.length
+    ? upcoming.map(v => '<div class="vac-row"><span>🏖️ ' + fmtKeyShort(v.from) + ' – ' + fmtKeyShort(v.to) + '</span>'
+        + '<button class="icon-btn" data-action="delVac" data-id="' + esc(h.id) + '" data-from="' + v.from + '" data-to="' + v.to + '" aria-label="Smazat prázdniny">🗑️</button></div>').join('')
+    : '<p class="muted" style="margin:4px 0 10px">Žádné aktuální ani nadcházející prázdniny.</p>';
+  openModal(
+    '<div class="sheet-title">🏖️ Prázdniny — ' + esc(h.name) + '</div>'
+    + '<p class="muted" style="margin:0 0 12px">V zadaných dnech se návyk nepočítá — nezobrazí se v Dnes a nepřeruší streak ani úspěšnost.</p>'
+    + rows
+    + (past ? '<p class="muted" style="margin:6px 0 12px;font-size:13px">+ ' + past + ' ' + plural(past, 'minulé období', 'minulá období', 'minulých období') + ' v historii</p>' : '')
+    + '<div class="sec-title" style="margin-top:14px">Přidat prázdniny</div>'
+    + vacDateFields()
+    + '<div class="modal-actions"><button class="btn" data-action="closeModal">Zavřít</button>'
+    + '<button class="btn primary" data-action="addVac" data-id="' + esc(h.id) + '">Přidat</button></div>'
+  );
+}
+function openVacAllModal(){
+  const n = activeHabits().length;
+  const anyNow = activeHabits().some(h => onVacation(h, today()));
+  openModal(
+    '<div class="sheet-title">🏖️ Hromadné prázdniny</div>'
+    + '<p class="muted" style="margin:0 0 12px">Nastaví prázdniny všem <strong>' + n + '</strong> aktivním návykům najednou — třeba když někam jedete. V těch dnech se nic nepočítá a streaky se nepřeruší.</p>'
+    + vacDateFields()
+    + '<div class="modal-actions col">'
+    + '<button class="btn primary" data-action="applyVacAll">Nastavit všem</button>'
+    + (anyNow ? '<button class="btn" data-action="endVacAll">⏹️ Ukončit probíhající prázdniny (všem)</button>' : '')
+    + '<button class="btn ghost" data-action="closeModal">Zrušit</button>'
+    + '</div>'
+  );
 }
 function openDeleteModal(h, isArch){
   openModal(
@@ -1377,18 +1613,22 @@ document.addEventListener('click', ev => {
   switch (act){
     case 'tab': {
       tab = el.dataset.tab;
-      if (tab === 'week') weekAnchor = startOfWeek(selectedDate);
-      if (tab === 'month') monthAnchor = firstOfMonth(selectedDate);
+      if (tab === 'cal'){
+        weekAnchor = startOfWeek(selectedDate);
+        monthAnchor = firstOfMonth(selectedDate);
+      }
       render();
       break;
     }
     case 'prevDay': selectedDate = addDays(selectedDate, -1); render(); break;
     case 'nextDay': {
       const n = addDays(selectedDate, 1);
-      if (n <= today()) { selectedDate = n; render(); }
+      if (tab === 'meals' || n <= today()) { selectedDate = n; render(); }
       break;
     }
     case 'goToday': selectedDate = today(); render(); break;
+    case 'calWeek': calView = 'week'; render(); break;
+    case 'calMonth': calView = 'month'; render(); break;
     case 'gotoDay': {
       let d = parseKey(el.dataset.key);
       if (d > today()) d = today();
@@ -1492,6 +1732,54 @@ document.addEventListener('click', ev => {
       break;
     }
     case 'toggleDay': el.classList.toggle('on'); break;
+    case 'vacHabit': { const h = habitById(id); if (h) openVacModal(h); break; }
+    case 'addVac': {
+      const h = habitById(id);
+      if (!h) break;
+      const r = readVacDates();
+      if (!r) break;
+      h.vacations = normVacs([...vacList(h), r]);
+      save(); render();
+      openVacModal(h);
+      toast('Prázdniny přidány');
+      break;
+    }
+    case 'delVac': {
+      const h = habitById(id);
+      if (!h) break;
+      h.vacations = vacList(h).filter(v => !(v.from === el.dataset.from && v.to === el.dataset.to));
+      save(); render();
+      openVacModal(h);
+      toast('Prázdniny smazány');
+      break;
+    }
+    case 'vacAll': openVacAllModal(); break;
+    case 'applyVacAll': {
+      const r = readVacDates();
+      if (!r) break;
+      const act = activeHabits();
+      act.forEach(h => { h.vacations = normVacs([...vacList(h), r]); });
+      save(); closeModal(); render();
+      toast('Prázdniny ' + fmtKeyShort(r.from) + ' – ' + fmtKeyShort(r.to) + ' nastaveny pro ' + act.length + ' ' + plural(act.length, 'návyk', 'návyky', 'návyků'));
+      break;
+    }
+    case 'endVacAll': {
+      const tk = dateKey(today());
+      const yk = dateKey(addDays(today(), -1));
+      data.habits.forEach(h => {
+        if (!Array.isArray(h.vacations)) return;
+        h.vacations = h.vacations.map(v => {
+          if (v.from <= tk && tk <= v.to){
+            if (v.from === tk) return null; // začaly dnes → smazat celé
+            return { from: v.from, to: yk }; // jinak ukončit včerejškem
+          }
+          return v;
+        }).filter(Boolean);
+      });
+      save(); closeModal(); render();
+      toast('Probíhající prázdniny ukončeny');
+      break;
+    }
     case 'editPlan': {
       planEdit = true;
       planDraft = data.plan || '';
@@ -1590,7 +1878,15 @@ document.addEventListener('change', ev => {
 });
 
 document.addEventListener('input', ev => {
-  if (ev.target && ev.target.id === 'plan-ta') planDraft = ev.target.value;
+  if (!ev.target) return;
+  if (ev.target.id === 'plan-ta'){ planDraft = ev.target.value; return; }
+  if (ev.target.id === 'meal-ta'){
+    const k = dateKey(selectedDate);
+    const v = ev.target.value;
+    if (v.trim() === '') delete data.meals[k];
+    else data.meals[k] = v.slice(0, 20000);
+    save();
+  }
 });
 
 document.addEventListener('keydown', ev => {
@@ -1647,11 +1943,11 @@ function toast(msg, isErr){
 
 /* ============ Hlavní render ============ */
 function render(){
-  ['day', 'week', 'month', 'stats', 'plan'].forEach(v => { $('#view-' + v).hidden = v !== tab; });
+  ['day', 'cal', 'meals', 'stats', 'plan'].forEach(v => { $('#view-' + v).hidden = v !== tab; });
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('on', b.dataset.tab === tab));
   if (tab === 'day') renderDay();
-  else if (tab === 'week') renderWeek();
-  else if (tab === 'month') renderMonth();
+  else if (tab === 'cal') renderCal();
+  else if (tab === 'meals') renderMeals();
   else if (tab === 'plan') renderPlan();
   else renderStats();
   popRef = null;
