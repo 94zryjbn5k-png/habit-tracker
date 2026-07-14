@@ -16,28 +16,19 @@
 <style>
 :root{
   --bg:#f2f2f7; --card:#ffffff; --text:#1c1c1e; --muted:#8a8a8e; --line:#e4e4e9;
+  --text-bg:#1c1c1e; --muted-bg:#8a8a8e; --field-bg:#ececf1;
   --accent:#0a84ff; --green:#34c759; --green-soft:rgba(52,199,89,.13); --red:#ff3b30;
   --btn-bg:#e9e9ee;
   --h0:#e4e4e9; --h1:#9be9a8; --h2:#40c463; --h3:#30a14e; --h4:#216e39;
   --shadow:0 1px 2px rgba(0,0,0,.06), 0 2px 8px rgba(0,0,0,.04);
   --radius:16px;
-  --tabbar-bg:rgba(249,249,251,.85);
-}
-@media (prefers-color-scheme: dark){
-  :root{
-    --bg:#000000; --card:#1c1c1e; --text:#f2f2f7; --muted:#98989f; --line:#2c2c2e;
-    --accent:#0a84ff; --green:#30d158; --green-soft:rgba(48,209,88,.16); --red:#ff453a;
-    --btn-bg:#2c2c2e;
-    --h0:#2a2a2e; --h1:#0e4429; --h2:#006d32; --h3:#26a641; --h4:#39d353;
-    --shadow:none;
-    --tabbar-bg:rgba(22,22,24,.85);
-  }
+  --tabbar-bg:rgba(249,249,251,.88);
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 [hidden]{display:none !important;}
 html{-webkit-text-size-adjust:100%;}
 body{
-  margin:0; background:var(--bg); color:var(--text);
+  margin:0; background:var(--bg); color:var(--text-bg);
   font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
   font-size:17px; line-height:1.45;
 }
@@ -56,38 +47,35 @@ input,textarea{-webkit-appearance:none;appearance:none;}
 
 /* ---------- hlavička aplikace ---------- */
 .app-top{padding:6px 2px 10px;display:flex;align-items:baseline;justify-content:space-between;}
-.app-title{font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);}
+.app-title{font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted-bg);}
 
 #storage-banner{
   background:#fff3cd;color:#5c4400;border:1px solid #e8d48a;
   border-radius:12px;padding:10px 14px;font-size:14px;margin:0 0 12px;
-}
-@media (prefers-color-scheme: dark){
-  #storage-banner{background:#3a3115;color:#ffd970;border-color:#5c4f1e;}
 }
 
 /* ---------- navigace dne / týdne / měsíce ---------- */
 .daynav{display:flex;align-items:center;gap:8px;margin:2px 0 14px;}
 .daynav-mid{flex:1;text-align:center;min-width:0;}
 .daynav-date{font-size:21px;font-weight:700;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.daynav-sub{font-size:13px;color:var(--muted);margin-top:1px;}
+.daynav-sub{font-size:13px;color:var(--muted-bg);margin-top:1px;}
 .linklike{font-size:13px;color:var(--accent);min-height:24px;padding:2px 6px;border-radius:8px;}
 .icon-btn{
   min-width:44px;min-height:44px;display:inline-flex;align-items:center;justify-content:center;
-  border-radius:12px;background:var(--card);box-shadow:var(--shadow);
+  border-radius:12px;background:var(--card);color:var(--text);box-shadow:var(--shadow);
   font-size:22px;line-height:1;user-select:none;-webkit-user-select:none;
 }
 .icon-btn:active:not(:disabled){transform:scale(.94);}
 
 /* ---------- karty ---------- */
-.card{background:var(--card);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);margin-bottom:12px;}
+.card{background:var(--card);color:var(--text);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);margin-bottom:12px;}
 .card h3{margin:0 0 8px;font-size:16px;}
 .card p{margin:0 0 12px;}
 .card p:last-child{margin-bottom:0;}
 .muted{color:var(--muted);font-size:14px;}
 .empty{text-align:center;color:var(--muted);padding:28px 16px;}
-.hint{font-size:12.5px;color:var(--muted);margin:10px 2px 0;}
-.sec-title{font-size:14px;font-weight:600;color:var(--muted);margin:20px 4px 8px;text-transform:uppercase;letter-spacing:.06em;}
+.hint{font-size:12.5px;color:var(--muted-bg);margin:10px 2px 0;}
+.sec-title{font-size:14px;font-weight:600;color:var(--muted-bg);margin:20px 4px 8px;text-transform:uppercase;letter-spacing:.06em;}
 .view-title{font-size:26px;font-weight:800;letter-spacing:-.02em;margin:4px 2px 14px;}
 
 /* ---------- denní progres ---------- */
@@ -100,7 +88,7 @@ input,textarea{-webkit-appearance:none;appearance:none;}
 /* ---------- toolbar ---------- */
 .toolbar{display:flex;gap:8px;justify-content:flex-end;margin:0 0 12px;}
 .btn{
-  min-height:44px;padding:0 16px;border-radius:12px;background:var(--card);
+  min-height:44px;padding:0 16px;border-radius:12px;background:var(--card);color:var(--text);
   box-shadow:var(--shadow);font-size:15px;font-weight:600;
   display:inline-flex;align-items:center;justify-content:center;gap:6px;
   user-select:none;-webkit-user-select:none;
@@ -117,7 +105,7 @@ input,textarea{-webkit-appearance:none;appearance:none;}
 .habit-list{display:flex;flex-direction:column;gap:8px;}
 .habit-row{
   display:flex;align-items:center;gap:12px;
-  background:var(--card);border-radius:var(--radius);
+  background:var(--card);color:var(--text);border-radius:var(--radius);
   padding:10px 14px;min-height:62px;box-shadow:var(--shadow);
   user-select:none;-webkit-user-select:none;
   transition:background .2s ease, transform .12s ease;
@@ -251,11 +239,8 @@ input,textarea{-webkit-appearance:none;appearance:none;}
 .hm.l2{background:var(--h2);}
 .hm.l3{background:var(--h3);color:#fff;}
 .hm.l4{background:var(--h4);color:#fff;}
-@media (prefers-color-scheme: dark){
-  .hm.l1{color:#c8f5d3;}
-  .hm.l2{color:#eafff0;}
-  .hm.l4{color:#08340f;}
-}
+.hm.l1,.hm.l2{color:#0b3d1c;}
+.hm.l3,.hm.l4{color:#ffffff;}
 .hm.today{box-shadow:inset 0 0 0 2.5px var(--accent);}
 .hm-foot{display:flex;justify-content:space-between;align-items:center;margin-top:14px;flex-wrap:wrap;gap:8px;}
 .hm-legend{display:inline-flex;align-items:center;gap:4px;font-size:12.5px;color:var(--muted);}
@@ -294,12 +279,23 @@ input,textarea{-webkit-appearance:none;appearance:none;}
 }
 .tabbar-inner{max-width:680px;margin:0 auto;display:flex;}
 .tab-btn{
-  flex:1;min-height:58px;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:1px;font-size:11.5px;font-weight:600;color:var(--muted);white-space:nowrap;min-width:0;
+  flex:1;min-height:60px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:2px;font-size:12px;font-weight:700;color:var(--muted-bg);white-space:nowrap;min-width:0;overflow:visible;
 }
-.tab-btn .tab-ico{font-size:21px;line-height:1.2;filter:grayscale(1);opacity:.8;transition:filter .15s,opacity .15s;}
+.tab-btn .tab-ico{font-size:22px;line-height:1.2;opacity:.55;transition:opacity .15s,transform .15s;}
 .tab-btn.on{color:var(--accent);}
-.tab-btn.on .tab-ico{filter:none;opacity:1;}
+.tab-btn.on .tab-ico{opacity:1;transform:translateY(-1px);}
+.tab-center{overflow:visible;}
+.tab-day{
+  width:54px;height:54px;border-radius:50%;background:var(--accent);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-size:25px;font-weight:800;line-height:1;
+  margin-top:-28px;border:4px solid var(--bg);flex:0 0 auto;
+  box-shadow:0 6px 16px rgba(10,132,255,.38),0 2px 5px rgba(0,0,0,.18);
+  transition:transform .12s ease,opacity .15s;
+}
+.tab-center:not(.on) .tab-day{opacity:.82;}
+.tab-center:active .tab-day{transform:scale(.92);}
+.tab-center .tab-lbl{font-weight:800;}
 
 /* ---------- kompaktní telefonní režim ---------- */
 @media (max-width:440px){
@@ -321,7 +317,7 @@ input,textarea{-webkit-appearance:none;appearance:none;}
 .backdrop{position:absolute;inset:0;background:rgba(0,0,0,.42);}
 .sheet{
   position:absolute;left:0;right:0;bottom:0;max-height:90vh;max-height:90dvh;overflow-y:auto;
-  background:var(--card);border-radius:22px 22px 0 0;
+  background:var(--card);color:var(--text);border-radius:22px 22px 0 0;
   padding:22px 20px calc(22px + env(safe-area-inset-bottom));
   animation:sheetIn .28s cubic-bezier(.2,.9,.3,1);
 }
@@ -339,24 +335,23 @@ input,textarea{-webkit-appearance:none;appearance:none;}
 .field input{
   display:block;width:100%;margin-top:6px;
   min-height:46px;padding:10px 13px;font-size:17px;
-  background:var(--bg);border:1px solid var(--line);border-radius:12px;
+  background:var(--field-bg);border:1px solid var(--line);border-radius:12px;
 }
 .field input:focus{border-color:var(--accent);outline:none;}
 .two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 .emoji-row{display:flex;gap:7px;flex-wrap:wrap;margin:-4px 0 16px;}
 .emoji-pick{
-  width:44px;height:44px;border-radius:12px;background:var(--bg);border:1px solid var(--line);
+  width:44px;height:44px;border-radius:12px;background:var(--field-bg);border:1px solid var(--line);
   font-size:22px;display:inline-flex;align-items:center;justify-content:center;
 }
 .emoji-pick:active{transform:scale(.9);}
-.seg{display:flex;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:3px;gap:3px;}
+.seg{display:flex;background:var(--field-bg);border:1px solid transparent;border-radius:12px;padding:3px;gap:3px;}
 .seg.freq{display:grid;grid-template-columns:1fr 1fr;}
 .seg-btn{flex:1;min-height:42px;border-radius:9px;font-size:15px;font-weight:600;color:var(--muted);}
 .seg.freq .seg-btn{font-size:14px;}
 .seg-btn.on{background:var(--card);color:var(--text);box-shadow:var(--shadow);}
-@media (prefers-color-scheme: dark){.seg-btn.on{background:#3a3a3d;}}
 .day-picker{display:flex;gap:5px;}
-.day-chip{flex:1;min-height:42px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);font-size:13.5px;font-weight:700;color:var(--muted);}
+.day-chip{flex:1;min-height:42px;border-radius:10px;border:1.5px solid var(--line);background:var(--field-bg);font-size:13.5px;font-weight:700;color:var(--muted);}
 .day-chip.on{background:var(--accent);border-color:var(--accent);color:#fff;}
 .wk-dot.off::after{border-style:dashed;opacity:.5;}
 .wk-off{opacity:.45;}
@@ -364,7 +359,10 @@ input,textarea{-webkit-appearance:none;appearance:none;}
 .wk-okwk{color:var(--green);}
 .cal-seg{max-width:260px;margin:0 auto 12px;}
 .hm.vacday{background:transparent;border:1.5px dashed var(--line);color:var(--muted);}
-.vac-card{color:var(--muted);font-size:14px;border:1.5px dashed var(--line);box-shadow:none;background:transparent;}
+.vac-card{display:flex;align-items:center;gap:12px;padding:12px 14px;}
+.vac-emo{width:40px;height:40px;border-radius:12px;background:var(--field-bg);display:inline-flex;align-items:center;justify-content:center;font-size:21px;flex:0 0 auto;}
+.vac-tx{display:flex;flex-direction:column;gap:1px;font-size:14px;color:var(--muted);min-width:0;line-height:1.35;}
+.vac-tx strong{color:var(--text);font-size:14.5px;}
 .vac-row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:5px 0 5px 2px;border-bottom:1px solid var(--line);font-size:15px;}
 .vac-row:last-child{border-bottom:0;}
 .vac-row .icon-btn{box-shadow:none;background:transparent;font-size:17px;min-width:40px;min-height:40px;}
@@ -384,7 +382,7 @@ input,textarea{-webkit-appearance:none;appearance:none;}
 }
 .plan-head{font-size:17.5px;font-weight:800;letter-spacing:-.01em;margin:22px 4px 10px;}
 .plan-head:first-child{margin-top:2px;}
-details.plan-day{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:8px;padding:0 14px;}
+details.plan-day{background:var(--card);color:var(--text);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:8px;padding:0 14px;}
 details.plan-day.today{box-shadow:var(--shadow), inset 0 0 0 1.5px var(--green);}
 .plan-day summary{list-style:none;display:flex;align-items:center;gap:10px;min-height:54px;cursor:pointer;font-weight:600;font-size:15px;user-select:none;-webkit-user-select:none;}
 .plan-day summary::-webkit-details-marker{display:none;}
@@ -398,7 +396,7 @@ details[open] > summary .chev{transform:rotate(90deg);}
 .plan-day .plan-body{border-top:1px solid var(--line);padding:12px 2px 15px;font-size:15px;line-height:1.55;}
 .plan-ta,.meal-ta{
   width:100%;min-height:56vh;min-height:56dvh;resize:vertical;display:block;
-  border:1.5px solid var(--line);border-radius:12px;background:var(--bg);color:var(--text);
+  border:1.5px solid var(--line);border-radius:12px;background:var(--field-bg);color:var(--text);
   font:inherit;font-size:16px;line-height:1.5;padding:12px;
 }
 .meal-ta{min-height:42vh;min-height:42dvh;}
@@ -408,7 +406,7 @@ details[open] > summary .chev{transform:rotate(90deg);}
 .meal-lbl{font-size:12.5px;font-weight:800;color:var(--muted);margin:0 2px 7px;text-transform:uppercase;letter-spacing:.06em;}
 .meal-f{
   width:100%;display:block;border:1.5px solid var(--line);border-radius:12px;
-  background:var(--bg);color:var(--text);font:inherit;font-size:16px;line-height:1.45;
+  background:var(--field-bg);color:var(--text);font:inherit;font-size:16px;line-height:1.45;
   padding:10px 12px;resize:vertical;
 }
 .meal-f:focus{border-color:var(--accent);outline:none;}
@@ -431,26 +429,19 @@ input.meal-sn{min-height:46px;resize:none;margin-bottom:8px;}
 .mh-t{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .mh-n{flex:0 0 auto;font-size:12.5px;font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums;}
 
-/* ---------- nálada + přepínač splněných ---------- */
-.pc-tools{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:11px;}
-.mood-mini{display:inline-flex;gap:4px;}
-.mood-btn{
-  width:34px;height:34px;border-radius:10px;font-size:19px;display:inline-flex;align-items:center;justify-content:center;
-  filter:grayscale(1);opacity:.55;transition:filter .15s,opacity .15s,transform .1s;
-}
-.mood-btn.on{filter:none;opacity:1;background:var(--green-soft);}
-.mood-btn:active{transform:scale(.88);}
+/* ---------- přepínač splněných ---------- */
+.pc-tools{display:flex;align-items:center;justify-content:flex-end;margin-top:10px;}
 .pc-tools .linklike{white-space:nowrap;}
 
 /* ---------- poznámky ---------- */
 .note-dot{font-size:12px;opacity:.85;}
-.hm{flex-direction:column;gap:0;line-height:1.1;position:relative;}
-.hm-mood{font-size:9.5px;line-height:1;margin-top:1px;}
+.hm{position:relative;}
 .hm-nd{position:absolute;top:4px;right:4px;width:5px;height:5px;border-radius:50%;background:var(--accent);}
 
 /* ---------- zmrazení ---------- */
-.wk-dot.frz{color:inherit;font-size:13px;}
-.wk-dot.frz::after{border-style:dotted;opacity:.6;}
+.wk-dot.frz{background:#5ac8fa;}
+.wk-dot.frz::after{border-color:transparent;}
+.wk-num.frz{color:#5ac8fa;font-weight:800;font-size:15px;}
 
 /* ---------- časovač ---------- */
 .tmr{box-shadow:none;background:var(--btn-bg);min-width:40px;min-height:40px;font-size:17px;flex:0 0 auto;}
@@ -471,16 +462,18 @@ input.meal-sn{min-height:46px;resize:none;margin-bottom:8px;}
 .fx-p{position:absolute;top:-30px;animation-name:fxfall;animation-timing-function:linear;animation-fill-mode:forwards;}
 @keyframes fxfall{to{transform:translateY(115vh) rotate(520deg);}}
 
-/* ---------- barva pozadí ---------- */
-.bg-row{display:flex;gap:10px;flex-wrap:wrap;}
+/* ---------- vzhled: palety ---------- */
+.bg-row{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:8px;margin-bottom:4px;}
 .bg-sw{
-  width:46px;height:46px;border-radius:50%;border:2px solid var(--line);
-  display:inline-flex;align-items:center;justify-content:center;
-  font-size:17px;font-weight:800;color:#3c3c43;flex:0 0 auto;
+  aspect-ratio:1/1;width:100%;border-radius:50%;border:2px solid var(--line);
+  display:inline-flex;align-items:center;justify-content:center;padding:0;
   transition:transform .1s,border-color .15s,box-shadow .15s;
 }
-.bg-sw:active{transform:scale(.9);}
-.bg-sw.on{border-color:var(--accent);box-shadow:0 0 0 3px rgba(10,132,255,.18);}
+.bg-sw:active{transform:scale(.88);}
+.bg-sw.on{border-color:var(--accent);box-shadow:0 0 0 3px rgba(10,132,255,.22);}
+.sw-check{font-size:15px;font-weight:800;color:#1c1c1e;line-height:1;}
+.sw-check.lite{color:#f2f2f7;}
+.theme-lbl{display:block;font-size:12.5px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin:14px 2px 8px;}
 
 /* ---------- milníky ---------- */
 .mile-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;}
@@ -508,7 +501,6 @@ input.meal-sn{min-height:46px;resize:none;margin-bottom:8px;}
   opacity:0;pointer-events:none;transition:opacity .22s ease,transform .22s ease;z-index:200;
   box-shadow:0 6px 22px rgba(0,0,0,.28);
 }
-@media (prefers-color-scheme: dark){#toast{background:#e9e9ee;color:#1c1c1e;}}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 #toast.err{background:var(--red);color:#fff;}
 
@@ -531,11 +523,11 @@ input.meal-sn{min-height:46px;resize:none;margin-bottom:8px;}
 </div>
 <nav class="tabbar">
   <div class="tabbar-inner">
-    <button class="tab-btn on" data-action="tab" data-tab="day"><span class="tab-ico">✅</span>Dnes</button>
-    <button class="tab-btn" data-action="tab" data-tab="cal"><span class="tab-ico">📅</span>Kalendář</button>
-    <button class="tab-btn" data-action="tab" data-tab="meals"><span class="tab-ico">🍽️</span>Jídlo</button>
-    <button class="tab-btn" data-action="tab" data-tab="plan"><span class="tab-ico">📋</span>Plán</button>
-    <button class="tab-btn" data-action="tab" data-tab="stats"><span class="tab-ico">📊</span>Přehled</button>
+    <button class="tab-btn" data-action="tab" data-tab="cal"><span class="tab-ico">📅</span><span class="tab-lbl">Kalendář</span></button>
+    <button class="tab-btn" data-action="tab" data-tab="meals"><span class="tab-ico">🍽️</span><span class="tab-lbl">Jídlo</span></button>
+    <button class="tab-btn tab-center on" data-action="tab" data-tab="day"><span class="tab-day">✓</span><span class="tab-lbl">Dnes</span></button>
+    <button class="tab-btn" data-action="tab" data-tab="plan"><span class="tab-ico">📋</span><span class="tab-lbl">Plán</span></button>
+    <button class="tab-btn" data-action="tab" data-tab="stats"><span class="tab-ico">📊</span><span class="tab-lbl">Přehled</span></button>
   </div>
 </nav>
 <div id="toast" role="status"></div>
@@ -896,11 +888,10 @@ function defaultData(){
     })),
     entries: {},
     meals: {},
-    moods: {},
     notes: {},
     milestones: {},
     hideDone: false,
-    bg: 'default',
+    theme: { ...THEME_DEFAULT },
     plan: DEFAULT_PLAN
   };
 }
@@ -946,13 +937,7 @@ function validateData(obj){
       if (v.sn != null && (!Array.isArray(v.sn) || v.sn.some(x => typeof x !== 'string'))) return 'Svačiny pro ' + k + ' mají špatný formát.';
     }
   }
-  if (obj.moods != null){
-    if (typeof obj.moods !== 'object' || Array.isArray(obj.moods)) return 'Nálady („moods“) mají špatný formát.';
-    for (const k of Object.keys(obj.moods)){
-      if (!DATE_RE.test(k)) return 'Neplatné datum v náladách: ' + k;
-      if (!Number.isInteger(obj.moods[k]) || obj.moods[k] < 0 || obj.moods[k] > 3) return 'Neplatná nálada pro ' + k + '.';
-    }
-  }
+  if (obj.theme != null && (typeof obj.theme !== 'object' || Array.isArray(obj.theme))) return 'Vzhled („theme“) má špatný formát.';
   if (obj.notes != null){
     if (typeof obj.notes !== 'object' || Array.isArray(obj.notes)) return 'Poznámky („notes“) mají špatný formát.';
     for (const k of Object.keys(obj.notes)){
@@ -986,11 +971,10 @@ function normalizeData(obj){
     habits: [],
     entries: {},
     meals: {},
-    moods: {},
     notes: {},
     milestones: {},
     hideDone: !!obj.hideDone,
-    bg: BG_PRESETS.some(p => p.id === obj.bg) ? obj.bg : 'default',
+    theme: normTheme(obj.theme || (typeof obj.bg === 'string' && LEGACY_BG_IDS[obj.bg] ? { bg: LEGACY_BG_IDS[obj.bg] } : null)),
     plan: typeof obj.plan === 'string' ? obj.plan.slice(0, 50000) : DEFAULT_PLAN
   };
   const convertedWork = new Set();
@@ -1021,12 +1005,6 @@ function normalizeData(obj){
     for (const k of Object.keys(obj.meals)){
       const m = normMeal(obj.meals[k]);
       if (m) out.meals[k] = m;
-    }
-  }
-  if (obj.moods){
-    for (const k of Object.keys(obj.moods)){
-      const v = obj.moods[k];
-      if (DATE_RE.test(k) && Number.isInteger(v) && v >= 0 && v <= 3) out.moods[k] = v;
     }
   }
   if (obj.notes){
@@ -1250,23 +1228,42 @@ function mealHistory(field){
   return [...map.values()].sort((a, b) => b.n - a.n || (a.last < b.last ? 1 : -1)).slice(0, 30);
 }
 
-/* ============ Nálada dne ============ */
-const MOODS = ['😀', '🙂', '😐', '😞'];
-
-/* ============ Barva pozadí ============ */
-const BG_PRESETS = [
-  { id: 'default',  name: 'Šedá (výchozí)', bg: '#f2f2f7', tab: 'rgba(249,249,251,.85)' },
-  { id: 'cream',    name: 'Krémová',        bg: '#f6f1e7', tab: 'rgba(250,246,238,.85)' },
-  { id: 'mint',     name: 'Mátová',         bg: '#eaf5ee', tab: 'rgba(240,249,243,.85)' },
-  { id: 'sky',      name: 'Nebeská',        bg: '#e9f1fa', tab: 'rgba(240,247,253,.85)' },
-  { id: 'lavender', name: 'Levandulová',    bg: '#efecf8', tab: 'rgba(245,243,251,.85)' },
-  { id: 'rose',     name: 'Růžová',         bg: '#f9edf0', tab: 'rgba(252,243,246,.85)' },
-  { id: 'peach',    name: 'Broskvová',      bg: '#fbf0e6', tab: 'rgba(253,246,238,.85)' }
-];
-function applyBg(){
-  const p = BG_PRESETS.find(x => x.id === (data && data.bg)) || BG_PRESETS[0];
-  document.documentElement.style.setProperty('--bg', p.bg);
-  document.documentElement.style.setProperty('--tabbar-bg', p.tab);
+/* ============ Vzhled (barvy) ============ */
+const THEME_BG = ['#f2f2f7','#ffffff','#f6f1e7','#eaf5ee','#e9f1fa','#efecf8','#f9edf0','#fbf0e6','#000000','#16171b','#1c1c1e','#101828','#14231c','#241726','#26180f','#1b2731'];
+const THEME_CARD = ['#ffffff','#f7f7fa','#fbf7ee','#eef7f1','#edf4fc','#f2effb','#fdf1f4','#fdf5ec','#1c1c1e','#222329','#17181d','#182236','#1e2b24','#2a1e2e','#2e2117','#223140'];
+const THEME_DEFAULT = { bg: '#f2f2f7', card: '#ffffff', text: 'auto' };
+const LEGACY_BG_IDS = { default: '#f2f2f7', cream: '#f6f1e7', mint: '#eaf5ee', sky: '#e9f1fa', lavender: '#efecf8', rose: '#f9edf0', peach: '#fbf0e6' };
+const HEX_RE = /^#[0-9a-f]{6}$/i;
+function lum(hex){
+  const n = parseInt(hex.slice(1), 16);
+  return (0.2126 * ((n >> 16) & 255) + 0.7152 * ((n >> 8) & 255) + 0.0722 * (n & 255)) / 255;
+}
+function normTheme(t){
+  const src = t && typeof t === 'object' ? t : {};
+  return {
+    bg: (typeof src.bg === 'string' && HEX_RE.test(src.bg)) ? src.bg.toLowerCase() : THEME_DEFAULT.bg,
+    card: (typeof src.card === 'string' && HEX_RE.test(src.card)) ? src.card.toLowerCase() : THEME_DEFAULT.card,
+    text: ['auto', 'dark', 'light'].includes(src.text) ? src.text : 'auto'
+  };
+}
+function applyTheme(){
+  const t = normTheme(data && data.theme);
+  const bgDark = lum(t.bg) < 0.5;
+  const cardDark = t.text === 'auto' ? lum(t.card) < 0.5 : t.text === 'light';
+  const R = document.documentElement.style;
+  R.setProperty('--bg', t.bg);
+  R.setProperty('--card', t.card);
+  R.setProperty('--text', cardDark ? '#f2f2f7' : '#1c1c1e');
+  R.setProperty('--muted', cardDark ? '#9d9da4' : '#8a8a8e');
+  R.setProperty('--line', cardDark ? 'rgba(255,255,255,.14)' : 'rgba(0,0,0,.10)');
+  R.setProperty('--btn-bg', cardDark ? 'rgba(255,255,255,.13)' : 'rgba(0,0,0,.06)');
+  R.setProperty('--field-bg', cardDark ? 'rgba(255,255,255,.09)' : 'rgba(0,0,0,.05)');
+  R.setProperty('--h0', cardDark ? 'rgba(255,255,255,.12)' : '#e4e4e9');
+  R.setProperty('--green-soft', cardDark ? 'rgba(48,209,88,.22)' : 'rgba(52,199,89,.13)');
+  R.setProperty('--shadow', cardDark ? '0 1px 3px rgba(0,0,0,.4)' : '0 1px 2px rgba(0,0,0,.06), 0 2px 8px rgba(0,0,0,.04)');
+  R.setProperty('--text-bg', bgDark ? '#f2f2f7' : '#1c1c1e');
+  R.setProperty('--muted-bg', bgDark ? '#a3a3ab' : '#8a8a8e');
+  R.setProperty('--tabbar-bg', bgDark ? 'rgba(18,19,22,.9)' : 'rgba(249,249,251,.9)');
 }
 
 /* ============ Poznámky ke dni ============ */
@@ -1297,12 +1294,20 @@ function weekMissDone(h, mon){
   }
   return { miss, done };
 }
+function prevScheduledDone(h, d){
+  let p = addDays(d, -1), guard = 0;
+  while (guard++ < 400){
+    if (isScheduled(h, p)) return isDone(h, dateKey(p));
+    p = addDays(p, -1);
+  }
+  return false;
+}
 function frozenDay(h, d){
   if (isPeriodic(h)) return false;
   if (d >= today()) return false;
   if (!isScheduled(h, d) || isDone(h, dateKey(d))) return false;
-  const s = weekMissDone(h, startOfWeek(d));
-  return s.miss === 1 && s.done >= 1; // max 1 prošvihnutý den v týdnu, a jinak ten týden makáš
+  if (!prevScheduledDone(h, d)) return false; // mrazí se jen rozjetá série
+  return weekMissDone(h, startOfWeek(d)).miss === 1; // a max 1 prošvih v témže týdnu
 }
 
 /* ============ Milníky ============ */
@@ -1750,15 +1755,14 @@ function renderDay(){
   if (dayHs.length){
     html += '<div class="card progress-card"><div class="progress-txt"><strong>Splněno ' + st.done + ' z ' + st.total + '</strong><span class="muted">' + st.pct + ' %</span></div>'
       + '<div class="bar"><div class="bar-fill" style="width:' + st.pct + '%"></div></div>'
-      + '<div class="pc-tools"><span class="mood-mini">' + MOODS.map((m, i) => '<button class="mood-btn' + (data.moods[key] === i ? ' on' : '') + '" data-action="setMood" data-m="' + i + '" aria-label="Nálada ' + m + '">' + m + '</button>').join('') + '</span>'
-      + '<button class="linklike" data-action="toggleHide">' + (hide ? '👁 Zobrazit i splněné' : '✓ Skrýt splněné') + '</button></div>'
+      + '<div class="pc-tools"><button class="linklike" data-action="toggleHide">' + (hide ? '👁 Zobrazit i splněné' : '✓ Skrýt splněné') + '</button></div>'
       + '</div>';
   }
 
   html += '<div class="toolbar">'
     + '<button class="btn small" data-action="vacAll" aria-label="Hromadné prázdniny" title="Hromadné prázdniny">🏖️</button>'
-    + '<button class="btn small' + (editMode ? ' primary' : '') + '" data-action="toggleEdit">' + (editMode ? '✓ Hotovo' : '✏️ Upravit') + '</button>'
-    + '<button class="btn small" data-action="addHabit">＋ Přidat návyk</button>'
+    + '<button class="btn small' + (editMode ? ' primary' : '') + '" data-action="toggleEdit" aria-label="' + (editMode ? 'Hotovo' : 'Upravit') + '" title="' + (editMode ? 'Hotovo' : 'Upravit') + '">' + (editMode ? '✓' : '✏️') + '</button>'
+    + '<button class="btn small" data-action="addHabit" aria-label="Přidat návyk" title="Přidat návyk">＋</button>'
     + '</div>';
 
   if (!hs.length){
@@ -1788,9 +1792,9 @@ function renderDay(){
       }
     }
     if (vacHs.length){
-      html += '<div class="card vac-card">🏖️ <strong>Na prázdninách:</strong> '
+      html += '<div class="card vac-card"><span class="vac-emo">🏖️</span><span class="vac-tx"><strong>Na prázdninách</strong><span>'
         + vacHs.map(h => esc(h.name) + (vacUntil(h, selectedDate) ? ' (do ' + fmtKeyShort(vacUntil(h, selectedDate)) + ')' : '')).join(', ')
-        + '</div>';
+        + '</span></span></div>';
     }
   }
 
@@ -1850,13 +1854,13 @@ function weekHtml(){
       if (h.type === 'check'){
         const on = isDone(h, key);
         grid += '<button class="wk-cell" data-action="cellToggle" data-id="' + esc(h.id) + '" data-key="' + key + '"' + (future ? ' disabled' : '') + vt + ' aria-label="' + esc(h.name) + ' ' + d.getDate() + '.' + (d.getMonth() + 1) + '.">'
-          + '<span class="wk-dot' + (on ? ' on' : '') + (off && !on ? ' off' : '') + (frz && !on ? ' frz' : '') + '">' + (on ? '✓' : (frz ? '🧊' : '')) + '</span></button>';
+          + '<span class="wk-dot' + (on ? ' on' : '') + (off && !on ? ' off' : '') + (frz && !on ? ' frz' : '') + '">' + (on ? '✓' : '') + '</span></button>';
       } else {
         const v = numVal(h, key);
         const on = isDone(h, key);
         const cls = (on ? ' on' : (v > 0 ? ' part' : '')) + (off && !on && v <= 0 ? ' wk-off' : '');
         grid += '<button class="wk-cell" data-action="gotoDay" data-key="' + key + '"' + (future ? ' disabled' : '') + vt + '>'
-          + '<span class="wk-num' + cls + '">' + (v > 0 ? fmtNum(v) : (frz ? '🧊' : '·')) + '</span></button>';
+          + '<span class="wk-num' + cls + (frz && v <= 0 ? ' frz' : '') + '">' + (v > 0 ? fmtNum(v) : (frz ? '•' : '·')) + '</span></button>';
       }
     }
   }
@@ -1899,9 +1903,8 @@ function monthHtml(){
       continue;
     }
     const s = dayStats(key);
-    const extra = (data.moods[key] != null ? '<span class="hm-mood">' + MOODS[data.moods[key]] + '</span>' : '')
-      + (data.notes[key] ? '<i class="hm-nd"></i>' : '');
-    const tExtra = (data.moods[key] != null ? ' · nálada ' + MOODS[data.moods[key]] : '') + (data.notes[key] ? ' · 📝' : '');
+    const extra = data.notes[key] ? '<i class="hm-nd"></i>' : '';
+    const tExtra = data.notes[key] ? ' · 📝' : '';
     if (!s.total && activeHabits().length){
       cells += '<button class="hm vacday' + (sameDay(d, t) ? ' today' : '') + '" data-action="gotoDay" data-key="' + key + '" title="' + day + '. ' + (first.getMonth() + 1) + '. — nic naplánováno (prázdniny / volno)' + tExtra + '"><span>' + day + '</span>' + extra + '</button>';
       continue;
@@ -1969,13 +1972,9 @@ function renderStats(){
       + '<p class="hint">Streak i úspěšnost respektují nastavenou frekvenci — u „vybraných dnů“ se počítají jen naplánované dny, u týdenních/měsíčních celé týdny či měsíce (úspěšnost z posledních 4 týdnů, resp. 3 měsíců).</p>';
   }
 
-  html += '<div class="sec-title">🎨 Barva pozadí</div>'
-    + '<div class="card"><div class="bg-row">'
-    + BG_PRESETS.map(p => {
-        const on = (data.bg || 'default') === p.id;
-        return '<button class="bg-sw' + (on ? ' on' : '') + '" style="background:' + p.bg + '" data-action="setBg" data-bg="' + p.id + '" aria-label="' + p.name + '" title="' + p.name + '">' + (on ? '✓' : '') + '</button>';
-      }).join('')
-    + '</div></div>';
+  html += '<div class="sec-title">🎨 Vzhled</div>'
+    + '<div class="card"><div class="row-btns"><button class="btn" data-action="openTheme">🎨 Přizpůsobit vzhled</button></div>'
+    + '<p class="muted" style="margin:10px 0 0;font-size:13.5px">Pozadí, barva karet i textu. Změny se přenáší v záloze.</p></div>';
 
   html += '<div class="card"><div class="sec-title" style="margin-top:0">Záloha a přenos dat</div>'
     + '<p class="muted" style="margin:6px 0 12px">Data se ukládají jen v tomto zařízení a prohlížeči (localStorage) — mezi Macem a iPhonem se nesynchronizují. Pro přenos vyexportujte JSON zálohu, uložte ji na iCloud Drive a na druhém zařízení ji importujte.</p>'
@@ -2221,6 +2220,28 @@ function openVacAllModal(){
     + '</div>'
   );
 }
+function themeSwRow(list, cur, action){
+  return '<div class="bg-row">' + list.map(c => {
+    const on = c === cur;
+    return '<button class="bg-sw' + (on ? ' on' : '') + '" style="background:' + c + '" data-action="' + action + '" data-v="' + c + '" aria-label="Barva ' + c + '"><span class="sw-check' + (lum(c) < 0.5 ? ' lite' : '') + '">' + (on ? '✓' : '') + '</span></button>';
+  }).join('') + '</div>';
+}
+function openThemeModal(){
+  const t = normTheme(data.theme);
+  openModal(
+    '<div class="sheet-title">🎨 Vzhled</div>'
+    + '<div class="field-lbl theme-lbl">Pozadí</div>' + themeSwRow(THEME_BG, t.bg, 'setThemeBg')
+    + '<div class="field-lbl theme-lbl">Karty a řádky</div>' + themeSwRow(THEME_CARD, t.card, 'setThemeCard')
+    + '<div class="field-lbl theme-lbl">Text</div>'
+    + '<div class="seg">'
+    +   [['auto', 'Automaticky'], ['dark', 'Tmavý'], ['light', 'Světlý']].map(o =>
+          '<button class="seg-btn' + (t.text === o[0] ? ' on' : '') + '" data-action="setThemeText" data-v="' + o[0] + '">' + o[1] + '</button>').join('')
+    + '</div>'
+    + '<p class="hint" style="margin-top:10px">Změny se projeví hned a ukládají se i do zálohy.</p>'
+    + '<div class="modal-actions"><button class="btn" data-action="resetTheme">Obnovit výchozí</button>'
+    + '<button class="btn primary" data-action="closeModal">Hotovo</button></div>'
+  );
+}
 const MEAL_LABELS = { b: '🥣 Snídaně', l: '🍲 Oběd', d: '🍽️ Večeře', sn: '🍏 Svačiny' };
 function openMealHistModal(field){
   const items = mealHistory(field);
@@ -2383,15 +2404,11 @@ document.addEventListener('click', ev => {
     case 'calMonth': calView = 'month'; render(); break;
     case 'addSnack': mealSnackUI.n = Math.min(12, mealSnackUI.n + 1); render(); break;
     case 'toggleHide': data.hideDone = !data.hideDone; save(); render(); break;
-    case 'setBg': data.bg = el.dataset.bg; save(); applyBg(); render(); break;
-    case 'setMood': {
-      const key = dateKey(selectedDate);
-      const m = Number(el.dataset.m);
-      if (data.moods[key] === m) delete data.moods[key];
-      else data.moods[key] = m;
-      save(); render();
-      break;
-    }
+    case 'openTheme': openThemeModal(); break;
+    case 'setThemeBg': data.theme = normTheme({ ...normTheme(data.theme), bg: el.dataset.v }); save(); applyTheme(); openThemeModal(); break;
+    case 'setThemeCard': data.theme = normTheme({ ...normTheme(data.theme), card: el.dataset.v }); save(); applyTheme(); openThemeModal(); break;
+    case 'setThemeText': data.theme = normTheme({ ...normTheme(data.theme), text: el.dataset.v }); save(); applyTheme(); openThemeModal(); break;
+    case 'resetTheme': data.theme = { ...THEME_DEFAULT }; save(); applyTheme(); openThemeModal(); break;
     case 'mealHist': openMealHistModal(el.dataset.f); break;
     case 'pickMeal': {
       const f = el.dataset.f;
@@ -2756,7 +2773,7 @@ function toast(msg, isErr){
 
 /* ============ Hlavní render ============ */
 function render(){
-  applyBg();
+  applyTheme();
   ['day', 'cal', 'meals', 'stats', 'plan'].forEach(v => { $('#view-' + v).hidden = v !== tab; });
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('on', b.dataset.tab === tab));
   if (tab === 'day') renderDay();
