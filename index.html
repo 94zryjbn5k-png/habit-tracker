@@ -415,6 +415,75 @@ details[open] > summary .chev{transform:rotate(90deg);}
 textarea.meal-f{min-height:58px;}
 input.meal-sn{min-height:46px;resize:none;margin-bottom:8px;}
 .add-snack{width:100%;min-height:42px;font-size:14px;}
+.meal-lbl{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.hist-btn{
+  min-width:36px;min-height:30px;border-radius:9px;background:var(--btn-bg);
+  font-size:15px;display:inline-flex;align-items:center;justify-content:center;
+}
+.hist-btn:active{transform:scale(.92);}
+.mh-list{max-height:52vh;max-height:52dvh;overflow-y:auto;margin:0 -4px;}
+.mh-row{
+  width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;
+  padding:11px 8px;border-bottom:1px solid var(--line);font-size:15px;text-align:left;
+}
+.mh-row:last-child{border-bottom:0;}
+.mh-row:active{background:var(--btn-bg);}
+.mh-t{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.mh-n{flex:0 0 auto;font-size:12.5px;font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums;}
+
+/* ---------- nálada + přepínač splněných ---------- */
+.pc-tools{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:11px;}
+.mood-mini{display:inline-flex;gap:4px;}
+.mood-btn{
+  width:34px;height:34px;border-radius:10px;font-size:19px;display:inline-flex;align-items:center;justify-content:center;
+  filter:grayscale(1);opacity:.55;transition:filter .15s,opacity .15s,transform .1s;
+}
+.mood-btn.on{filter:none;opacity:1;background:var(--green-soft);}
+.mood-btn:active{transform:scale(.88);}
+.pc-tools .linklike{white-space:nowrap;}
+
+/* ---------- poznámky ---------- */
+.note-dot{font-size:12px;opacity:.85;}
+.hm{flex-direction:column;gap:0;line-height:1.1;position:relative;}
+.hm-mood{font-size:9.5px;line-height:1;margin-top:1px;}
+.hm-nd{position:absolute;top:4px;right:4px;width:5px;height:5px;border-radius:50%;background:var(--accent);}
+
+/* ---------- zmrazení ---------- */
+.wk-dot.frz{color:inherit;font-size:13px;}
+.wk-dot.frz::after{border-style:dotted;opacity:.6;}
+
+/* ---------- časovač ---------- */
+.tmr{box-shadow:none;background:var(--btn-bg);min-width:40px;min-height:40px;font-size:17px;flex:0 0 auto;}
+#timerpill{
+  position:fixed;left:50%;transform:translateX(-50%);bottom:calc(74px + env(safe-area-inset-bottom));z-index:60;
+  background:var(--accent);color:#fff;border-radius:999px;padding:8px 8px 8px 16px;
+  display:flex;align-items:center;gap:8px;font-size:14.5px;font-weight:700;font-variant-numeric:tabular-nums;
+  box-shadow:0 4px 16px rgba(0,0,0,.25);white-space:nowrap;max-width:92vw;
+}
+#timerpill[hidden]{display:none;}
+#timerpill button{
+  width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.22);color:#fff;
+  display:inline-flex;align-items:center;justify-content:center;font-size:14px;flex:0 0 auto;
+}
+
+/* ---------- konfety ---------- */
+#fx{position:fixed;inset:0;pointer-events:none;z-index:300;overflow:hidden;}
+.fx-p{position:absolute;top:-30px;animation-name:fxfall;animation-timing-function:linear;animation-fill-mode:forwards;}
+@keyframes fxfall{to{transform:translateY(115vh) rotate(520deg);}}
+
+/* ---------- milníky ---------- */
+.mile-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;}
+@media (min-width:600px){.mile-grid{grid-template-columns:repeat(3,minmax(0,1fr));}}
+.mile{
+  border:1.5px dashed var(--line);border-radius:12px;padding:10px 8px;text-align:center;
+  display:flex;flex-direction:column;gap:2px;opacity:.5;min-width:0;
+}
+.mile.got{border-style:solid;border-color:var(--green);background:var(--green-soft);opacity:1;}
+.mile-e{font-size:22px;line-height:1.2;}
+.mile.got .mile-e{filter:none;}
+.mile:not(.got) .mile-e{filter:grayscale(1);}
+.mile-t{font-size:12.5px;font-weight:700;line-height:1.25;}
+.mile-d{font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums;}
 .modal-actions{display:flex;gap:10px;margin-top:20px;}
 .modal-actions .btn{flex:1;}
 .modal-actions.col{flex-direction:column;}
@@ -764,10 +833,15 @@ function defaultData(){
       order: i,
       createdAt: now,
       freq: d[5] ? { type: d[5] } : { type: 'daily' },
-      vacations: []
+      vacations: [],
+      timerMin: null
     })),
     entries: {},
     meals: {},
+    moods: {},
+    notes: {},
+    milestones: {},
+    hideDone: false,
     plan: DEFAULT_PLAN
   };
 }
@@ -792,6 +866,7 @@ function validateData(obj){
       if (['daily', 'days', 'weekly', 'monthly'].indexOf(f.type) === -1) return 'Návyk „' + h.name + '“ má neznámou frekvenci.';
       if (f.type === 'days' && (!Array.isArray(f.days) || !f.days.length || f.days.some(d => !Number.isInteger(d) || d < 0 || d > 6))) return 'Návyk „' + h.name + '“ má neplatné dny v týdnu.';
     }
+    if (h.timerMin != null && !(Number.isInteger(h.timerMin) && h.timerMin >= 1 && h.timerMin <= 600)) return 'Návyk „' + h.name + '“ má neplatný časovač.';
     if (h.vacations != null){
       if (!Array.isArray(h.vacations)) return 'Návyk „' + h.name + '“ má neplatné prázdniny.';
       for (const v of h.vacations){
@@ -812,6 +887,25 @@ function validateData(obj){
       if (v.sn != null && (!Array.isArray(v.sn) || v.sn.some(x => typeof x !== 'string'))) return 'Svačiny pro ' + k + ' mají špatný formát.';
     }
   }
+  if (obj.moods != null){
+    if (typeof obj.moods !== 'object' || Array.isArray(obj.moods)) return 'Nálady („moods“) mají špatný formát.';
+    for (const k of Object.keys(obj.moods)){
+      if (!DATE_RE.test(k)) return 'Neplatné datum v náladách: ' + k;
+      if (!Number.isInteger(obj.moods[k]) || obj.moods[k] < 0 || obj.moods[k] > 3) return 'Neplatná nálada pro ' + k + '.';
+    }
+  }
+  if (obj.notes != null){
+    if (typeof obj.notes !== 'object' || Array.isArray(obj.notes)) return 'Poznámky („notes“) mají špatný formát.';
+    for (const k of Object.keys(obj.notes)){
+      if (!DATE_RE.test(k)) return 'Neplatné datum v poznámkách: ' + k;
+      const day = obj.notes[k];
+      if (!day || typeof day !== 'object' || Array.isArray(day)) return 'Poznámky pro ' + k + ' mají špatný formát.';
+      for (const hid of Object.keys(day)){
+        if (typeof day[hid] !== 'string') return 'Poznámka pro ' + k + ' není text.';
+      }
+    }
+  }
+  if (obj.milestones != null && (typeof obj.milestones !== 'object' || Array.isArray(obj.milestones))) return 'Milníky mají špatný formát.';
   if (obj.entries != null){
     if (typeof obj.entries !== 'object' || Array.isArray(obj.entries)) return 'Záznamy („entries“) mají špatný formát.';
     for (const k of Object.keys(obj.entries)){
@@ -833,6 +927,10 @@ function normalizeData(obj){
     habits: [],
     entries: {},
     meals: {},
+    moods: {},
+    notes: {},
+    milestones: {},
+    hideDone: !!obj.hideDone,
     plan: typeof obj.plan === 'string' ? obj.plan.slice(0, 50000) : DEFAULT_PLAN
   };
   const convertedWork = new Set();
@@ -848,7 +946,8 @@ function normalizeData(obj){
       order: typeof h.order === 'number' && isFinite(h.order) ? h.order : i,
       createdAt: typeof h.createdAt === 'number' ? h.createdAt : Date.now(),
       freq: normFreq(h.freq),
-      vacations: normVacs(h.vacations)
+      vacations: normVacs(h.vacations),
+      timerMin: (Number.isInteger(h.timerMin) && h.timerMin >= 1 && h.timerMin <= 600) ? h.timerMin : null
     };
     // jednorázová migrace: výchozí Práce (ano/ne denně) → 85 h měsíčně, součtově
     if (nh.name === 'Práce' && nh.type === 'check' && nh.freq.type === 'daily'){
@@ -862,6 +961,29 @@ function normalizeData(obj){
     for (const k of Object.keys(obj.meals)){
       const m = normMeal(obj.meals[k]);
       if (m) out.meals[k] = m;
+    }
+  }
+  if (obj.moods){
+    for (const k of Object.keys(obj.moods)){
+      const v = obj.moods[k];
+      if (DATE_RE.test(k) && Number.isInteger(v) && v >= 0 && v <= 3) out.moods[k] = v;
+    }
+  }
+  if (obj.notes){
+    for (const k of Object.keys(obj.notes)){
+      if (!DATE_RE.test(k) || !obj.notes[k] || typeof obj.notes[k] !== 'object') continue;
+      const day = {};
+      for (const hid of Object.keys(obj.notes[k])){
+        const t = obj.notes[k][hid];
+        if (typeof t === 'string' && t.trim()) day[String(hid)] = t.slice(0, 500);
+      }
+      if (Object.keys(day).length) out.notes[k] = day;
+    }
+  }
+  if (obj.milestones && typeof obj.milestones === 'object'){
+    for (const id of Object.keys(obj.milestones)){
+      const v = obj.milestones[id];
+      if (typeof v === 'string' && DATE_RE.test(v)) out.milestones[String(id).slice(0, 40)] = v;
     }
   }
   if (obj.entries){
@@ -891,6 +1013,7 @@ function checkStorage(){
 function save(){
   if (!storageOk) return;
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch (e) {}
+  checkMilestones();
 }
 function load(){
   if (storageOk){
@@ -911,6 +1034,8 @@ function getVal(key, habitId){
   return day ? day[habitId] : undefined;
 }
 function setVal(key, habitId, value){
+  const isTodayKey = key === dateKey(today());
+  const before = isTodayKey ? dayStats(key).pct : -1;
   let day = data.entries[key];
   if (value === undefined || value === false || value === 0 || value === null){
     if (day){
@@ -922,6 +1047,10 @@ function setVal(key, habitId, value){
     day[habitId] = value;
   }
   save();
+  if (isTodayKey && before > -1 && before < 100){
+    const after = dayStats(key);
+    if (after.total && after.pct === 100) celebrate('🎉 Perfektní den — vše splněno!');
+  }
 }
 function isDone(habit, key){
   const v = getVal(key, habit.id);
@@ -1042,6 +1171,200 @@ function normMeal(v){
 function mealObj(key){
   return normMeal(data.meals[key]) || { b: '', l: '', d: '', sn: [], note: '' };
 }
+function mealHistory(field){
+  const map = new Map();
+  const add = (txt, k) => {
+    const t = String(txt || '').trim();
+    if (!t) return;
+    const e = map.get(t) || { t, n: 0, last: '' };
+    e.n++;
+    if (k > e.last) e.last = k;
+    map.set(t, e);
+  };
+  for (const k of Object.keys(data.meals)){
+    const m = normMeal(data.meals[k]);
+    if (!m) continue;
+    if (field === 'sn') m.sn.forEach(s => add(s, k));
+    else add(m[field], k);
+  }
+  return [...map.values()].sort((a, b) => b.n - a.n || (a.last < b.last ? 1 : -1)).slice(0, 30);
+}
+
+/* ============ Nálada dne ============ */
+const MOODS = ['😀', '🙂', '😐', '😞'];
+
+/* ============ Poznámky ke dni ============ */
+function getNote(key, hid){
+  return (data.notes[key] && data.notes[key][hid]) || '';
+}
+function setNote(key, hid, text){
+  const t = String(text || '').trim().slice(0, 500);
+  if (t){
+    if (!data.notes[key]) data.notes[key] = {};
+    data.notes[key][hid] = t;
+  } else if (data.notes[key]){
+    delete data.notes[key][hid];
+    if (!Object.keys(data.notes[key]).length) delete data.notes[key];
+  }
+  save();
+}
+
+/* ============ Zmrazení streaku (1× týdně) ============ */
+function weekMissDone(h, mon){
+  const t = today();
+  let miss = 0, done = 0;
+  for (let i = 0; i < 7; i++){
+    const d = addDays(mon, i);
+    if (!isScheduled(h, d)) continue;
+    if (isDone(h, dateKey(d))) done++;
+    else if (d < t) miss++;
+  }
+  return { miss, done };
+}
+function frozenDay(h, d){
+  if (isPeriodic(h)) return false;
+  if (d >= today()) return false;
+  if (!isScheduled(h, d) || isDone(h, dateKey(d))) return false;
+  const s = weekMissDone(h, startOfWeek(d));
+  return s.miss === 1 && s.done >= 1; // max 1 prošvihnutý den v týdnu, a jinak ten týden makáš
+}
+
+/* ============ Milníky ============ */
+function bestLongestDaily(){
+  let m = 0;
+  for (const h of data.habits){
+    if (isPeriodic(h)) continue;
+    const s = longestStreak(h);
+    if (s > m) m = s;
+  }
+  return m;
+}
+function totalDone(){
+  let c = 0;
+  for (const k of Object.keys(data.entries)){
+    for (const hid of Object.keys(data.entries[k])){
+      const h = habitById(hid);
+      if (h && isDone(h, k)) c++;
+    }
+  }
+  return c;
+}
+function totalHours(){
+  let s = 0;
+  const hrs = data.habits.filter(h => h.type === 'number' && String(h.unit).trim().toLowerCase() === 'h');
+  for (const k of Object.keys(data.entries)){
+    for (const h of hrs){
+      const v = getVal(k, h.id);
+      if (typeof v === 'number') s += v;
+    }
+  }
+  return s;
+}
+function perfectDays(){
+  let c = 0;
+  for (const k of Object.keys(data.entries)){
+    const s = dayStats(k);
+    if (s.total && s.done === s.total) c++;
+  }
+  return c;
+}
+const MILESTONES = [
+  { id: 'streak7',   e: '🔥', t: 'Série 7 dní',          test: () => bestLongestDaily() >= 7 },
+  { id: 'streak30',  e: '🔥', t: 'Série 30 dní',         test: () => bestLongestDaily() >= 30 },
+  { id: 'streak100', e: '🏆', t: 'Série 100 dní',        test: () => bestLongestDaily() >= 100 },
+  { id: 'done100',   e: '✅', t: '100 splnění',          test: () => totalDone() >= 100 },
+  { id: 'done500',   e: '✅', t: '500 splnění',          test: () => totalDone() >= 500 },
+  { id: 'done1000',  e: '🎯', t: '1 000 splnění',        test: () => totalDone() >= 1000 },
+  { id: 'perfect10', e: '🌟', t: '10 perfektních dní',   test: () => perfectDays() >= 10 },
+  { id: 'perfect50', e: '💎', t: '50 perfektních dní',   test: () => perfectDays() >= 50 },
+  { id: 'hours100',  e: '⏱️', t: '100 hodin',            test: () => totalHours() >= 100 },
+  { id: 'hours500',  e: '⏱️', t: '500 hodin',            test: () => totalHours() >= 500 }
+];
+let msGuard = false;
+function checkMilestones(){
+  if (msGuard || !data) return;
+  msGuard = true;
+  const got = [];
+  for (const m of MILESTONES){
+    if (!data.milestones[m.id] && m.test()){
+      data.milestones[m.id] = dateKey(today());
+      got.push(m.e + ' ' + m.t);
+    }
+  }
+  if (got.length){
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch (e) {}
+    celebrate('🏅 Milník: ' + got.join(' · '));
+  }
+  msGuard = false;
+}
+
+/* ============ Oslava 🎉 ============ */
+function confetti(){
+  const old = document.getElementById('fx');
+  if (old) old.remove();
+  const fx = document.createElement('div');
+  fx.id = 'fx';
+  const em = ['🎉', '✨', '🎊', '⭐', '💚'];
+  let s = '';
+  for (let i = 0; i < 36; i++){
+    s += '<span class="fx-p" style="left:' + Math.round(Math.random() * 100) + '%;font-size:' + (14 + Math.round(Math.random() * 12)) + 'px;animation-duration:' + (1.6 + Math.random() * 1.2).toFixed(2) + 's;animation-delay:' + (Math.random() * 0.4).toFixed(2) + 's">' + em[i % em.length] + '</span>';
+  }
+  fx.innerHTML = s;
+  document.body.appendChild(fx);
+  setTimeout(() => fx.remove(), 3400);
+}
+function celebrate(msg){
+  confetti();
+  toast(msg);
+}
+
+/* ============ Časovač ============ */
+let timerState = null;
+let timerInt = null;
+function timerPill(){
+  let p = document.getElementById('timerpill');
+  if (!p){
+    p = document.createElement('div');
+    p.id = 'timerpill';
+    p.innerHTML = '<span id="tp-txt"></span><button data-action="cancelTimer" aria-label="Zrušit časovač">✕</button>';
+    document.body.appendChild(p);
+  }
+  return p;
+}
+function startTimer(h, key){
+  timerState = { id: h.id, key, name: h.name, endsAt: Date.now() + h.timerMin * 60000 };
+  timerPill().hidden = false;
+  if (!timerInt) timerInt = setInterval(timerTick, 500);
+  timerTick();
+}
+function stopTimer(){
+  timerState = null;
+  if (timerInt){ clearInterval(timerInt); timerInt = null; }
+  const p = document.getElementById('timerpill');
+  if (p) p.hidden = true;
+}
+function timerTick(){
+  if (!timerState) return;
+  const rem = timerState.endsAt - Date.now();
+  if (rem <= 0){
+    const { id, key, name } = timerState;
+    stopTimer();
+    const h = habitById(id);
+    if (h && h.type === 'check' && !isDone(h, key)){
+      popRef = { id, key };
+      setVal(key, id, true);
+      toast('⏱️ ' + name + ' — hotovo, odškrtnuto ✓');
+    } else {
+      toast('⏱️ ' + name + ' — čas doběhl');
+    }
+    render();
+    return;
+  }
+  const sec = Math.ceil(rem / 1000);
+  const mm = Math.floor(sec / 60), ss = sec % 60;
+  const el = document.getElementById('tp-txt');
+  if (el) el.textContent = '⏱️ ' + timerState.name + ' · ' + mm + ':' + String(ss).padStart(2, '0');
+}
 function freqLabel(h){
   const f = habitFreq(h);
   if (f.type === 'days') return f.days.map(i => WD[i]).join(' · ');
@@ -1120,7 +1443,10 @@ function currentStreak(habit){
   let n = 0, guard = 0;
   while (guard++ < 20000){
     if (!isScheduled(habit, d)){ d = addDays(d, -1); continue; } // nenaplánované a prázdninové dny se přeskakují
-    if (!isDone(habit, dateKey(d))) break;
+    if (!isDone(habit, dateKey(d))){
+      if (frozenDay(habit, d)){ d = addDays(d, -1); continue; } // 🧊 zmrazení — max 1 prošvih týdně
+      break;
+    }
     n++;
     d = addDays(d, -1);
   }
@@ -1160,7 +1486,7 @@ function longestStreak(habit){
   for (let d = doneDays[0]; d <= end && guard++ < 20000; d = addDays(d, 1)){
     if (!isScheduled(habit, d)) continue; // nenaplánované a prázdninové dny se přeskakují
     if (isDone(habit, dateKey(d))){ run++; if (run > best) best = run; }
-    else run = 0;
+    else if (!frozenDay(habit, d)) run = 0; // 🧊 zmrazený den sérii nepřeruší
   }
   return best;
 }
@@ -1229,10 +1555,13 @@ function streakBadge(h){
 function dayRow(h, key, isFuture){
   const done = isDone(h, key);
   const pop = popRef && popRef.id === h.id && popRef.key === key;
+  const noteDot = getNote(key, h.id) ? ' <span class="note-dot" aria-label="Má poznámku">📝</span>' : '';
   if (h.type === 'check'){
+    const tmr = (h.timerMin && !done) ? '<button class="icon-btn tmr" data-action="startTimer" data-id="' + esc(h.id) + '" data-key="' + key + '" aria-label="Spustit časovač ' + h.timerMin + ' min">⏱️</button>' : '';
     return '<div class="habit-row check' + (done ? ' done' : '') + '" role="checkbox" aria-checked="' + done + '" tabindex="0" data-action="rowToggle" data-id="' + esc(h.id) + '" aria-label="' + esc(h.name) + '">'
       + '<span class="pop-wrap' + (pop ? ' pop' : '') + '">' + habitBadge(h) + '</span>'
-      + '<span class="h-main"><span class="h-name">' + esc(h.name) + '</span></span>'
+      + '<span class="h-main"><span class="h-name">' + esc(h.name) + noteDot + '</span></span>'
+      + tmr
       + streakBadge(h)
       + '<span class="checkbox" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path class="' + (pop ? 'draw' : '') + '" d="M5 13l4 4L19 7"/></svg></span>'
       + '</div>';
@@ -1243,7 +1572,7 @@ function dayRow(h, key, isFuture){
   return '<div class="habit-row num' + (done ? ' done' : '') + '" data-id="' + esc(h.id) + '">'
     + '<span class="pop-wrap' + (pop ? ' pop' : '') + '">' + habitBadge(h) + '</span>'
     + '<span class="h-main">'
-    +   '<span class="h-name">' + esc(h.name) + '</span>'
+    +   '<span class="h-name">' + esc(h.name) + noteDot + '</span>'
     +   '<span class="h-meta"><span class="h-goal">' + fmtNum(val) + ' / ' + fmtNum(goal) + (h.unit ? ' ' + esc(h.unit) : '') + '</span>' + (done ? ' ✓' : '') + '</span>'
     +   '<span class="mini-bar"><span style="width:' + pct + '%"></span></span>'
     + '</span>'
@@ -1265,11 +1594,14 @@ function periodicRow(h, key){
   const status = done
     ? '✓ splněno' + (scopeDone === key ? '' : ' — ' + fmtKeyShort(scopeDone))
     : (f.type === 'weekly' ? 'tento týden zatím ne' : 'tento měsíc zatím ne');
+  const noteDot = getNote(key, h.id) ? ' <span class="note-dot" aria-label="Má poznámku">📝</span>' : '';
   if (h.type === 'check'){
+    const tmr = (h.timerMin && !done) ? '<button class="icon-btn tmr" data-action="startTimer" data-id="' + esc(h.id) + '" data-key="' + key + '" aria-label="Spustit časovač ' + h.timerMin + ' min">⏱️</button>' : '';
     return '<div class="habit-row check' + (done ? ' done' : '') + '" role="checkbox" aria-checked="' + done + '" tabindex="0" data-action="rowToggle" data-id="' + esc(h.id) + '" aria-label="' + esc(h.name) + '">'
       + '<span class="pop-wrap' + (pop ? ' pop' : '') + '">' + habitBadge(h) + '</span>'
-      + '<span class="h-main"><span class="h-name">' + esc(h.name) + '</span>'
+      + '<span class="h-main"><span class="h-name">' + esc(h.name) + noteDot + '</span>'
       +   '<span class="h-meta"><span class="h-goal">' + status + '</span></span></span>'
+      + tmr
       + streakBadge(h)
       + '<span class="checkbox" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path class="' + (pop ? 'draw' : '') + '" d="M5 13l4 4L19 7"/></svg></span>'
       + '</div>';
@@ -1285,7 +1617,7 @@ function periodicRow(h, key){
   return '<div class="habit-row num' + (scopeSum >= goal ? ' done' : '') + '" data-id="' + esc(h.id) + '">'
     + '<span class="pop-wrap' + (pop ? ' pop' : '') + '">' + habitBadge(h) + '</span>'
     + '<span class="h-main">'
-    +   '<span class="h-name">' + esc(h.name) + '</span>'
+    +   '<span class="h-name">' + esc(h.name) + noteDot + '</span>'
     +   '<span class="h-meta"><span class="h-goal">' + numStatus + '</span></span>'
     +   '<span class="mini-bar"><span style="width:' + pct + '%"></span></span>'
     + '</span>'
@@ -1333,9 +1665,18 @@ function renderDay(){
     + '<button class="icon-btn" data-action="nextDay" aria-label="Další den"' + (isToday ? ' disabled' : '') + '>›</button>'
     + '</div>';
 
+  const hide = !!data.hideDone && !editMode;
+  const shownDay = hide ? dayHs.filter(h => !isDone(h, key)) : dayHs;
+  const shownWeek = hide ? weekHs.filter(h => !doneInWeek(h, startOfWeek(selectedDate))) : weekHs;
+  const shownMonth = hide ? monthHs.filter(h => !doneInMonth(h, firstOfMonth(selectedDate))) : monthHs;
+  const hiddenCnt = (dayHs.length - shownDay.length) + (weekHs.length - shownWeek.length) + (monthHs.length - shownMonth.length);
+
   if (dayHs.length){
     html += '<div class="card progress-card"><div class="progress-txt"><strong>Splněno ' + st.done + ' z ' + st.total + '</strong><span class="muted">' + st.pct + ' %</span></div>'
-      + '<div class="bar"><div class="bar-fill" style="width:' + st.pct + '%"></div></div></div>';
+      + '<div class="bar"><div class="bar-fill" style="width:' + st.pct + '%"></div></div>'
+      + '<div class="pc-tools"><span class="mood-mini">' + MOODS.map((m, i) => '<button class="mood-btn' + (data.moods[key] === i ? ' on' : '') + '" data-action="setMood" data-m="' + i + '" aria-label="Nálada ' + m + '">' + m + '</button>').join('') + '</span>'
+      + '<button class="linklike" data-action="toggleHide">' + (hide ? '👁 Zobrazit i splněné' : '✓ Skrýt splněné') + '</button></div>'
+      + '</div>';
   }
 
   html += '<div class="toolbar">'
@@ -1348,20 +1689,27 @@ function renderDay(){
     html += '<div class="card empty">Zatím tu nejsou žádné návyky.<br>Začněte tlačítkem <strong>＋ Přidat návyk</strong>.</div>';
   } else if (editMode){
     html += '<div class="habit-list">' + hs.map((h, i) => editRow(h, i, hs.length)).join('') + '</div>'
-      + '<p class="hint">Pořadí změníte přetažením (na počítači) nebo šipkami ↑ ↓. Ikonou 🏖️ nastavíte návyku prázdniny.</p>';
+      + '<p class="hint">Pořadí změníte přetažením (na počítači) nebo šipkami ↑ ↓. Ikonou 🏖️ nastavíte návyku prázdniny. Podržením prstu na návyku (mimo režim úprav) přidáte poznámku ke dni.</p>';
   } else {
     const hasSections = weekHs.length || monthHs.length;
-    if (dayHs.length){
-      if (hasSections) html += '<div class="sec-title">Denní</div>';
-      html += '<div class="habit-list">' + dayHs.map(h => dayRow(h, key, false)).join('') + '</div>';
-    } else if (offCnt){
-      html += '<div class="card empty">Na ' + (isToday ? 'dnešek' : 'tento den') + ' nejsou naplánované žádné denní návyky. 🌤️</div>';
-    }
-    if (weekHs.length){
-      html += '<div class="sec-title">Jednou týdně</div><div class="habit-list">' + weekHs.map(h => periodicRow(h, key)).join('') + '</div>';
-    }
-    if (monthHs.length){
-      html += '<div class="sec-title">Jednou měsíčně</div><div class="habit-list">' + monthHs.map(h => periodicRow(h, key)).join('') + '</div>';
+    if (hide && !shownDay.length && !shownWeek.length && !shownMonth.length && hiddenCnt){
+      html += '<div class="card empty">🎉 Všechno hotovo — splněno ' + hiddenCnt + ' ' + plural(hiddenCnt, 'návyk', 'návyky', 'návyků') + '.</div>';
+    } else {
+      if (shownDay.length){
+        if (hasSections) html += '<div class="sec-title">Denní</div>';
+        html += '<div class="habit-list">' + shownDay.map(h => dayRow(h, key, false)).join('') + '</div>';
+      } else if (!hide && offCnt){
+        html += '<div class="card empty">Na ' + (isToday ? 'dnešek' : 'tento den') + ' nejsou naplánované žádné denní návyky. 🌤️</div>';
+      }
+      if (shownWeek.length){
+        html += '<div class="sec-title">Jednou týdně</div><div class="habit-list">' + shownWeek.map(h => periodicRow(h, key)).join('') + '</div>';
+      }
+      if (shownMonth.length){
+        html += '<div class="sec-title">Jednou měsíčně</div><div class="habit-list">' + shownMonth.map(h => periodicRow(h, key)).join('') + '</div>';
+      }
+      if (hide && hiddenCnt){
+        html += '<p class="hint">Skryto ' + hiddenCnt + ' splněných.</p>';
+      }
     }
     if (vacHs.length){
       html += '<div class="card vac-card">🏖️ <strong>Na prázdninách:</strong> '
@@ -1421,17 +1769,18 @@ function weekHtml(){
       const future = d > t;
       const vac = !isPeriodic(h) && onVacation(h, d);
       const off = !isPeriodic(h) && !isScheduled(h, d);
-      const vt = vac ? ' title="Prázdniny 🏖️"' : '';
+      const frz = !off && !future && frozenDay(h, d);
+      const vt = vac ? ' title="Prázdniny 🏖️"' : (frz ? ' title="Zmrazeno 🧊 — streak pokračuje"' : '');
       if (h.type === 'check'){
         const on = isDone(h, key);
         grid += '<button class="wk-cell" data-action="cellToggle" data-id="' + esc(h.id) + '" data-key="' + key + '"' + (future ? ' disabled' : '') + vt + ' aria-label="' + esc(h.name) + ' ' + d.getDate() + '.' + (d.getMonth() + 1) + '.">'
-          + '<span class="wk-dot' + (on ? ' on' : '') + (off && !on ? ' off' : '') + '">' + (on ? '✓' : (vac ? '' : '')) + '</span></button>';
+          + '<span class="wk-dot' + (on ? ' on' : '') + (off && !on ? ' off' : '') + (frz && !on ? ' frz' : '') + '">' + (on ? '✓' : (frz ? '🧊' : '')) + '</span></button>';
       } else {
         const v = numVal(h, key);
         const on = isDone(h, key);
         const cls = (on ? ' on' : (v > 0 ? ' part' : '')) + (off && !on && v <= 0 ? ' wk-off' : '');
         grid += '<button class="wk-cell" data-action="gotoDay" data-key="' + key + '"' + (future ? ' disabled' : '') + vt + '>'
-          + '<span class="wk-num' + cls + '">' + (v > 0 ? fmtNum(v) : '·') + '</span></button>';
+          + '<span class="wk-num' + cls + '">' + (v > 0 ? fmtNum(v) : (frz ? '🧊' : '·')) + '</span></button>';
       }
     }
   }
@@ -1474,8 +1823,11 @@ function monthHtml(){
       continue;
     }
     const s = dayStats(key);
+    const extra = (data.moods[key] != null ? '<span class="hm-mood">' + MOODS[data.moods[key]] + '</span>' : '')
+      + (data.notes[key] ? '<i class="hm-nd"></i>' : '');
+    const tExtra = (data.moods[key] != null ? ' · nálada ' + MOODS[data.moods[key]] : '') + (data.notes[key] ? ' · 📝' : '');
     if (!s.total && activeHabits().length){
-      cells += '<button class="hm vacday' + (sameDay(d, t) ? ' today' : '') + '" data-action="gotoDay" data-key="' + key + '" title="' + day + '. ' + (first.getMonth() + 1) + '. — nic naplánováno (prázdniny / volno)">' + day + '</button>';
+      cells += '<button class="hm vacday' + (sameDay(d, t) ? ' today' : '') + '" data-action="gotoDay" data-key="' + key + '" title="' + day + '. ' + (first.getMonth() + 1) + '. — nic naplánováno (prázdniny / volno)' + tExtra + '"><span>' + day + '</span>' + extra + '</button>';
       continue;
     }
     sumPct += s.pct; cnt++;
@@ -1483,7 +1835,7 @@ function monthHtml(){
     if (s.total && s.done){
       lvl = s.pct < 25 ? 'l1' : s.pct < 50 ? 'l2' : s.pct < 75 ? 'l3' : 'l4';
     }
-    cells += '<button class="hm ' + lvl + (sameDay(d, t) ? ' today' : '') + '" data-action="gotoDay" data-key="' + key + '" title="' + day + '. ' + (first.getMonth() + 1) + '. — splněno ' + s.done + ' z ' + s.total + ' (' + s.pct + ' %)">' + day + '</button>';
+    cells += '<button class="hm ' + lvl + (sameDay(d, t) ? ' today' : '') + '" data-action="gotoDay" data-key="' + key + '" title="' + day + '. ' + (first.getMonth() + 1) + '. — splněno ' + s.done + ' z ' + s.total + ' (' + s.pct + ' %)' + tExtra + '"><span>' + day + '</span>' + extra + '</button>';
   }
   const avg = cnt ? Math.round(sumPct / cnt) : 0;
   html += '<div class="card"><div class="hm-grid">' + cells + '</div>'
@@ -1528,6 +1880,16 @@ function renderStats(){
     html += '<div class="card table-card"><table class="stat-table"><thead><tr><th>Návyk</th><th>🔥 Teď</th><th>Max</th><th>Úspěšnost</th></tr></thead><tbody>'
       + hs.map(h => row(h, false)).join('') + arch.map(h => row(h, true)).join('')
       + '</tbody></table></div>'
+      + '<div class="sec-title">🏅 Milníky</div>'
+      + '<div class="card"><div class="mile-grid">'
+      + MILESTONES.map(m => {
+          const got = data.milestones[m.id];
+          return '<div class="mile' + (got ? ' got' : '') + '" title="' + (got ? 'Získáno ' + fmtKeyShort(got) : 'Zatím nezískáno') + '">'
+            + '<span class="mile-e">' + m.e + '</span><span class="mile-t">' + esc(m.t) + '</span>'
+            + (got ? '<span class="mile-d">' + fmtKeyShort(got) + '</span>' : '<span class="mile-d">🔒</span>')
+            + '</div>';
+        }).join('')
+      + '</div></div>'
       + '<p class="hint">Streak i úspěšnost respektují nastavenou frekvenci — u „vybraných dnů“ se počítají jen naplánované dny, u týdenních/měsíčních celé týdny či měsíce (úspěšnost z posledních 4 týdnů, resp. 3 měsíců).</p>';
   }
 
@@ -1557,8 +1919,9 @@ function renderMeals(){
     + '<button class="icon-btn" data-action="nextDay" aria-label="Další den">›</button>'
     + '</div>';
 
-  const group = (id, emoji, label, value, ph) =>
-    '<div class="meal-group"><div class="meal-lbl">' + emoji + ' ' + label + '</div>'
+  const histBtn = f => '<button class="hist-btn" data-action="mealHist" data-f="' + f + '" aria-label="Dřívější jídla">🕘</button>';
+  const group = (id, emoji, label, value, ph, f) =>
+    '<div class="meal-group"><div class="meal-lbl"><span>' + emoji + ' ' + label + '</span>' + histBtn(f) + '</div>'
     + '<textarea id="' + id + '" class="meal-f" rows="2" maxlength="2000" aria-label="' + label + '" placeholder="' + ph + '">' + esc(value) + '</textarea></div>';
 
   let snacks = '';
@@ -1567,10 +1930,10 @@ function renderMeals(){
   }
 
   html += '<div class="card">'
-    + group('meal-b', '🥣', 'Snídaně', m.b, 'např. ovesná kaše s ovocem')
-    + group('meal-l', '🍲', 'Oběd', m.l, 'např. kuře s rýží a zeleninou')
-    + group('meal-d', '🍽️', 'Večeře', m.d, 'např. losos s bramborem')
-    + '<div class="meal-group"><div class="meal-lbl">🍏 Svačiny</div>' + snacks
+    + group('meal-b', '🥣', 'Snídaně', m.b, 'např. ovesná kaše s ovocem', 'b')
+    + group('meal-l', '🍲', 'Oběd', m.l, 'např. kuře s rýží a zeleninou', 'l')
+    + group('meal-d', '🍽️', 'Večeře', m.d, 'např. losos s bramborem', 'd')
+    + '<div class="meal-group"><div class="meal-lbl"><span>🍏 Svačiny</span>' + histBtn('sn') + '</div>' + snacks
     + '<button class="btn ghost small add-snack" data-action="addSnack">＋ Přidat svačinu</button></div>'
     + (m.note ? '<div class="meal-group"><div class="meal-lbl">📝 Poznámka</div>'
         + '<textarea id="meal-note" class="meal-f" rows="2" maxlength="2000" aria-label="Poznámka">' + esc(m.note) + '</textarea></div>' : '')
@@ -1719,6 +2082,7 @@ function openHabitModal(habit){
     + '</div>'
     + '<div class="field"><span class="field-lbl">Jak často</span><div class="seg freq" id="freq-seg">' + freqBtns + '</div></div>'
     + '<div id="days-fields" class="field"' + (f.type === 'days' ? '' : ' hidden') + '><span class="field-lbl">Které dny</span><div class="day-picker">' + dayBtns + '</div></div>'
+    + '<label class="field"><span class="field-lbl">⏱️ Časovač v minutách (volitelné)</span><input id="f-timer" inputmode="numeric" value="' + (h.timerMin || '') + '" placeholder="— bez časovače"></label>'
     + '<div class="modal-actions"><button class="btn" data-action="closeModal">Zrušit</button>'
     + '<button class="btn primary" data-action="saveHabit" data-id="' + (isNew ? '' : esc(h.id)) + '">' + (isNew ? 'Přidat' : 'Uložit') + '</button></div>'
   );
@@ -1773,6 +2137,31 @@ function openVacAllModal(){
     + '</div>'
   );
 }
+const MEAL_LABELS = { b: '🥣 Snídaně', l: '🍲 Oběd', d: '🍽️ Večeře', sn: '🍏 Svačiny' };
+function openMealHistModal(field){
+  const items = mealHistory(field);
+  const rows = items.length
+    ? items.map(it => '<button class="mh-row" data-action="pickMeal" data-f="' + field + '" data-v="' + esc(it.t) + '">'
+        + '<span class="mh-t">' + esc(it.t) + '</span><span class="mh-n">' + (it.n > 1 ? '×' + it.n : fmtKeyShort(it.last)) + '</span></button>').join('')
+    : '<p class="muted">Zatím žádná historie — jak budete zapisovat, objeví se tu inspirace z dřívějších dní.</p>';
+  openModal(
+    '<div class="sheet-title">🕘 ' + MEAL_LABELS[field] + ' — dříve</div>'
+    + '<p class="muted" style="margin:0 0 12px">Ťuknutím vyplníte do dnešního záznamu.</p>'
+    + '<div class="mh-list">' + rows + '</div>'
+    + '<div class="modal-actions"><button class="btn" data-action="closeModal">Zavřít</button></div>'
+  );
+}
+function openNoteModal(h, key){
+  const t = getNote(key, h.id);
+  openModal(
+    '<div class="sheet-title">📝 ' + esc(h.name) + ' — ' + fmtKeyShort(key) + '</div>'
+    + '<textarea id="f-note" class="meal-f" rows="4" maxlength="500" placeholder="např. PR 90 kg, běh bolel, levé koleno…">' + esc(t) + '</textarea>'
+    + '<div class="modal-actions">'
+    + (t ? '<button class="btn danger" data-action="delNote" data-id="' + esc(h.id) + '" data-key="' + key + '">🗑️ Smazat</button>' : '<button class="btn" data-action="closeModal">Zrušit</button>')
+    + '<button class="btn primary" data-action="saveNote" data-id="' + esc(h.id) + '" data-key="' + key + '">Uložit</button>'
+    + '</div>'
+  );
+}
 function openDeleteModal(h, isArch){
   openModal(
     '<div class="sheet-title">Smazat „' + esc(h.name) + '“?</div>'
@@ -1788,10 +2177,24 @@ function openDeleteModal(h, isArch){
 
 /* ============ Export / Import ============ */
 function exportData(){
-  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const json = JSON.stringify(data, null, 2);
+  const fname = 'habit-tracker-zaloha-' + dateKey(today()) + '.json';
+  try {
+    const file = new File([json], fname, { type: 'application/json' });
+    if (navigator.canShare && navigator.canShare({ files: [file] }) && navigator.share){
+      navigator.share({ files: [file], title: 'Záloha Habit Trackeru' })
+        .then(() => toast('Záloha sdílena'))
+        .catch(err => { if (!err || err.name !== 'AbortError') downloadExport(json, fname); });
+      return;
+    }
+  } catch (e) {}
+  downloadExport(json, fname);
+}
+function downloadExport(json, fname){
+  const blob = new Blob([json], { type: 'application/json' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = 'habit-tracker-zaloha-' + dateKey(today()) + '.json';
+  a.download = fname;
   document.body.appendChild(a);
   a.click();
   setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
@@ -1841,7 +2244,35 @@ function moveHabit(id, dir){
 }
 
 /* ============ Události ============ */
+let lpTimer = null, lpConsume = false, lpX = 0, lpY = 0;
+function lpClear(){ if (lpTimer){ clearTimeout(lpTimer); lpTimer = null; } }
+document.addEventListener('pointerdown', ev => {
+  if (editMode || tab !== 'day') return;
+  const row = ev.target.closest('#view-day .habit-row');
+  if (!row || row.classList.contains('edit')) return;
+  if (ev.target.closest('.stepper, .num-input, .tmr')) return;
+  const id = row.dataset.id;
+  if (!id) return;
+  lpX = ev.clientX || 0; lpY = ev.clientY || 0;
+  lpClear();
+  lpTimer = setTimeout(() => {
+    lpTimer = null;
+    const h = habitById(id);
+    if (!h) return;
+    lpConsume = true;
+    openNoteModal(h, dateKey(selectedDate));
+  }, 550);
+});
+document.addEventListener('pointermove', ev => {
+  if (!lpTimer) return;
+  const dx = (ev.clientX || 0) - lpX, dy = (ev.clientY || 0) - lpY;
+  if (dx * dx + dy * dy > 144) lpClear();
+});
+document.addEventListener('pointerup', lpClear);
+document.addEventListener('pointercancel', lpClear);
+
 document.addEventListener('click', ev => {
+  if (lpConsume){ lpConsume = false; ev.stopPropagation(); ev.preventDefault(); return; }
   const el = ev.target.closest('[data-action]');
   if (!el || el.disabled) return;
   const act = el.dataset.action;
@@ -1867,6 +2298,52 @@ document.addEventListener('click', ev => {
     case 'calWeek': calView = 'week'; render(); break;
     case 'calMonth': calView = 'month'; render(); break;
     case 'addSnack': mealSnackUI.n = Math.min(12, mealSnackUI.n + 1); render(); break;
+    case 'toggleHide': data.hideDone = !data.hideDone; save(); render(); break;
+    case 'setMood': {
+      const key = dateKey(selectedDate);
+      const m = Number(el.dataset.m);
+      if (data.moods[key] === m) delete data.moods[key];
+      else data.moods[key] = m;
+      save(); render();
+      break;
+    }
+    case 'mealHist': openMealHistModal(el.dataset.f); break;
+    case 'pickMeal': {
+      const f = el.dataset.f;
+      const v = el.dataset.v || '';
+      const k = dateKey(selectedDate);
+      const m = mealObj(k);
+      if (f === 'sn'){ m.sn.push(v); }
+      else m[f] = v;
+      data.meals[k] = { b: m.b, l: m.l, d: m.d, sn: m.sn, note: m.note };
+      save(); closeModal(); render();
+      toast('Vyplněno z historie');
+      break;
+    }
+    case 'saveNote': {
+      const h = habitById(id);
+      if (!h) break;
+      setNote(el.dataset.key, h.id, ($('#f-note') && $('#f-note').value) || '');
+      closeModal(); render();
+      toast('Poznámka uložena');
+      break;
+    }
+    case 'delNote': {
+      const h = habitById(id);
+      if (!h) break;
+      setNote(el.dataset.key, h.id, '');
+      closeModal(); render();
+      toast('Poznámka smazána');
+      break;
+    }
+    case 'startTimer': {
+      const h = habitById(id);
+      if (!h || !h.timerMin) break;
+      startTimer(h, el.dataset.key || dateKey(selectedDate));
+      toast('⏱️ ' + h.name + ' — ' + h.timerMin + ' min běží');
+      break;
+    }
+    case 'cancelTimer': stopTimer(); toast('Časovač zrušen'); break;
     case 'gotoDay': {
       let d = parseKey(el.dataset.key);
       if (d > today()) d = today();
@@ -2057,16 +2534,22 @@ document.addEventListener('click', ev => {
         freq.days = days;
       }
       freq = normFreq(freq);
+      const tmRaw = ($('#f-timer') && $('#f-timer').value || '').trim();
+      const tm = parseInt(tmRaw, 10);
+      const timerMin = (tmRaw && isFinite(tm) && tm >= 1 && tm <= 600) ? tm : null;
+      if (tmRaw && timerMin === null){ toast('Časovač: zadejte 1–600 minut, nebo nechte prázdné', true); break; }
       if (id){
         const h = habitById(id);
-        if (h){ h.name = name.slice(0, 60); h.emoji = emoji; h.type = type; h.goal = goal; h.unit = unit; h.freq = freq; }
+        if (h){ h.name = name.slice(0, 60); h.emoji = emoji; h.type = type; h.goal = goal; h.unit = unit; h.freq = freq; h.timerMin = timerMin; }
         toast('Návyk upraven');
       } else {
         data.habits.push({
           id: uid(), name: name.slice(0, 60), emoji, type, goal, unit, freq,
           archived: false,
           order: data.habits.reduce((m, x) => Math.max(m, x.order), -1) + 1,
-          createdAt: Date.now()
+          createdAt: Date.now(),
+          vacations: [],
+          timerMin
         });
         toast('Návyk přidán');
       }
