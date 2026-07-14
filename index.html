@@ -368,7 +368,20 @@ input,textarea{-webkit-appearance:none;appearance:none;}
 .vac-row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:5px 0 5px 2px;border-bottom:1px solid var(--line);font-size:15px;}
 .vac-row:last-child{border-bottom:0;}
 .vac-row .icon-btn{box-shadow:none;background:transparent;font-size:17px;min-width:40px;min-height:40px;}
-.plan-text{white-space:pre-wrap;word-break:break-word;font-size:15px;line-height:1.55;margin:0;}
+.plan-text{font-size:15px;line-height:1.55;margin:0;word-break:break-word;}
+.pl-p{margin:7px 0;}
+.pl-p:first-child,.pl-li:first-child{margin-top:0;}
+.pl-p:last-child,.pl-li:last-child{margin-bottom:0;}
+.pl-li{display:flex;gap:9px;margin:6px 0;align-items:flex-start;font-size:15px;line-height:1.5;}
+.pl-dot{flex:0 0 auto;color:var(--accent);font-weight:700;}
+.pl-li.sub{margin-left:20px;font-size:14px;color:var(--text);}
+.pl-li.sub .pl-dot{color:var(--muted);font-weight:400;}
+.pl-tx{min-width:0;word-break:break-word;}
+.pl-sp{height:9px;}
+.pl-time{
+  display:inline-block;background:var(--btn-bg);border-radius:7px;padding:1px 8px;margin-right:3px;
+  font-weight:700;font-size:12.5px;font-variant-numeric:tabular-nums;white-space:nowrap;
+}
 .plan-head{font-size:17.5px;font-weight:800;letter-spacing:-.01em;margin:22px 4px 10px;}
 .plan-head:first-child{margin-top:2px;}
 details.plan-day{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:8px;padding:0 14px;}
@@ -382,7 +395,7 @@ details.plan-day.today{box-shadow:var(--shadow), inset 0 0 0 1.5px var(--green);
 .today-tag{flex:0 0 auto;font-size:10.5px;font-weight:800;color:var(--green);background:var(--green-soft);padding:3px 8px;border-radius:999px;text-transform:uppercase;letter-spacing:.06em;}
 .chev{flex:0 0 auto;color:var(--muted);transition:transform .18s ease;font-size:19px;line-height:1;}
 details[open] > summary .chev{transform:rotate(90deg);}
-.plan-day .plan-body{border-top:1px solid var(--line);padding:10px 2px 14px;}
+.plan-day .plan-body{border-top:1px solid var(--line);padding:12px 2px 15px;font-size:15px;line-height:1.55;}
 .plan-ta,.meal-ta{
   width:100%;min-height:56vh;min-height:56dvh;resize:vertical;display:block;
   border:1.5px solid var(--line);border-radius:12px;background:var(--bg);color:var(--text);
@@ -1592,10 +1605,44 @@ function planSections(text){
   push();
   return secs;
 }
+function planInline(t){
+  let pill = '';
+  let m = t.match(/^([^|]{1,14}?)\s*\|\s*(.+)$/);
+  if (m){ pill = '<span class="pl-time">' + esc(m[1].trim()) + '</span> '; t = m[2]; }
+  let html;
+  m = t.match(/^([0-9]+\.\s+)?([^:]{1,30}):\s+(.+)$/);
+  if (m && /\p{L}/u.test(m[2])){
+    html = (m[1] ? esc(m[1]) : '') + '<strong>' + esc(m[2]) + ':</strong> ' + esc(m[3]);
+  } else if ((m = t.match(/^([^:]{1,30}):\s*$/)) && /\p{L}/u.test(m[1])){
+    html = '<strong>' + esc(m[1]) + ':</strong>';
+  } else {
+    html = esc(t);
+  }
+  return pill + html;
+}
+function planLineHtml(line){
+  if (!line.trim()) return '<div class="pl-sp"></div>';
+  let m = line.match(/^\s+\*\s+(.*)$/) || line.match(/^\s*[◦▪]\s+(.*)$/);
+  if (m) return '<div class="pl-li sub"><span class="pl-dot">–</span><span class="pl-tx">' + planInline(m[1]) + '</span></div>';
+  m = line.match(/^\s*[•\-–*]\s+(.*)$/);
+  if (m) return '<div class="pl-li"><span class="pl-dot">•</span><span class="pl-tx">' + planInline(m[1]) + '</span></div>';
+  return '<div class="pl-p">' + planInline(line.trim()) + '</div>';
+}
+function planBodyHtml(text){
+  const out = [];
+  let blank = false;
+  for (const line of String(text).split('\n')){
+    if (!line.trim()){ blank = true; continue; }
+    if (blank && out.length) out.push('<div class="pl-sp"></div>');
+    blank = false;
+    out.push(planLineHtml(line));
+  }
+  return out.join('');
+}
 function planPrettyHtml(text){
   const secs = planSections(text);
   if (!secs.some(s => s.kind === 'day')){
-    return '<div class="card"><p class="plan-text">' + esc(text) + '</p></div>';
+    return '<div class="card"><div class="plan-text">' + planBodyHtml(text) + '</div></div>';
   }
   const tIdx = weekdayIdx(today());
   let html = '';
@@ -1603,7 +1650,7 @@ function planPrettyHtml(text){
     const body = s.lines.join('\n').replace(/^\n+|\n+$/g, '');
     if (s.kind === 'head'){
       html += '<div class="plan-head">' + esc(s.title) + '</div>';
-      if (body) html += '<div class="card"><p class="plan-text">' + esc(body) + '</p></div>';
+      if (body) html += '<div class="card"><div class="plan-text">' + planBodyHtml(body) + '</div></div>';
     } else if (s.kind === 'day'){
       const isT = s.day === tIdx;
       html += '<details class="plan-day' + (isT ? ' today' : '') + '"' + (isT ? ' open' : '') + '>'
@@ -1611,10 +1658,10 @@ function planPrettyHtml(text){
         + '<span class="plan-day-title">' + esc(s.sub || WDFULL[s.day]) + '</span>'
         + (isT ? '<span class="today-tag">dnes</span>' : '')
         + '<span class="chev">›</span></summary>'
-        + (body ? '<div class="plan-body plan-text">' + esc(body) + '</div>' : '')
+        + (body ? '<div class="plan-body">' + planBodyHtml(body) + '</div>' : '')
         + '</details>';
     } else if (body){
-      html += '<div class="card"><p class="plan-text">' + esc(body) + '</p></div>';
+      html += '<div class="card"><div class="plan-text">' + planBodyHtml(body) + '</div></div>';
     }
   }
   return html;
