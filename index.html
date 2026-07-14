@@ -47,8 +47,12 @@ button:disabled{opacity:.35;cursor:default;}
 :focus{outline:none;}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:8px;}
 input{font-family:inherit;color:var(--text);}
+input,textarea{-webkit-appearance:none;appearance:none;}
 
-#app{max-width:680px;margin:0 auto;padding:10px 16px calc(96px + env(safe-area-inset-bottom));}
+#app{
+  max-width:680px;margin:0 auto;
+  padding:10px calc(16px + env(safe-area-inset-right)) calc(96px + env(safe-area-inset-bottom)) calc(16px + env(safe-area-inset-left));
+}
 
 /* ---------- hlavička aplikace ---------- */
 .app-top{padding:6px 2px 10px;display:flex;align-items:baseline;justify-content:space-between;}
@@ -88,8 +92,8 @@ input{font-family:inherit;color:var(--text);}
 
 /* ---------- denní progres ---------- */
 .progress-card{padding:14px 16px;}
-.progress-line{display:flex;justify-content:space-between;align-items:baseline;font-size:15px;margin-bottom:9px;}
-.progress-pct{font-weight:700;font-variant-numeric:tabular-nums;}
+.progress-txt{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:15px;margin-bottom:9px;}
+.progress-txt .muted{font-weight:700;font-variant-numeric:tabular-nums;flex:0 0 auto;}
 .bar{height:8px;border-radius:4px;background:var(--btn-bg);overflow:hidden;}
 .bar-fill{height:100%;border-radius:4px;background:var(--green);transition:width .3s ease;}
 
@@ -130,12 +134,12 @@ input{font-family:inherit;color:var(--text);}
 .h-main{flex:1;min-width:0;}
 .h-name{font-weight:600;font-size:16.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .h-sub{font-size:13px;color:var(--muted);margin-top:1px;}
-.h-meta{display:flex;align-items:baseline;gap:10px;margin-top:1px;}
+.h-meta{display:flex;align-items:baseline;gap:10px;margin-top:1px;min-width:0;}
 .h-streak{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums;}
 .h-streak.zero{opacity:.45;}
-.h-goal{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap;}
+.h-goal{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .mini-bar{height:4px;border-radius:2px;background:var(--btn-bg);margin-top:7px;overflow:hidden;}
-.mini-bar div{height:100%;border-radius:2px;background:var(--green);}
+.mini-bar span{display:block;height:100%;border-radius:2px;background:var(--green);}
 
 /* zaškrtávací kolečko */
 .checkbox{
@@ -183,24 +187,28 @@ input{font-family:inherit;color:var(--text);}
 /* ---------- týdenní mřížka ---------- */
 .grid-card{padding:10px 6px 12px;}
 .wk-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;}
-.wk-grid{display:grid;gap:2px 2px;align-items:center;min-width:max-content;}
+.wk-grid{display:grid;gap:2px 2px;align-items:center;min-width:100%;}
 .wk-cell{
   min-height:46px;display:flex;align-items:center;justify-content:center;
   font-size:13px;
 }
 .wk-cell.name{
   position:sticky;left:0;z-index:1;background:var(--card);
-  justify-content:flex-start;gap:6px;padding:0 8px 0 6px;max-width:160px;
+  justify-content:flex-start;gap:5px;padding:0 6px;min-width:0;
 }
-.wk-emoji{font-size:16px;flex:0 0 auto;}
-.wk-name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:500;font-size:13.5px;}
+.wk-cell.name .h-emoji{width:22px;height:22px;flex:0 0 22px;font-size:15px;}
+.wk-cell.name .h-emoji.letter{font-size:12px;}
+.wk-hname{
+  flex:1;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;
+  font-weight:500;font-size:12.5px;line-height:1.25;
+}
 .wk-head{flex-direction:column;gap:0;line-height:1.15;border-radius:10px;}
-.wk-head .wd{font-size:12px;font-weight:700;color:var(--muted);}
-.wk-head .dn{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;}
+.wk-head span:first-child{font-size:12px;font-weight:700;color:var(--muted);}
+.wk-dnum{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;}
 .wk-head.today{background:var(--green-soft);}
-.wk-head.today .wd,.wk-head.today .dn{color:var(--green);}
+.wk-head.today span{color:var(--green);}
 .wk-dot{
-  width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;
+  width:100%;max-width:46px;height:44px;display:inline-flex;align-items:center;justify-content:center;
   border-radius:12px;font-size:15px;font-weight:700;color:transparent;
 }
 .wk-dot::before{content:"";position:absolute;}
@@ -219,9 +227,9 @@ input{font-family:inherit;color:var(--text);}
 .wk-dot.on{text-shadow:none;}
 .wk-dot > *{position:relative;z-index:1;}
 .wk-num{
-  min-width:44px;height:44px;border-radius:12px;font-size:12.5px;font-weight:700;
+  min-width:0;width:100%;max-width:46px;height:44px;border-radius:12px;font-size:12px;font-weight:700;
   font-variant-numeric:tabular-nums;color:var(--muted);background:transparent;
-  display:inline-flex;align-items:center;justify-content:center;padding:0 2px;
+  display:inline-flex;align-items:center;justify-content:center;padding:0 1px;
 }
 .wk-num.part{background:var(--btn-bg);color:var(--text);}
 .wk-num.on{background:var(--green);color:#fff;}
@@ -283,11 +291,25 @@ input{font-family:inherit;color:var(--text);}
 .tabbar-inner{max-width:680px;margin:0 auto;display:flex;}
 .tab-btn{
   flex:1;min-height:58px;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:1px;font-size:11.5px;font-weight:600;color:var(--muted);
+  gap:1px;font-size:11.5px;font-weight:600;color:var(--muted);white-space:nowrap;min-width:0;
 }
 .tab-btn .tab-ico{font-size:21px;line-height:1.2;filter:grayscale(1);opacity:.8;transition:filter .15s,opacity .15s;}
 .tab-btn.on{color:var(--accent);}
 .tab-btn.on .tab-ico{filter:none;opacity:1;}
+
+/* ---------- kompaktní telefonní režim ---------- */
+@media (max-width:440px){
+  .habit-row{padding:10px 12px;gap:10px;}
+  .habit-row .h-emoji{width:30px;height:30px;flex:0 0 30px;font-size:21px;}
+  .h-name{font-size:16px;}
+  .step-btn{width:38px;height:42px;font-size:20px;}
+  .num-input{width:46px;font-size:16px;}
+  .stepper{gap:1px;}
+  .stat-table th,.stat-table td{padding-left:7px;padding-right:7px;}
+  .stat-table td:first-child{max-width:150px;}
+  .view-title{font-size:24px;}
+  .tab-btn{font-size:11px;}
+}
 
 /* ---------- modální okno ---------- */
 .modal-wrap{position:fixed;inset:0;z-index:100;}
@@ -306,7 +328,7 @@ input{font-family:inherit;color:var(--text);}
     animation:none;
   }
 }
-.sheet h2{margin:0 0 16px;font-size:21px;letter-spacing:-.01em;}
+.sheet-title{margin:0 0 16px;font-size:21px;font-weight:800;letter-spacing:-.01em;}
 .field{display:block;font-size:13.5px;font-weight:600;color:var(--muted);margin-bottom:14px;}
 .field-lbl{display:block;margin-bottom:7px;}
 .field input{
@@ -323,9 +345,25 @@ input{font-family:inherit;color:var(--text);}
 }
 .emoji-pick:active{transform:scale(.9);}
 .seg{display:flex;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:3px;gap:3px;}
+.seg.freq{display:grid;grid-template-columns:1fr 1fr;}
 .seg-btn{flex:1;min-height:42px;border-radius:9px;font-size:15px;font-weight:600;color:var(--muted);}
+.seg.freq .seg-btn{font-size:14px;}
 .seg-btn.on{background:var(--card);color:var(--text);box-shadow:var(--shadow);}
 @media (prefers-color-scheme: dark){.seg-btn.on{background:#3a3a3d;}}
+.day-picker{display:flex;gap:5px;}
+.day-chip{flex:1;min-height:42px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);font-size:13.5px;font-weight:700;color:var(--muted);}
+.day-chip.on{background:var(--accent);border-color:var(--accent);color:#fff;}
+.wk-dot.off::after{border-style:dashed;opacity:.5;}
+.wk-off{opacity:.45;}
+.wk-hfreq{display:block;font-size:10.5px;font-weight:600;color:var(--muted);}
+.wk-okwk{color:var(--green);}
+.plan-text{white-space:pre-wrap;word-break:break-word;font-size:15px;line-height:1.55;margin:0;}
+.plan-ta{
+  width:100%;min-height:56vh;min-height:56dvh;resize:vertical;display:block;
+  border:1.5px solid var(--line);border-radius:12px;background:var(--bg);color:var(--text);
+  font:inherit;font-size:16px;line-height:1.5;padding:12px;
+}
+.plan-ta:focus{border-color:var(--accent);outline:none;}
 .modal-actions{display:flex;gap:10px;margin-top:20px;}
 .modal-actions .btn{flex:1;}
 .modal-actions.col{flex-direction:column;}
@@ -357,6 +395,7 @@ input{font-family:inherit;color:var(--text);}
     <section id="view-week" hidden></section>
     <section id="view-month" hidden></section>
     <section id="view-stats" hidden></section>
+    <section id="view-plan" hidden></section>
   </main>
 </div>
 <nav class="tabbar">
@@ -365,6 +404,7 @@ input{font-family:inherit;color:var(--text);}
     <button class="tab-btn" data-action="tab" data-tab="week"><span class="tab-ico">📅</span>Týden</button>
     <button class="tab-btn" data-action="tab" data-tab="month"><span class="tab-ico">🟩</span>Měsíc</button>
     <button class="tab-btn" data-action="tab" data-tab="stats"><span class="tab-ico">📊</span>Přehled</button>
+    <button class="tab-btn" data-action="tab" data-tab="plan"><span class="tab-ico">📋</span>Plán</button>
   </div>
 </nav>
 <div id="toast" role="status"></div>
@@ -377,6 +417,96 @@ input{font-family:inherit;color:var(--text);}
 const STORAGE_KEY = 'habit-tracker-data-v1';
 const WD = ['Po','Út','St','Čt','Pá','So','Ne'];
 const EMOJI_PICKS = ['✅','💪','🏃','🚶','🧘','😴','📖','✍️','📓','💧','🥗','🍎','🚫','💊','🦉','🎓','💼','🎸','🧹','🧠'];
+const FREQ_NAMES = { daily: 'denně', days: 'vybrané dny', weekly: '1× týdně', monthly: '1× měsíčně' };
+const DEFAULT_PLAN = `🗓️ TÝDENNÍ HARMONOGRAM (10 FÁZÍ)
+• PONDĚLÍ
+• 08:30 | Fáze 1: Běh – Intervaly (VO2 Max)
+• 16:30 | Fáze 2: Silový trénink – Vršek A (Síla)
+• ÚTERÝ
+• 15:00 | Fáze 3: Silový trénink – Spodek A (Síla)
+• STŘEDA
+• 16:30 | Fáze 5: Jízda na kole (Zóna 2)
+• ČTVRTEK
+• 09:30 | Fáze 6: Silový trénink – Vršek B (Hypertrofie)
+• 16:00 | Fáze 7: Plavání (Regenerace)
+• PÁTEK
+• 08:30 | Fáze 8: Běh (Zóna 2)
+• 16:30 | Fáze 9: Silový trénink – Spodek B (Hypertrofie)
+• SOBOTA
+• Dopoledne | Fáze 10: Horský výšlap / Rucking (2–4 hodiny)
+• NEDĚLE
+• Volno: Absolutní regenerace, spánek, příprava jídla na týden.
+
+🏋️ SILOVÝ TRÉNINK (Rozpis cviků)
+Pauzy: 2–3 minuty u silových cviků (první dva cviky). 60–90 sekund u hypertrofických cviků a břicha.
+
+PONDĚLÍ: Vršek A (Důraz na absolutní sílu)
+1. Bench press na rovné lavici: 4 série x 3–5 opakování
+2. Shyby se zátěží (nebo těžká kladka): 4 série x 4–6 opakování
+3. Tlaky s jednoručkami vsedě (Ramena): 3 série x 8–10 opakování
+4. Přítahy osy v předklonu: 3 série x 8–10 opakování
+5. Bicepsový zdvih s velkou osou + Tricepsové stahování kladky: 3 série x 10–12 opakování (Supersérie)
+6. Cable Crunches (Zkracovačky na kladce): 3 série x 12–15 opakování
+7. Leg Raises (Zvedání nohou ve visu nebo vleže): 3 série x 10–15 opakování
+
+ÚTERÝ: Spodek A (Důraz na absolutní sílu)
+1. Dřepy s osou na zádech: 4 série x 3–5 opakování
+2. Rumunský mrtvý tah (RDL): 3 série x 6–8 opakování
+3. Bulharské dřepy s jednoručkami: 3 série x 8–10 opakování na každou nohu
+4. Zakopávání na stroji: 3 série x 10–12 opakování
+5. Výpony na lýtka ve stoji: 4 série x 10–15 opakování
+6. Cable Crunches: 3 série x 12–15 opakování
+7. Leg Raises: 3 série x 10–15 opakování
+
+ČTVRTEK: Vršek B (Důraz na hypertrofii / svalový objem)
+1. Tlaky s jednoručkami na šikmé lavici (Incline): 4 série x 8–10 opakování
+2. Přítahy jednoručky v předklonu s oporou: 4 série x 8–10 opakování
+3. Kliky na bradlech (Dips) s náklonem vpřed: 3 série x 10–12 opakování
+4. Upažování s jednoručkami ve stoji (Střední delty): 4 série x 12–15 opakování
+5. Face pulls + Kladivové zdvihy na biceps: 3 série x 12–15 opakování (Supersérie)
+6. Cable Crunches: 3 série x 15–20 opakování (Lehčí váha, maximální kontrakce)
+7. Leg Raises: 3 série x 12–15 opakování
+
+PÁTEK: Spodek B (Důraz na hypertrofii / svalový objem)
+1. Mrtvý tah (Trap osa nebo konvenční): 3 série x 5 opakování (Těžší váha, ale kontrolovaně)
+2. Leg press: 3 série x 10–12 opakování
+3. Předkopávání na stroji: 3 série x 12–15 opakování
+4. Hyperextenze (zaměření na hýždě/hamstringy): 3 série x 12–15 opakování
+5. Výpony na lýtka vsedě: 4 série x 15–20 opakování
+6. Cable Crunches: 3 série x 15–20 opakování
+7. Leg Raises: 3 série x 12–15 opakování
+
+🏃‍♂️ KARDIO A DOPLŇKOVÉ AKTIVITY (Motor a regenerace)
+1. Běh – Intervaly (Pondělí 08:30)
+• Cíl: Budování VO2 max a laktátové tolerance. Bude to bolet.
+• Intenzita: Zóna 5 (90–95 % maximální tepové frekvence). RPE 8.5–9/10.
+• Struktura:
+  * 10 minut lehký rozklus a dynamický strečink.
+  * 4x 4 minuty ostrého běhu (závodní tempo).
+  * Mezi každým úsekem 3 minuty aktivní odpočinek (pomalá chůze/volný klus).
+  * 10 minut lehký výklus na závěr.
+• Alternativa: 6–8x 45 sekund sprint do prudkého kopce, dolů chůze.
+
+3. Jízda na kole (Středa 16:30)
+• Cíl: Vyplavení kyseliny mléčné po dřepování, budování aerobní baze (kapilarizace svalů).
+• Délka: 60–90 minut.
+• Intenzita: Striktní Zóna 2 (60–70 % TF max). RPE 3–4/10. Musíš být schopen celou dobu dýchat pouze nosem nebo mluvit v celých větách. Šlapej lehký převod s vyšší kadencí.
+
+4. Plavání (Čtvrtek 16:00)
+• Cíl: Aktivní regenerace, uvolnění kloubů a páteře, lymfatická drenáž.
+• Délka: 30–45 minut.
+• Intenzita: Zóna 1–2. Velmi pomalé, relaxační tempo. Střídej kraul, znak a prsa. Žádné sprinty.
+
+5. Běh – Zóna 2 (Pátek 08:30)
+• Cíl: Budování aerobního motoru a výdrže pro nohy před odpoledním tréninkem.
+• Délka: 45–60 minut.
+• Intenzita: Striktní Zóna 2 (60–70 % TF max). Opět test dýchání nosem. Pokud ti tep vyletí kvůli kopci, okamžitě přejdi do chůze, než tep spadne.
+
+6. Horský výšlap / Rucking (Sobota dopoledne)
+• Cíl: Budování odolnosti šlach, vazů, zad a dlouhodobé vytrvalosti v přírodě.
+• Délka: 2–4 hodiny.
+• Intenzita: Zóna 1–2, v prudkých stoupáních přirozeně Zóna 3.
+• Zátěž: Cca 10–15 % tvé tělesné váhy v batohu. Nutná pevná obuv.`;
 
 /* ============ Stav aplikace ============ */
 let data = null;
@@ -389,6 +519,8 @@ let popRef = null;          // {id, key} — animace při novém splnění
 let storageOk = true;
 let pendingImport = null;
 let dragFrom = null;
+let planEdit = false;
+let planDraft = '';
 
 /* ============ Utility ============ */
 const $ = sel => document.querySelector(sel);
@@ -487,9 +619,11 @@ function defaultData(){
       unit: d[2] === 'number' ? d[4] : '',
       archived: false,
       order: i,
-      createdAt: now
+      createdAt: now,
+      freq: { type: 'daily' }
     })),
-    entries: {}
+    entries: {},
+    plan: DEFAULT_PLAN
   };
 }
 
@@ -507,6 +641,12 @@ function validateData(obj){
     if (typeof h.name !== 'string' || !h.name.trim()) return 'Návyk č. ' + (i + 1) + ' nemá název.';
     if (h.type !== 'check' && h.type !== 'number') return 'Návyk „' + h.name + '“ má neznámý typ (povoleno: check, number).';
     if (h.type === 'number' && (typeof h.goal !== 'number' || !isFinite(h.goal) || h.goal <= 0)) return 'Návyk „' + h.name + '“ nemá platný číselný cíl.';
+    if (h.freq != null){
+      const f = h.freq;
+      if (typeof f !== 'object' || Array.isArray(f)) return 'Návyk „' + h.name + '“ má neplatnou frekvenci.';
+      if (['daily', 'days', 'weekly', 'monthly'].indexOf(f.type) === -1) return 'Návyk „' + h.name + '“ má neznámou frekvenci.';
+      if (f.type === 'days' && (!Array.isArray(f.days) || !f.days.length || f.days.some(d => !Number.isInteger(d) || d < 0 || d > 6))) return 'Návyk „' + h.name + '“ má neplatné dny v týdnu.';
+    }
   }
   if (obj.entries != null){
     if (typeof obj.entries !== 'object' || Array.isArray(obj.entries)) return 'Záznamy („entries“) mají špatný formát.';
@@ -520,10 +660,16 @@ function validateData(obj){
       }
     }
   }
+  if (obj.plan != null && typeof obj.plan !== 'string') return 'Plán („plan“) má špatný formát.';
   return null; // OK
 }
 function normalizeData(obj){
-  const out = { version: 1, habits: [], entries: {} };
+  const out = {
+    version: 1,
+    habits: [],
+    entries: {},
+    plan: typeof obj.plan === 'string' ? obj.plan.slice(0, 50000) : DEFAULT_PLAN
+  };
   obj.habits.forEach((h, i) => {
     out.habits.push({
       id: String(h.id),
@@ -534,7 +680,8 @@ function normalizeData(obj){
       unit: typeof h.unit === 'string' ? h.unit.trim().slice(0, 20) : '',
       archived: !!h.archived,
       order: typeof h.order === 'number' && isFinite(h.order) ? h.order : i,
-      createdAt: typeof h.createdAt === 'number' ? h.createdAt : Date.now()
+      createdAt: typeof h.createdAt === 'number' ? h.createdAt : Date.now(),
+      freq: normFreq(h.freq)
     });
   });
   if (obj.entries){
@@ -618,33 +765,145 @@ function habitById(id){
   return data.habits.find(h => h.id === id);
 }
 
+/* ============ Frekvence návyků ============ */
+function weekdayIdx(d){
+  return (d.getDay() + 6) % 7; // Po=0 … Ne=6
+}
+function habitFreq(h){
+  return h && h.freq && h.freq.type ? h.freq : { type: 'daily' };
+}
+function normFreq(f){
+  if (!f || typeof f !== 'object' || Array.isArray(f)) return { type: 'daily' };
+  if (f.type === 'days'){
+    const days = Array.isArray(f.days)
+      ? [...new Set(f.days.filter(d => Number.isInteger(d) && d >= 0 && d <= 6))].sort((a, b) => a - b)
+      : [];
+    return days.length ? { type: 'days', days } : { type: 'daily' };
+  }
+  if (f.type === 'weekly' || f.type === 'monthly') return { type: f.type };
+  return { type: 'daily' };
+}
+function isPeriodic(h){
+  const t = habitFreq(h).type;
+  return t === 'weekly' || t === 'monthly';
+}
+function isScheduled(h, d){
+  const f = habitFreq(h);
+  if (f.type === 'daily') return true;
+  if (f.type === 'days') return f.days.indexOf(weekdayIdx(d)) !== -1;
+  return false; // týdenní/měsíční nemají pevné dny
+}
+function freqLabel(h){
+  const f = habitFreq(h);
+  if (f.type === 'days') return f.days.map(i => WD[i]).join(' · ');
+  return FREQ_NAMES[f.type];
+}
+function doneInWeek(h, mon){
+  for (let i = 0; i < 7; i++){
+    const k = dateKey(addDays(mon, i));
+    if (isDone(h, k)) return k;
+  }
+  return null;
+}
+function doneInMonth(h, first){
+  const days = new Date(first.getFullYear(), first.getMonth() + 1, 0).getDate();
+  for (let i = 1; i <= days; i++){
+    const k = dateKey(new Date(first.getFullYear(), first.getMonth(), i));
+    if (isDone(h, k)) return k;
+  }
+  return null;
+}
+function fmtKeyShort(k){
+  const d = parseKey(k);
+  return WD[weekdayIdx(d)] + ' ' + d.getDate() + '. ' + (d.getMonth() + 1) + '.';
+}
+
 /* ============ Streaky a statistiky ============ */
 function currentStreak(habit){
+  const f = habitFreq(habit);
+  if (f.type === 'weekly'){
+    let mon = startOfWeek(today());
+    if (!doneInWeek(habit, mon)) mon = addDays(mon, -7); // běžící týden streak nepřerušuje
+    let n = 0;
+    while (doneInWeek(habit, mon)){
+      n++;
+      mon = addDays(mon, -7);
+      if (n > 3000) break;
+    }
+    return n;
+  }
+  if (f.type === 'monthly'){
+    let first = firstOfMonth(today());
+    if (!doneInMonth(habit, first)) first = new Date(first.getFullYear(), first.getMonth() - 1, 1); // běžící měsíc nepřerušuje
+    let n = 0;
+    while (doneInMonth(habit, first)){
+      n++;
+      first = new Date(first.getFullYear(), first.getMonth() - 1, 1);
+      if (n > 1200) break;
+    }
+    return n;
+  }
   let d = today();
-  if (!isDone(habit, dateKey(d))) d = addDays(d, -1); // dnešek zatím nesplněný streak nepřerušuje
-  let n = 0;
-  while (isDone(habit, dateKey(d))){
+  if (isScheduled(habit, d) && !isDone(habit, dateKey(d))) d = addDays(d, -1); // dnešek zatím nesplněný streak nepřerušuje
+  let n = 0, guard = 0;
+  while (guard++ < 20000){
+    if (!isScheduled(habit, d)){ d = addDays(d, -1); continue; } // nenaplánované dny se přeskakují
+    if (!isDone(habit, dateKey(d))) break;
     n++;
     d = addDays(d, -1);
-    if (n > 20000) break;
   }
   return n;
 }
 function longestStreak(habit){
-  const days = Object.keys(data.entries)
+  const f = habitFreq(habit);
+  const doneDays = Object.keys(data.entries)
     .filter(k => isDone(habit, k))
     .map(parseKey)
     .sort((a, b) => a - b);
+  if (!doneDays.length) return 0;
+  if (f.type === 'weekly'){
+    const weeks = [...new Set(doneDays.map(d => dateKey(startOfWeek(d))))];
+    let best = 0, run = 0, prev = null;
+    for (const w of weeks){
+      run = (prev && sameDay(addDays(parseKey(prev), 7), parseKey(w))) ? run + 1 : 1;
+      if (run > best) best = run;
+      prev = w;
+    }
+    return best;
+  }
+  if (f.type === 'monthly'){
+    const months = [...new Set(doneDays.map(d => d.getFullYear() * 12 + d.getMonth()))];
+    let best = 0, run = 0, prev = null;
+    for (const m of months){
+      run = (prev !== null && m === prev + 1) ? run + 1 : 1;
+      if (run > best) best = run;
+      prev = m;
+    }
+    return best;
+  }
+  if (f.type === 'days'){
+    let best = 0, run = 0, guard = 0;
+    const end = today();
+    for (let d = doneDays[0]; d <= end && guard++ < 20000; d = addDays(d, 1)){
+      if (!isScheduled(habit, d)) continue;
+      if (isDone(habit, dateKey(d))){ run++; if (run > best) best = run; }
+      else run = 0;
+    }
+    return best;
+  }
   let best = 0, run = 0, prev = null;
-  for (const d of days){
+  for (const d of doneDays){
     run = (prev && sameDay(addDays(prev, 1), d)) ? run + 1 : 1;
     if (run > best) best = run;
     prev = d;
   }
   return best;
 }
+function scheduledFor(d){
+  return activeHabits().filter(h => isScheduled(h, d));
+}
 function dayStats(key){
-  const hs = activeHabits();
+  const hs = scheduledFor(parseKey(key));
   if (!hs.length) return { done: 0, total: 0, pct: 0 };
   const done = hs.filter(h => isDone(h, key)).length;
   return { done, total: hs.length, pct: Math.round(done / hs.length * 100) };
@@ -658,12 +917,31 @@ function rateOverDays(n){
   }
   return total ? Math.round(done / total * 100) : 0;
 }
-function habitRate30(habit){
-  let done = 0;
-  for (let i = 0; i < 30; i++){
-    if (isDone(habit, dateKey(addDays(today(), -i)))) done++;
+function habitRate(habit){
+  const f = habitFreq(habit);
+  if (f.type === 'weekly'){
+    let done = 0;
+    for (let i = 1; i <= 4; i++){ // poslední 4 uzavřené týdny
+      if (doneInWeek(habit, addDays(startOfWeek(today()), -7 * i))) done++;
+    }
+    return Math.round(done / 4 * 100);
   }
-  return Math.round(done / 30 * 100);
+  if (f.type === 'monthly'){
+    let done = 0;
+    const t = today();
+    for (let i = 1; i <= 3; i++){ // poslední 3 uzavřené měsíce
+      if (doneInMonth(habit, new Date(t.getFullYear(), t.getMonth() - i, 1))) done++;
+    }
+    return Math.round(done / 3 * 100);
+  }
+  let done = 0, total = 0;
+  for (let i = 0; i < 30; i++){
+    const d = addDays(today(), -i);
+    if (!isScheduled(habit, d)) continue;
+    total++;
+    if (isDone(habit, dateKey(d))) done++;
+  }
+  return total ? Math.round(done / total * 100) : 0;
 }
 
 /* ============ Render: Dnes ============ */
@@ -673,7 +951,9 @@ function habitBadge(h){
 }
 function streakBadge(h){
   const s = currentStreak(h);
-  return '<span class="h-streak' + (s ? '' : ' zero') + '">🔥 ' + s + '</span>';
+  const f = habitFreq(h).type;
+  const t = f === 'weekly' ? 'Série týdnů po sobě' : f === 'monthly' ? 'Série měsíců po sobě' : 'Série dní po sobě';
+  return '<span class="h-streak' + (s ? '' : ' zero') + '" title="' + t + '">🔥 ' + s + '</span>';
 }
 function dayRow(h, key, isFuture){
   const done = isDone(h, key);
@@ -704,12 +984,50 @@ function dayRow(h, key, isFuture){
     + '</span>'
     + '</div>';
 }
+function periodicRow(h, key){
+  const f = habitFreq(h);
+  const scopeDone = f.type === 'weekly'
+    ? doneInWeek(h, startOfWeek(parseKey(key)))
+    : doneInMonth(h, firstOfMonth(parseKey(key)));
+  const done = !!scopeDone;
+  const pop = popRef && popRef.id === h.id && popRef.key === key;
+  const status = done
+    ? '✓ splněno' + (scopeDone === key ? '' : ' — ' + fmtKeyShort(scopeDone))
+    : (f.type === 'weekly' ? 'tento týden zatím ne' : 'tento měsíc zatím ne');
+  if (h.type === 'check'){
+    return '<div class="habit-row check' + (done ? ' done' : '') + '" role="checkbox" aria-checked="' + done + '" tabindex="0" data-action="rowToggle" data-id="' + esc(h.id) + '" aria-label="' + esc(h.name) + '">'
+      + '<span class="pop-wrap' + (pop ? ' pop' : '') + '">' + habitBadge(h) + '</span>'
+      + '<span class="h-main"><span class="h-name">' + esc(h.name) + '</span>'
+      +   '<span class="h-meta"><span class="h-goal">' + status + '</span></span></span>'
+      + streakBadge(h)
+      + '<span class="checkbox" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path class="' + (pop ? 'draw' : '') + '" d="M5 13l4 4L19 7"/></svg></span>'
+      + '</div>';
+  }
+  const val = numVal(h, key);
+  const goal = h.goal || 1;
+  const pct = Math.max(0, Math.min(100, Math.round(val / goal * 100)));
+  return '<div class="habit-row num' + (done ? ' done' : '') + '" data-id="' + esc(h.id) + '">'
+    + '<span class="pop-wrap' + (pop ? ' pop' : '') + '">' + habitBadge(h) + '</span>'
+    + '<span class="h-main">'
+    +   '<span class="h-name">' + esc(h.name) + '</span>'
+    +   '<span class="h-meta"><span class="h-goal">' + fmtNum(val) + ' / ' + fmtNum(goal) + (h.unit ? ' ' + esc(h.unit) : '') + ' · ' + status + '</span></span>'
+    +   '<span class="mini-bar"><span style="width:' + pct + '%"></span></span>'
+    + '</span>'
+    + streakBadge(h)
+    + '<span class="stepper">'
+    +   '<button class="step-btn" data-action="dec" data-id="' + esc(h.id) + '" aria-label="Ubrat">−</button>'
+    +   '<input class="num-input" inputmode="decimal" data-id="' + esc(h.id) + '" value="' + fmtNum(val) + '" aria-label="Hodnota – ' + esc(h.name) + '">'
+    +   '<button class="step-btn" data-action="inc" data-id="' + esc(h.id) + '" aria-label="Přidat">＋</button>'
+    + '</span>'
+    + '</div>';
+}
 function editRow(h, idx, count){
   const goalTxt = h.type === 'number' ? 'cíl ' + fmtNum(h.goal) + (h.unit ? ' ' + esc(h.unit) : '') : 'ano / ne';
+  const meta = goalTxt + ' · ' + esc(freqLabel(h));
   return '<div class="habit-row edit" draggable="true" data-idx="' + idx + '" data-id="' + esc(h.id) + '">'
     + '<span class="drag-handle" title="Přetáhnout" aria-hidden="true">⠿</span>'
     + habitBadge(h)
-    + '<span class="h-main"><span class="h-name">' + esc(h.name) + '</span><span class="h-meta">' + goalTxt + '</span></span>'
+    + '<span class="h-main"><span class="h-name">' + esc(h.name) + '</span><span class="h-meta">' + meta + '</span></span>'
     + '<span class="edit-controls">'
     +   '<button class="icon-btn" data-action="moveUp" data-id="' + esc(h.id) + '" aria-label="Posunout nahoru"' + (idx === 0 ? ' disabled' : '') + '>↑</button>'
     +   '<button class="icon-btn" data-action="moveDown" data-id="' + esc(h.id) + '" aria-label="Posunout dolů"' + (idx === count - 1 ? ' disabled' : '') + '>↓</button>'
@@ -722,6 +1040,10 @@ function renderDay(){
   const key = dateKey(selectedDate);
   const isToday = sameDay(selectedDate, today());
   const hs = activeHabits();
+  const dayHs = hs.filter(h => !isPeriodic(h) && isScheduled(h, selectedDate));
+  const offCnt = hs.filter(h => !isPeriodic(h) && !isScheduled(h, selectedDate)).length;
+  const weekHs = hs.filter(h => habitFreq(h).type === 'weekly');
+  const monthHs = hs.filter(h => habitFreq(h).type === 'monthly');
   const st = dayStats(key);
   let html = '<div class="daynav">'
     + '<button class="icon-btn" data-action="prevDay" aria-label="Předchozí den">‹</button>'
@@ -732,7 +1054,7 @@ function renderDay(){
     + '<button class="icon-btn" data-action="nextDay" aria-label="Další den"' + (isToday ? ' disabled' : '') + '>›</button>'
     + '</div>';
 
-  if (hs.length){
+  if (dayHs.length){
     html += '<div class="card progress-card"><div class="progress-txt"><strong>Splněno ' + st.done + ' z ' + st.total + '</strong><span class="muted">' + st.pct + ' %</span></div>'
       + '<div class="bar"><div class="bar-fill" style="width:' + st.pct + '%"></div></div></div>';
   }
@@ -748,7 +1070,19 @@ function renderDay(){
     html += '<div class="habit-list">' + hs.map((h, i) => editRow(h, i, hs.length)).join('') + '</div>'
       + '<p class="hint">Pořadí změníte přetažením (na počítači) nebo šipkami ↑ ↓.</p>';
   } else {
-    html += '<div class="habit-list">' + hs.map(h => dayRow(h, key, false)).join('') + '</div>';
+    const hasSections = weekHs.length || monthHs.length;
+    if (dayHs.length){
+      if (hasSections) html += '<div class="sec-title">Denní</div>';
+      html += '<div class="habit-list">' + dayHs.map(h => dayRow(h, key, false)).join('') + '</div>';
+    } else if (offCnt){
+      html += '<div class="card empty">Na ' + (isToday ? 'dnešek' : 'tento den') + ' nejsou naplánované žádné denní návyky. 🌤️</div>';
+    }
+    if (weekHs.length){
+      html += '<div class="sec-title">Jednou týdně</div><div class="habit-list">' + weekHs.map(h => periodicRow(h, key)).join('') + '</div>';
+    }
+    if (monthHs.length){
+      html += '<div class="sec-title">Jednou měsíčně</div><div class="habit-list">' + monthHs.map(h => periodicRow(h, key)).join('') + '</div>';
+    }
   }
 
   const arch = archivedHabits();
@@ -791,19 +1125,25 @@ function renderWeek(){
     grid += '<button class="wk-cell wk-head' + (sameDay(d, t) ? ' today' : '') + '" data-action="gotoDay" data-key="' + dateKey(d) + '"><span>' + WD[i] + '</span><span class="wk-dnum">' + d.getDate() + '.</span></button>';
   }
   for (const h of hs){
-    grid += '<div class="wk-cell name" title="' + esc(h.name) + '">' + habitBadge(h) + '<span class="wk-hname">' + esc(h.name) + '</span></div>';
+    const f = habitFreq(h);
+    const wkOk = f.type === 'weekly' && doneInWeek(h, mon);
+    const nameExtra = isPeriodic(h)
+      ? '<span class="wk-hfreq">1×/' + (f.type === 'weekly' ? 'týd' : 'měs') + (wkOk ? ' <span class="wk-okwk">✓</span>' : '') + '</span>'
+      : '';
+    grid += '<div class="wk-cell name" title="' + esc(h.name) + ' — ' + esc(freqLabel(h)) + '">' + habitBadge(h) + '<span class="wk-hname">' + esc(h.name) + nameExtra + '</span></div>';
     for (let i = 0; i < 7; i++){
       const d = addDays(mon, i);
       const key = dateKey(d);
       const future = d > t;
+      const off = !isPeriodic(h) && !isScheduled(h, d);
       if (h.type === 'check'){
         const on = isDone(h, key);
         grid += '<button class="wk-cell" data-action="cellToggle" data-id="' + esc(h.id) + '" data-key="' + key + '"' + (future ? ' disabled' : '') + ' aria-label="' + esc(h.name) + ' ' + d.getDate() + '.' + (d.getMonth() + 1) + '.">'
-          + '<span class="wk-dot' + (on ? ' on' : '') + '">' + (on ? '✓' : '') + '</span></button>';
+          + '<span class="wk-dot' + (on ? ' on' : '') + (off && !on ? ' off' : '') + '">' + (on ? '✓' : '') + '</span></button>';
       } else {
         const v = numVal(h, key);
         const on = isDone(h, key);
-        const cls = on ? ' on' : (v > 0 ? ' part' : '');
+        const cls = (on ? ' on' : (v > 0 ? ' part' : '')) + (off && !on && v <= 0 ? ' wk-off' : '');
         grid += '<button class="wk-cell" data-action="gotoDay" data-key="' + key + '"' + (future ? ' disabled' : '') + '>'
           + '<span class="wk-num' + cls + '">' + (v > 0 ? fmtNum(v) : '·') + '</span></button>';
       }
@@ -816,7 +1156,7 @@ function renderWeek(){
     grid += '<div class="wk-cell sum">' + (s ? s.done + '/' + s.total : '–') + '</div>';
   }
 
-  html += '<div class="card grid-card"><div class="wk-scroll"><div class="wk-grid" style="grid-template-columns:minmax(104px,1fr) repeat(7,44px);">' + grid + '</div></div>'
+  html += '<div class="card grid-card"><div class="wk-scroll"><div class="wk-grid" style="grid-template-columns:minmax(84px,1.3fr) repeat(7,minmax(34px,46px));">' + grid + '</div></div>'
     + '<p class="hint">Ano/ne návyky odškrtnete klepnutím přímo v mřížce, číselné otevřou daný den.</p></div>';
   $('#view-week').innerHTML = html;
 }
@@ -869,6 +1209,7 @@ function renderStats(){
   const arch = archivedHabits();
   let best = null;
   for (const h of data.habits){
+    if (isPeriodic(h)) continue; // týdenní/měsíční streaky se počítají v jiných jednotkách
     const s = longestStreak(h);
     if (!best || s > best.s) best = { h, s };
   }
@@ -882,11 +1223,15 @@ function renderStats(){
     + '</div>';
 
   if (hs.length || arch.length){
-    const row = (h, dim) => '<tr' + (dim ? ' class="dim"' : '') + '><td><span class="tbl-emoji">' + (h.emoji ? esc(h.emoji) : '•') + '</span>' + esc(h.name) + (dim ? ' <span class="muted">(archiv)</span>' : '') + '</td>'
-      + '<td>' + currentStreak(h) + '</td><td>' + longestStreak(h) + '</td><td>' + habitRate30(h) + ' %</td></tr>';
-    html += '<div class="card table-card"><table class="stat-table"><thead><tr><th>Návyk</th><th>🔥 Teď</th><th>Max</th><th>30 dní</th></tr></thead><tbody>'
+    const row = (h, dim) => {
+      const fl = habitFreq(h).type !== 'daily' ? ' <span class="muted" style="font-size:12px;font-weight:400">(' + esc(freqLabel(h)) + ')</span>' : '';
+      return '<tr' + (dim ? ' class="dim"' : '') + '><td><span class="tbl-emoji">' + (h.emoji ? esc(h.emoji) : '•') + '</span>' + esc(h.name) + fl + (dim ? ' <span class="muted">(archiv)</span>' : '') + '</td>'
+        + '<td>' + currentStreak(h) + '</td><td>' + longestStreak(h) + '</td><td>' + habitRate(h) + ' %</td></tr>';
+    };
+    html += '<div class="card table-card"><table class="stat-table"><thead><tr><th>Návyk</th><th>🔥 Teď</th><th>Max</th><th>Úspěšnost</th></tr></thead><tbody>'
       + hs.map(h => row(h, false)).join('') + arch.map(h => row(h, true)).join('')
-      + '</tbody></table></div>';
+      + '</tbody></table></div>'
+      + '<p class="hint">Streak i úspěšnost respektují nastavenou frekvenci — u „vybraných dnů“ se počítají jen naplánované dny, u týdenních/měsíčních celé týdny či měsíce (úspěšnost z posledních 4 týdnů, resp. 3 měsíců).</p>';
   }
 
   html += '<div class="card"><div class="sec-title" style="margin-top:0">Záloha a přenos dat</div>'
@@ -894,6 +1239,25 @@ function renderStats(){
     + '<div class="row-btns"><button class="btn" data-action="exportData">⬇️ Exportovat data</button>'
     + '<button class="btn" data-action="importData">⬆️ Importovat data</button></div></div>';
   $('#view-stats').innerHTML = html;
+}
+
+/* ============ Render: Plán ============ */
+function renderPlan(){
+  let html = '<div class="view-title">Plán</div>';
+  if (planEdit){
+    html += '<div class="card">'
+      + '<textarea id="plan-ta" class="plan-ta" maxlength="50000" aria-label="Text plánu">' + esc(planDraft) + '</textarea>'
+      + '<div class="row-btns" style="margin-top:12px"><button class="btn" data-action="cancelPlan">Zrušit</button>'
+      + '<button class="btn primary" data-action="savePlan">💾 Uložit</button></div>'
+      + '</div>';
+  } else {
+    html += '<div class="toolbar"><button class="btn small" data-action="editPlan">✏️ Upravit plán</button></div>';
+    html += (data.plan && data.plan.trim())
+      ? '<div class="card"><p class="plan-text">' + esc(data.plan) + '</p></div>'
+      : '<div class="card empty">Plán je zatím prázdný.<br>Klepněte na <strong>✏️ Upravit plán</strong> a napište si sem cokoli — tréninky, jídelníček, poznámky.</div>';
+    html += '<p class="hint">Volný text jen pro vás. Ukládá se v tomto zařízení a je součástí exportu dat.</p>';
+  }
+  $('#view-plan').innerHTML = html;
 }
 
 /* ============ Modaly ============ */
@@ -907,21 +1271,29 @@ function closeModal(){
 }
 function openHabitModal(habit){
   const isNew = !habit;
-  const h = habit || { name: '', emoji: '', type: 'check', goal: 10, unit: '' };
+  const h = habit || { name: '', emoji: '', type: 'check', goal: 10, unit: '', freq: { type: 'daily' } };
+  const f = normFreq(h.freq);
   const emojiBtns = EMOJI_PICKS.map(e => '<button class="emoji-pick" data-action="pickEmoji" data-emoji="' + e + '">' + e + '</button>').join('');
+  const freqBtns = ['daily', 'days', 'weekly', 'monthly'].map(t =>
+    '<button class="seg-btn' + (f.type === t ? ' on' : '') + '" data-action="setFreq" data-freq="' + t + '">'
+    + ({ daily: 'Denně', days: 'Vybrané dny', weekly: '1× týdně', monthly: '1× měsíčně' })[t] + '</button>').join('');
+  const dayBtns = WD.map((w, i) =>
+    '<button class="day-chip' + (f.type === 'days' && f.days.indexOf(i) !== -1 ? ' on' : '') + '" data-action="toggleDay" data-day="' + i + '">' + w + '</button>').join('');
   openModal(
     '<div class="sheet-title">' + (isNew ? 'Nový návyk' : 'Upravit návyk') + '</div>'
     + '<label class="field"><span class="field-lbl">Název</span><input id="f-name" maxlength="60" value="' + esc(h.name) + '" placeholder="např. Meditace"></label>'
     + '<label class="field"><span class="field-lbl">Emoji (volitelné)</span><input id="f-emoji" maxlength="8" value="' + esc(h.emoji || '') + '" placeholder="🙂"></label>'
     + '<div class="emoji-row">' + emojiBtns + '</div>'
-    + '<div class="field"><span class="field-lbl">Typ návyku</span><div class="seg">'
+    + '<div class="field"><span class="field-lbl">Typ návyku</span><div class="seg" id="type-seg">'
     + '<button class="seg-btn' + (h.type === 'check' ? ' on' : '') + '" data-action="setType" data-type="check">Ano / ne</button>'
     + '<button class="seg-btn' + (h.type === 'number' ? ' on' : '') + '" data-action="setType" data-type="number">Číselný s cílem</button>'
     + '</div></div>'
     + '<div id="goal-fields" class="two-col"' + (h.type === 'number' ? '' : ' hidden') + '>'
-    + '<label class="field"><span class="field-lbl">Denní cíl</span><input id="f-goal" inputmode="decimal" value="' + fmtNum(h.goal || 10) + '"></label>'
+    + '<label class="field"><span class="field-lbl">Cíl</span><input id="f-goal" inputmode="decimal" value="' + fmtNum(h.goal || 10) + '"></label>'
     + '<label class="field"><span class="field-lbl">Jednotka</span><input id="f-unit" maxlength="20" value="' + esc(h.unit || '') + '" placeholder="např. stránek"></label>'
     + '</div>'
+    + '<div class="field"><span class="field-lbl">Jak často</span><div class="seg freq" id="freq-seg">' + freqBtns + '</div></div>'
+    + '<div id="days-fields" class="field"' + (f.type === 'days' ? '' : ' hidden') + '><span class="field-lbl">Které dny</span><div class="day-picker">' + dayBtns + '</div></div>'
     + '<div class="modal-actions"><button class="btn" data-action="closeModal">Zrušit</button>'
     + '<button class="btn primary" data-action="saveHabit" data-id="' + (isNew ? '' : esc(h.id)) + '">' + (isNew ? 'Přidat' : 'Uložit') + '</button></div>'
   );
@@ -1072,6 +1444,14 @@ document.addEventListener('click', ev => {
       if (!h) break;
       const key = dateKey(selectedDate);
       const was = isDone(h, key);
+      if (!was && isPeriodic(h)){
+        const f = habitFreq(h);
+        const dk = f.type === 'weekly' ? doneInWeek(h, startOfWeek(selectedDate)) : doneInMonth(h, firstOfMonth(selectedDate));
+        if (dk && dk !== key){
+          toast('„' + h.name + '“ už je splněno — ' + fmtKeyShort(dk) + '. Zrušit to jde jen na tom dni.');
+          break;
+        }
+      }
       setVal(key, h.id, was ? false : true);
       if (!was) popRef = { id: h.id, key };
       render();
@@ -1100,9 +1480,33 @@ document.addEventListener('click', ev => {
     }
 
     case 'setType': {
-      document.querySelectorAll('.seg-btn').forEach(b => b.classList.toggle('on', b === el));
+      document.querySelectorAll('#type-seg .seg-btn').forEach(b => b.classList.toggle('on', b === el));
       const gf = $('#goal-fields');
       if (gf) gf.hidden = el.dataset.type !== 'number';
+      break;
+    }
+    case 'setFreq': {
+      document.querySelectorAll('#freq-seg .seg-btn').forEach(b => b.classList.toggle('on', b === el));
+      const df = $('#days-fields');
+      if (df) df.hidden = el.dataset.freq !== 'days';
+      break;
+    }
+    case 'toggleDay': el.classList.toggle('on'); break;
+    case 'editPlan': {
+      planEdit = true;
+      planDraft = data.plan || '';
+      render();
+      const ta = $('#plan-ta');
+      if (ta) ta.focus();
+      break;
+    }
+    case 'cancelPlan': planEdit = false; render(); break;
+    case 'savePlan': {
+      const ta = $('#plan-ta');
+      data.plan = ((ta ? ta.value : planDraft) || '').slice(0, 50000);
+      planEdit = false;
+      save(); render();
+      toast('Plán uložen');
       break;
     }
     case 'pickEmoji': { const f = $('#f-emoji'); if (f) f.value = el.dataset.emoji; break; }
@@ -1110,22 +1514,30 @@ document.addEventListener('click', ev => {
       const name = ($('#f-name') && $('#f-name').value || '').trim();
       if (!name){ toast('Zadejte název návyku', true); break; }
       const emoji = ($('#f-emoji') && $('#f-emoji').value || '').trim().slice(0, 8);
-      const typeBtn = document.querySelector('.seg-btn.on');
+      const typeBtn = document.querySelector('#type-seg .seg-btn.on');
       const type = typeBtn ? typeBtn.dataset.type : 'check';
       let goal = null, unit = '';
       if (type === 'number'){
         goal = parseNum($('#f-goal') ? $('#f-goal').value : '');
-        if (!isFinite(goal) || goal <= 0){ toast('Zadejte platný denní cíl (číslo větší než 0)', true); break; }
+        if (!isFinite(goal) || goal <= 0){ toast('Zadejte platný cíl (číslo větší než 0)', true); break; }
         goal = Math.round(goal * 100) / 100;
         unit = ($('#f-unit') && $('#f-unit').value || '').trim().slice(0, 20);
       }
+      const freqBtn = document.querySelector('#freq-seg .seg-btn.on');
+      let freq = { type: freqBtn ? freqBtn.dataset.freq : 'daily' };
+      if (freq.type === 'days'){
+        const days = [...document.querySelectorAll('#days-fields .day-chip.on')].map(b => Number(b.dataset.day));
+        if (!days.length){ toast('Vyberte aspoň jeden den v týdnu', true); break; }
+        freq.days = days;
+      }
+      freq = normFreq(freq);
       if (id){
         const h = habitById(id);
-        if (h){ h.name = name.slice(0, 60); h.emoji = emoji; h.type = type; h.goal = goal; h.unit = unit; }
+        if (h){ h.name = name.slice(0, 60); h.emoji = emoji; h.type = type; h.goal = goal; h.unit = unit; h.freq = freq; }
         toast('Návyk upraven');
       } else {
         data.habits.push({
-          id: uid(), name: name.slice(0, 60), emoji, type, goal, unit,
+          id: uid(), name: name.slice(0, 60), emoji, type, goal, unit, freq,
           archived: false,
           order: data.habits.reduce((m, x) => Math.max(m, x.order), -1) + 1,
           createdAt: Date.now()
@@ -1175,6 +1587,10 @@ document.addEventListener('change', ev => {
     if (!was && isDone(h, key)) popRef = { id: h.id, key };
     render();
   }
+});
+
+document.addEventListener('input', ev => {
+  if (ev.target && ev.target.id === 'plan-ta') planDraft = ev.target.value;
 });
 
 document.addEventListener('keydown', ev => {
@@ -1231,11 +1647,12 @@ function toast(msg, isErr){
 
 /* ============ Hlavní render ============ */
 function render(){
-  ['day', 'week', 'month', 'stats'].forEach(v => { $('#view-' + v).hidden = v !== tab; });
+  ['day', 'week', 'month', 'stats', 'plan'].forEach(v => { $('#view-' + v).hidden = v !== tab; });
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('on', b.dataset.tab === tab));
   if (tab === 'day') renderDay();
   else if (tab === 'week') renderWeek();
   else if (tab === 'month') renderMonth();
+  else if (tab === 'plan') renderPlan();
   else renderStats();
   popRef = null;
 }
