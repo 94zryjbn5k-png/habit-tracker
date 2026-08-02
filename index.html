@@ -296,6 +296,7 @@ input,textarea{-webkit-appearance:none;appearance:none;}
 .tab-center:not(.on) .tab-day{opacity:.82;}
 .tab-center:active .tab-day{transform:scale(.92);}
 .tab-center .tab-lbl{font-weight:800;}
+.tab-ghost{visibility:hidden;pointer-events:none;}
 
 /* ---------- kompaktní telefonní režim ---------- */
 @media (max-width:440px){
@@ -346,6 +347,8 @@ input,textarea{-webkit-appearance:none;appearance:none;}
 }
 .emoji-pick:active{transform:scale(.9);}
 .seg{display:flex;background:var(--field-bg);border:1px solid transparent;border-radius:12px;padding:3px;gap:3px;}
+.seg.freq{flex-wrap:wrap;}
+.seg.freq .seg-btn{flex:1 1 31%;}
 .seg.freq{display:grid;grid-template-columns:1fr 1fr;}
 .seg-btn{flex:1;min-height:42px;border-radius:9px;font-size:15px;font-weight:600;color:var(--muted);}
 .seg.freq .seg-btn{font-size:14px;}
@@ -359,7 +362,7 @@ input,textarea{-webkit-appearance:none;appearance:none;}
 .wk-okwk{color:var(--green);}
 .cal-seg{max-width:260px;margin:0 auto 12px;}
 .hm.vacday{background:transparent;border:1.5px dashed var(--line);color:var(--muted);}
-.vac-card{display:flex;align-items:center;gap:12px;padding:12px 14px;}
+.vac-card{display:flex;align-items:center;gap:12px;padding:12px 14px;margin-top:12px;}
 .vac-emo{width:40px;height:40px;border-radius:12px;background:var(--field-bg);display:inline-flex;align-items:center;justify-content:center;font-size:21px;flex:0 0 auto;}
 .vac-tx{display:flex;flex-direction:column;gap:1px;font-size:14px;color:var(--muted);min-width:0;line-height:1.35;}
 .vac-tx strong{color:var(--text);font-size:14.5px;}
@@ -413,6 +416,7 @@ details[open] > summary .chev{transform:rotate(90deg);}
 textarea.meal-f{min-height:58px;}
 input.meal-sn{min-height:46px;resize:none;margin-bottom:8px;}
 .add-snack{width:100%;min-height:42px;font-size:14px;}
+.meals-tools{display:flex;justify-content:flex-end;margin:0 0 6px;}
 .meal-lbl{display:flex;align-items:center;justify-content:space-between;gap:8px;}
 .hist-btn{
   min-width:36px;min-height:30px;border-radius:9px;background:var(--btn-bg);
@@ -443,8 +447,13 @@ input.meal-sn{min-height:46px;resize:none;margin-bottom:8px;}
 .wk-num.frz{color:#5ac8fa;font-weight:800;font-size:15px;}
 
 /* ---------- časovač ---------- */
-.tmr,.lnk{box-shadow:none;background:var(--btn-bg);min-width:40px;min-height:40px;font-size:17px;flex:0 0 auto;}
-.lnk{color:var(--accent);font-weight:800;font-size:17px;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;border-radius:12px;}
+.tmr{box-shadow:none;background:var(--btn-bg);min-width:40px;min-height:40px;font-size:17px;flex:0 0 auto;}
+.lnk{
+  box-shadow:none;background:transparent;min-width:32px;min-height:40px;flex:0 0 auto;
+  color:var(--muted);opacity:.7;font-weight:700;font-size:15px;text-decoration:none;
+  display:inline-flex;align-items:center;justify-content:center;border-radius:10px;
+}
+.lnk:active{opacity:1;background:var(--btn-bg);}
 #timerpill{
   position:fixed;left:50%;transform:translateX(-50%);bottom:calc(74px + env(safe-area-inset-bottom));z-index:60;
   background:var(--accent);color:#fff;border-radius:999px;padding:8px 8px 8px 16px;
@@ -526,8 +535,8 @@ input.meal-sn{min-height:46px;resize:none;margin-bottom:8px;}
     <button class="tab-btn" data-action="tab" data-tab="cal"><span class="tab-ico">📅</span><span class="tab-lbl">Kalendář</span></button>
     <button class="tab-btn" data-action="tab" data-tab="meals"><span class="tab-ico">🍽️</span><span class="tab-lbl">Jídlo</span></button>
     <button class="tab-btn tab-center on" data-action="tab" data-tab="day"><span class="tab-day">✓</span><span class="tab-lbl">Dnes</span></button>
-    <button class="tab-btn" data-action="tab" data-tab="plan"><span class="tab-ico">📋</span><span class="tab-lbl">Plán</span></button>
     <button class="tab-btn" data-action="tab" data-tab="stats"><span class="tab-ico">📊</span><span class="tab-lbl">Přehled</span></button>
+    <span class="tab-btn tab-ghost" aria-hidden="true"></span>
   </div>
 </nav>
 <div id="toast" role="status"></div>
@@ -540,7 +549,7 @@ input.meal-sn{min-height:46px;resize:none;margin-bottom:8px;}
 const STORAGE_KEY = 'habit-tracker-data-v1';
 const WD = ['Po','Út','St','Čt','Pá','So','Ne'];
 const EMOJI_PICKS = ['✅','💪','🏃','🚶','🧘','😴','📖','✍️','📓','💧','🥗','🍎','🚫','💊','🦉','🎓','💼','🎸','🧹','🧠'];
-const FREQ_NAMES = { daily: 'denně', days: 'vybrané dny', weekly: '1× týdně', monthly: '1× měsíčně' };
+const FREQ_NAMES = { daily: 'denně', days: 'vybrané dny', weekly: '1× týdně', biweekly: '1× za 2 týdny', monthly: '1× měsíčně' };
 const WDFULL = ['Pondělí','Úterý','Středa','Čtvrtek','Pátek','Sobota','Neděle'];
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 const DEFAULT_PLAN = `🗓️ TRÉNINKOVÝ TÝDEN
@@ -914,7 +923,7 @@ function validateData(obj){
     if (h.freq != null){
       const f = h.freq;
       if (typeof f !== 'object' || Array.isArray(f)) return 'Návyk „' + h.name + '“ má neplatnou frekvenci.';
-      if (['daily', 'days', 'weekly', 'monthly'].indexOf(f.type) === -1) return 'Návyk „' + h.name + '“ má neznámou frekvenci.';
+      if (['daily', 'days', 'weekly', 'biweekly', 'monthly'].indexOf(f.type) === -1) return 'Návyk „' + h.name + '“ má neznámou frekvenci.';
       if (f.type === 'days' && (!Array.isArray(f.days) || !f.days.length || f.days.some(d => !Number.isInteger(d) || d < 0 || d > 6))) return 'Návyk „' + h.name + '“ má neplatné dny v týdnu.';
     }
     if (h.timerMin != null && !(Number.isInteger(h.timerMin) && h.timerMin >= 1 && h.timerMin <= 600)) return 'Návyk „' + h.name + '“ má neplatný časovač.';
@@ -1131,12 +1140,12 @@ function normFreq(f){
       : [];
     return days.length ? { type: 'days', days } : { type: 'daily' };
   }
-  if (f.type === 'weekly' || f.type === 'monthly') return { type: f.type };
+  if (f.type === 'weekly' || f.type === 'biweekly' || f.type === 'monthly') return { type: f.type };
   return { type: 'daily' };
 }
 function isPeriodic(h){
   const t = habitFreq(h).type;
-  return t === 'weekly' || t === 'monthly';
+  return t === 'weekly' || t === 'biweekly' || t === 'monthly';
 }
 function isScheduled(h, d){
   if (onVacation(h, d)) return false; // prázdniny = nenaplánováno
@@ -1180,6 +1189,36 @@ function weekAllVacation(h, mon){
   }
   return true;
 }
+const FORTNIGHT_EPOCH = startOfWeek(new Date(2024, 0, 1)); // pevná kotva čtrnáctidenních oken (Po 1. 1. 2024)
+function fortnightStart(d){
+  const mon = startOfWeek(d);
+  const weeks = Math.round((mon - FORTNIGHT_EPOCH) / 604800000);
+  return (((weeks % 2) + 2) % 2) === 0 ? mon : addDays(mon, -7);
+}
+function fortnightSum(h, fs){
+  let s = 0;
+  for (let i = 0; i < 14; i++){
+    const v = getVal(dateKey(addDays(fs, i)), h.id);
+    if (typeof v === 'number') s += v;
+  }
+  return Math.round(s * 100) / 100;
+}
+function fortnightAllVacation(h, fs){
+  for (let i = 0; i < 14; i++){
+    if (!onVacation(h, addDays(fs, i))) return false;
+  }
+  return true;
+}
+function doneInFortnight(h, fs){
+  if (h.type === 'number'){ // číselný cíl se sčítá přes celých 14 dní
+    return fortnightSum(h, fs) >= (h.goal || 1) ? dateKey(fs) : null;
+  }
+  for (let i = 0; i < 14; i++){
+    const k = dateKey(addDays(fs, i));
+    if (isDone(h, k)) return k;
+  }
+  return null;
+}
 function monthAllVacation(h, first){
   const days = new Date(first.getFullYear(), first.getMonth() + 1, 0).getDate();
   for (let i = 1; i <= days; i++){
@@ -1190,6 +1229,7 @@ function monthAllVacation(h, first){
 function periodicPaused(h, refDate){
   const f = habitFreq(h);
   if (f.type === 'weekly') return weekAllVacation(h, startOfWeek(refDate));
+  if (f.type === 'biweekly') return fortnightAllVacation(h, fortnightStart(refDate));
   if (f.type === 'monthly') return monthAllVacation(h, firstOfMonth(refDate));
   return false;
 }
@@ -1208,6 +1248,40 @@ function normMeal(v){
   }
   if (!m.b.trim() && !m.l.trim() && !m.d.trim() && !m.note.trim() && !m.sn.length) return null;
   return m;
+}
+function mealsWeekText(anyDay){
+  const mon = startOfWeek(anyDay);
+  const sun = addDays(mon, 6);
+  const DAYS = ['PONDĚLÍ', 'ÚTERÝ', 'STŘEDA', 'ČTVRTEK', 'PÁTEK', 'SOBOTA', 'NEDĚLE'];
+  let out = '🍽️ Jídelníček ' + mon.getDate() + '. ' + (mon.getMonth() + 1) + '. – ' + sun.getDate() + '. ' + (sun.getMonth() + 1) + '.\n';
+  for (let i = 0; i < 7; i++){
+    const d = addDays(mon, i);
+    const m = normMeal(data.meals[dateKey(d)]);
+    out += '\n' + DAYS[i] + ' ' + d.getDate() + '. ' + (d.getMonth() + 1) + '.\n';
+    if (!m || (!m.b && !m.l && !m.d && !m.sn.length && !m.note)){ out += '—\n'; continue; }
+    if (m.b) out += '🥣 Snídaně: ' + m.b + '\n';
+    if (m.l) out += '🍲 Oběd: ' + m.l + '\n';
+    if (m.d) out += '🍽️ Večeře: ' + m.d + '\n';
+    if (m.sn.length) out += '🍏 Svačiny: ' + m.sn.join(', ') + '\n';
+    if (m.note) out += '📝 ' + m.note + '\n';
+  }
+  return out;
+}
+function downloadText(txt, fname){
+  const blob = new Blob([txt], { type: 'text/plain' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = fname;
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+  toast('Jídelníček stažen');
+}
+function copyMealsWeek(txt){
+  const fname = 'jidelnicek-' + dateKey(startOfWeek(selectedDate)) + '.txt';
+  if (navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(() => toast('Jídelníček zkopírován do schránky')).catch(() => downloadText(txt, fname));
+  } else downloadText(txt, fname);
 }
 function mealObj(key){
   return normMeal(data.meals[key]) || { b: '', l: '', d: '', sn: [], note: '' };
@@ -1518,6 +1592,17 @@ function currentStreak(habit){
     }
     return n;
   }
+  if (f.type === 'biweekly'){
+    let fs = fortnightStart(today());
+    let n = 0, guard = 0, current = true;
+    while (guard++ < 3000){
+      if (doneInFortnight(habit, fs)){ n++; fs = addDays(fs, -14); current = false; continue; }
+      if (fortnightAllVacation(habit, fs)){ fs = addDays(fs, -14); current = false; continue; } // prázdniny nepřerušují
+      if (current){ current = false; fs = addDays(fs, -14); continue; } // běžící okno streak nepřerušuje
+      break;
+    }
+    return n;
+  }
   if (f.type === 'monthly'){
     let first = firstOfMonth(today());
     let n = 0, guard = 0, current = true;
@@ -1558,6 +1643,17 @@ function longestStreak(habit){
       if (doneInWeek(habit, mon)){ run++; if (run > best) best = run; }
       else if (!weekAllVacation(habit, mon)) run = 0; // prázdninový týden nepřerušuje
       mon = addDays(mon, 7);
+    }
+    return best;
+  }
+  if (f.type === 'biweekly'){
+    let fs = fortnightStart(doneDays[0]);
+    const end = fortnightStart(today());
+    let best = 0, run = 0, guard = 0;
+    while (fs <= end && guard++ < 3000){
+      if (doneInFortnight(habit, fs)){ run++; if (run > best) best = run; }
+      else if (!fortnightAllVacation(habit, fs)) run = 0;
+      fs = addDays(fs, 14);
     }
     return best;
   }
@@ -1608,6 +1704,16 @@ function habitRate(habit){
       if (weekAllVacation(habit, mon)) continue;
       total++;
       if (doneInWeek(habit, mon)) done++;
+    }
+    return total ? Math.round(done / total * 100) : 0;
+  }
+  if (f.type === 'biweekly'){
+    let done = 0, total = 0;
+    for (let i = 1; i <= 9 && total < 3; i++){ // poslední 3 hodnotitelná uzavřená okna
+      const fs = addDays(fortnightStart(today()), -14 * i);
+      if (fortnightAllVacation(habit, fs)) continue;
+      total++;
+      if (doneInFortnight(habit, fs)) done++;
     }
     return total ? Math.round(done / total * 100) : 0;
   }
@@ -1682,12 +1788,14 @@ function periodicRow(h, key){
   const f = habitFreq(h);
   const scopeDone = f.type === 'weekly'
     ? doneInWeek(h, startOfWeek(parseKey(key)))
+    : f.type === 'biweekly'
+    ? doneInFortnight(h, fortnightStart(parseKey(key)))
     : doneInMonth(h, firstOfMonth(parseKey(key)));
   const done = !!scopeDone;
   const pop = popRef && popRef.id === h.id && popRef.key === key;
   const status = done
     ? '✓ splněno' + (scopeDone === key ? '' : ' — ' + fmtKeyShort(scopeDone))
-    : (f.type === 'weekly' ? 'tento týden zatím ne' : 'tento měsíc zatím ne');
+    : (f.type === 'weekly' ? 'tento týden zatím ne' : f.type === 'biweekly' ? 'tyto 2 týdny zatím ne' : 'tento měsíc zatím ne');
   const noteDot = getNote(key, h.id) ? ' <span class="note-dot" aria-label="Má poznámku">📝</span>' : '';
   const lnk = h.link ? '<a class="icon-btn lnk" href="' + esc(h.link) + '" data-action="openLink" rel="noopener" aria-label="Otevřít aplikaci">↗</a>' : '';
   if (h.type === 'check'){
@@ -1704,8 +1812,10 @@ function periodicRow(h, key){
   }
   const val = numVal(h, key);
   const goal = h.goal || 1;
-  const scopeSum = f.type === 'weekly' ? weekSum(h, startOfWeek(parseKey(key))) : monthSum(h, firstOfMonth(parseKey(key)));
-  const scopeName = f.type === 'weekly' ? 'tento týden' : 'tento měsíc';
+  const scopeSum = f.type === 'weekly' ? weekSum(h, startOfWeek(parseKey(key)))
+    : f.type === 'biweekly' ? fortnightSum(h, fortnightStart(parseKey(key)))
+    : monthSum(h, firstOfMonth(parseKey(key)));
+  const scopeName = f.type === 'weekly' ? 'tento týden' : f.type === 'biweekly' ? 'tyto 2 týdny' : 'tento měsíc';
   const pct = Math.max(0, Math.min(100, Math.round(scopeSum / goal * 100)));
   const numStatus = fmtNum(scopeSum) + ' / ' + fmtNum(goal) + (h.unit ? ' ' + esc(h.unit) : '') + ' ' + scopeName
     + (val > 0 ? ' · dnes ' + fmtNum(val) : '')
@@ -1750,6 +1860,7 @@ function renderDay(){
   const dayHs = hs.filter(h => !isPeriodic(h) && isScheduled(h, selectedDate));
   const offCnt = hs.filter(h => !isPeriodic(h) && !isScheduled(h, selectedDate) && !onVacation(h, selectedDate)).length;
   const weekHs = hs.filter(h => habitFreq(h).type === 'weekly' && !periodicPaused(h, selectedDate));
+  const biweekHs = hs.filter(h => habitFreq(h).type === 'biweekly' && !periodicPaused(h, selectedDate));
   const monthHs = hs.filter(h => habitFreq(h).type === 'monthly' && !periodicPaused(h, selectedDate));
   const vacHs = hs.filter(h => isPeriodic(h) ? periodicPaused(h, selectedDate) : onVacation(h, selectedDate));
   const st = dayStats(key);
@@ -1765,8 +1876,9 @@ function renderDay(){
   const hide = !!data.hideDone && !editMode;
   const shownDay = hide ? dayHs.filter(h => !isDone(h, key)) : dayHs;
   const shownWeek = hide ? weekHs.filter(h => !doneInWeek(h, startOfWeek(selectedDate))) : weekHs;
+  const shownBiweek = hide ? biweekHs.filter(h => !doneInFortnight(h, fortnightStart(selectedDate))) : biweekHs;
   const shownMonth = hide ? monthHs.filter(h => !doneInMonth(h, firstOfMonth(selectedDate))) : monthHs;
-  const hiddenCnt = (dayHs.length - shownDay.length) + (weekHs.length - shownWeek.length) + (monthHs.length - shownMonth.length);
+  const hiddenCnt = (dayHs.length - shownDay.length) + (weekHs.length - shownWeek.length) + (biweekHs.length - shownBiweek.length) + (monthHs.length - shownMonth.length);
 
   if (dayHs.length){
     html += '<div class="card progress-card"><div class="progress-txt"><strong>Splněno ' + st.done + ' z ' + st.total + '</strong><span class="muted">' + st.pct + ' %</span></div>'
@@ -1787,8 +1899,8 @@ function renderDay(){
     html += '<div class="habit-list">' + hs.map((h, i) => editRow(h, i, hs.length)).join('') + '</div>'
       + '<p class="hint">Pořadí změníte přetažením (na počítači) nebo šipkami ↑ ↓. Ikonou 🏖️ nastavíte návyku prázdniny. Podržením prstu na návyku (mimo režim úprav) přidáte poznámku ke dni.</p>';
   } else {
-    const hasSections = weekHs.length || monthHs.length;
-    if (hide && !shownDay.length && !shownWeek.length && !shownMonth.length && hiddenCnt){
+    const hasSections = weekHs.length || biweekHs.length || monthHs.length;
+    if (hide && !shownDay.length && !shownWeek.length && !shownBiweek.length && !shownMonth.length && hiddenCnt){
       html += '<div class="card empty">🎉 Všechno hotovo — splněno ' + hiddenCnt + ' ' + plural(hiddenCnt, 'návyk', 'návyky', 'návyků') + '.</div>';
     } else {
       if (shownDay.length){
@@ -1799,6 +1911,9 @@ function renderDay(){
       }
       if (shownWeek.length){
         html += '<div class="sec-title">Jednou týdně</div><div class="habit-list">' + shownWeek.map(h => periodicRow(h, key)).join('') + '</div>';
+      }
+      if (shownBiweek.length){
+        html += '<div class="sec-title">Jednou za 2 týdny</div><div class="habit-list">' + shownBiweek.map(h => periodicRow(h, key)).join('') + '</div>';
       }
       if (shownMonth.length){
         html += '<div class="sec-title">Jednou měsíčně</div><div class="habit-list">' + shownMonth.map(h => periodicRow(h, key)).join('') + '</div>';
@@ -2009,7 +2124,8 @@ function renderMeals(){
   if (mealSnackUI.key !== key) mealSnackUI = { key, n: Math.max(1, m.sn.length) };
   else mealSnackUI.n = Math.max(mealSnackUI.n, m.sn.length, 1);
 
-  let html = '<div class="daynav">'
+  let html = '<div class="meals-tools"><button class="btn small" data-action="exportMealsWeek" aria-label="Exportovat týden" title="Exportovat tento týden">📤 Týden</button></div>'
+    + '<div class="daynav">'
     + '<button class="icon-btn" data-action="prevDay" aria-label="Předchozí den">‹</button>'
     + '<div class="daynav-mid"><div class="daynav-date">' + (isToday ? 'Dnes' : fmtDateFull(selectedDate)) + '</div>'
     + (isToday ? '<div class="daynav-sub">' + fmtDateFull(selectedDate) + '</div>'
@@ -2161,9 +2277,9 @@ function openHabitModal(habit){
   const h = habit || { name: '', emoji: '', type: 'check', goal: 10, unit: '', freq: { type: 'daily' } };
   const f = normFreq(h.freq);
   const emojiBtns = EMOJI_PICKS.map(e => '<button class="emoji-pick" data-action="pickEmoji" data-emoji="' + e + '">' + e + '</button>').join('');
-  const freqBtns = ['daily', 'days', 'weekly', 'monthly'].map(t =>
+  const freqBtns = ['daily', 'days', 'weekly', 'biweekly', 'monthly'].map(t =>
     '<button class="seg-btn' + (f.type === t ? ' on' : '') + '" data-action="setFreq" data-freq="' + t + '">'
-    + ({ daily: 'Denně', days: 'Vybrané dny', weekly: '1× týdně', monthly: '1× měsíčně' })[t] + '</button>').join('');
+    + ({ daily: 'Denně', days: 'Vybrané dny', weekly: '1× týdně', biweekly: '1× za 2 týdny', monthly: '1× měsíčně' })[t] + '</button>').join('');
   const dayBtns = WD.map((w, i) =>
     '<button class="day-chip' + (f.type === 'days' && f.days.indexOf(i) !== -1 ? ' on' : '') + '" data-action="toggleDay" data-day="' + i + '">' + w + '</button>').join('');
   openModal(
@@ -2464,6 +2580,15 @@ document.addEventListener('click', ev => {
     }
     case 'cancelTimer': stopTimer(); toast('Časovač zrušen'); break;
     case 'openLink': break; // odkaz řeší prohlížeč, jen nesmí přepnout řádek
+    case 'exportMealsWeek': {
+      const txt = mealsWeekText(selectedDate);
+      if (navigator.share){
+        navigator.share({ title: 'Jídelníček', text: txt })
+          .then(() => toast('Jídelníček sdílen'))
+          .catch(err => { if (!err || err.name !== 'AbortError') copyMealsWeek(txt); });
+      } else copyMealsWeek(txt);
+      break;
+    }
     case 'gotoDay': {
       let d = parseKey(el.dataset.key);
       if (d > today()) d = today();
