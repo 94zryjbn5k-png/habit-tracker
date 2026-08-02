@@ -23,6 +23,7 @@
   --shadow:0 1px 2px rgba(0,0,0,.06), 0 2px 8px rgba(0,0,0,.04);
   --radius:16px;
   --tabbar-bg:rgba(249,249,251,.88);
+  --accent-text:#ffffff; --accent-soft:rgba(10,132,255,.38); --accent-ring:rgba(10,132,255,.22);
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 [hidden]{display:none !important;}
@@ -95,7 +96,7 @@ input,textarea{-webkit-appearance:none;appearance:none;}
 }
 .btn:active{transform:scale(.97);}
 .btn.small{font-size:14.5px;padding:0 14px;}
-.btn.primary{background:var(--accent);color:#fff;}
+.btn.primary{background:var(--accent);color:var(--accent-text);}
 .btn.danger{background:var(--red);color:#fff;}
 .btn.ghost{background:var(--btn-bg);box-shadow:none;}
 .row-btns{display:flex;gap:10px;flex-wrap:wrap;}
@@ -287,10 +288,10 @@ input,textarea{-webkit-appearance:none;appearance:none;}
 .tab-btn.on .tab-ico{opacity:1;transform:translateY(-1px);}
 .tab-center{overflow:visible;}
 .tab-day{
-  width:54px;height:54px;border-radius:50%;background:var(--accent);color:#fff;
-  display:flex;align-items:center;justify-content:center;font-size:25px;font-weight:800;line-height:1;
+  width:54px;height:54px;border-radius:50%;background:var(--accent);color:var(--accent-text);
+  display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;line-height:1;font-variant-numeric:tabular-nums;
   margin-top:-28px;border:4px solid var(--bg);flex:0 0 auto;
-  box-shadow:0 6px 16px rgba(10,132,255,.38),0 2px 5px rgba(0,0,0,.18);
+  box-shadow:0 6px 16px var(--accent-soft),0 2px 5px rgba(0,0,0,.18);
   transition:transform .12s ease,opacity .15s;
 }
 .tab-center:not(.on) .tab-day{opacity:.82;}
@@ -362,10 +363,22 @@ input,textarea{-webkit-appearance:none;appearance:none;}
 .wk-okwk{color:var(--green);}
 .cal-seg{max-width:260px;margin:0 auto 12px;}
 .hm.vacday{background:transparent;border:1.5px dashed var(--line);color:var(--muted);}
-.vac-card{display:flex;align-items:center;gap:12px;padding:12px 14px;margin-top:12px;}
-.vac-emo{width:40px;height:40px;border-radius:12px;background:var(--field-bg);display:inline-flex;align-items:center;justify-content:center;font-size:21px;flex:0 0 auto;}
-.vac-tx{display:flex;flex-direction:column;gap:1px;font-size:14px;color:var(--muted);min-width:0;line-height:1.35;}
-.vac-tx strong{color:var(--text);font-size:14.5px;}
+.vac-card{
+  background:var(--card);color:var(--text);border-radius:var(--radius);box-shadow:var(--shadow);
+  margin-top:26px;opacity:.92;
+}
+.vac-card summary{display:flex;align-items:center;gap:12px;padding:11px 14px;list-style:none;cursor:pointer;min-height:44px;}
+.vac-card summary::-webkit-details-marker{display:none;}
+.vac-emo{width:36px;height:36px;border-radius:11px;background:var(--field-bg);display:inline-flex;align-items:center;justify-content:center;font-size:19px;flex:0 0 auto;}
+.vac-sum{display:flex;flex-direction:column;gap:0;min-width:0;flex:1;line-height:1.3;}
+.vac-sum strong{font-size:14px;}
+.vac-sum span{font-size:12.5px;color:var(--muted);}
+.vac-chev{color:var(--muted);font-size:19px;transition:transform .15s;flex:0 0 auto;padding-right:2px;}
+.vac-card[open] .vac-chev{transform:rotate(90deg);}
+.vac-list{list-style:none;margin:0;padding:2px 14px 12px;}
+.vac-list li{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 0;border-top:1px solid var(--line);font-size:14.5px;}
+.vac-nm{display:inline-flex;align-items:center;gap:8px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.vac-until{flex:0 0 auto;font-size:12.5px;color:var(--muted);}
 .vac-row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:5px 0 5px 2px;border-bottom:1px solid var(--line);font-size:15px;}
 .vac-row:last-child{border-bottom:0;}
 .vac-row .icon-btn{box-shadow:none;background:transparent;font-size:17px;min-width:40px;min-height:40px;}
@@ -456,13 +469,13 @@ input.meal-sn{min-height:46px;resize:none;margin-bottom:8px;}
 .lnk:active{opacity:1;background:var(--btn-bg);}
 #timerpill{
   position:fixed;left:50%;transform:translateX(-50%);bottom:calc(74px + env(safe-area-inset-bottom));z-index:60;
-  background:var(--accent);color:#fff;border-radius:999px;padding:8px 8px 8px 16px;
+  background:var(--accent);color:var(--accent-text);border-radius:999px;padding:8px 8px 8px 16px;
   display:flex;align-items:center;gap:8px;font-size:14.5px;font-weight:700;font-variant-numeric:tabular-nums;
   box-shadow:0 4px 16px rgba(0,0,0,.25);white-space:nowrap;max-width:92vw;
 }
 #timerpill[hidden]{display:none;}
 #timerpill button{
-  width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.22);color:#fff;
+  width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.22);color:var(--accent-text);
   display:inline-flex;align-items:center;justify-content:center;font-size:14px;flex:0 0 auto;
 }
 
@@ -479,10 +492,25 @@ input.meal-sn{min-height:46px;resize:none;margin-bottom:8px;}
   transition:transform .1s,border-color .15s,box-shadow .15s;
 }
 .bg-sw:active{transform:scale(.88);}
-.bg-sw.on{border-color:var(--accent);box-shadow:0 0 0 3px rgba(10,132,255,.22);}
+.bg-sw.on{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-ring);}
 .sw-check{font-size:15px;font-weight:800;color:#1c1c1e;line-height:1;}
 .sw-check.lite{color:#f2f2f7;}
 .theme-lbl{display:block;font-size:12.5px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin:14px 2px 8px;}
+
+/* ---------- rok v pixelech ---------- */
+.yr-head{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:3px;margin-bottom:5px;}
+.yr-head span{font-size:9.5px;color:var(--muted);text-align:center;font-weight:700;}
+.yr-row{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:3px;margin-bottom:3px;}
+.yr-row:last-child{margin-bottom:0;}
+.yc{aspect-ratio:1/1;width:100%;border-radius:4px;background:var(--h0);padding:0;display:block;border:none;}
+.yc.off{background:transparent;box-shadow:inset 0 0 0 1px var(--line);}
+.yc.void{background:transparent;}
+.yc.future{background:transparent;box-shadow:inset 0 0 0 1px var(--line);opacity:.35;}
+.yc.l1{background:var(--h1);}
+.yc.l2{background:var(--h2);}
+.yc.l3{background:var(--h3);}
+.yc.l4{background:var(--h4);}
+.yc.today{outline:2px solid var(--accent);outline-offset:1px;}
 
 /* ---------- milníky ---------- */
 .mile-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;}
@@ -526,6 +554,7 @@ input.meal-sn{min-height:46px;resize:none;margin-bottom:8px;}
     <section id="view-day"></section>
     <section id="view-cal" hidden></section>
     <section id="view-meals" hidden></section>
+    <section id="view-year" hidden></section>
     <section id="view-stats" hidden></section>
     <section id="view-plan" hidden></section>
   </main>
@@ -535,8 +564,8 @@ input.meal-sn{min-height:46px;resize:none;margin-bottom:8px;}
     <button class="tab-btn" data-action="tab" data-tab="cal"><span class="tab-ico">📅</span><span class="tab-lbl">Kalendář</span></button>
     <button class="tab-btn" data-action="tab" data-tab="meals"><span class="tab-ico">🍽️</span><span class="tab-lbl">Jídlo</span></button>
     <button class="tab-btn tab-center on" data-action="tab" data-tab="day"><span class="tab-day">✓</span><span class="tab-lbl">Dnes</span></button>
+    <button class="tab-btn" data-action="tab" data-tab="year"><span class="tab-ico">📆</span><span class="tab-lbl">Rok</span></button>
     <button class="tab-btn" data-action="tab" data-tab="stats"><span class="tab-ico">📊</span><span class="tab-lbl">Přehled</span></button>
-    <span class="tab-btn tab-ghost" aria-hidden="true"></span>
   </div>
 </nav>
 <div id="toast" role="status"></div>
@@ -923,7 +952,9 @@ function validateData(obj){
     if (h.freq != null){
       const f = h.freq;
       if (typeof f !== 'object' || Array.isArray(f)) return 'Návyk „' + h.name + '“ má neplatnou frekvenci.';
-      if (['daily', 'days', 'weekly', 'biweekly', 'monthly'].indexOf(f.type) === -1) return 'Návyk „' + h.name + '“ má neznámou frekvenci.';
+      if (['daily', 'days', 'weekly', 'biweekly', 'monthly', 'every'].indexOf(f.type) === -1) return 'Návyk „' + h.name + '“ má neznámou frekvenci.';
+      if (f.type === 'every' && !(Number.isInteger(f.days) && f.days >= 2 && f.days <= 365)) return 'Návyk „' + h.name + '“ má neplatný interval (2–365 dní).';
+      if (f.type === 'every' && h.type === 'number') return 'Interval „za X dní" je jen pro ano/ne návyky („' + h.name + '“).';
       if (f.type === 'days' && (!Array.isArray(f.days) || !f.days.length || f.days.some(d => !Number.isInteger(d) || d < 0 || d > 6))) return 'Návyk „' + h.name + '“ má neplatné dny v týdnu.';
     }
     if (h.timerMin != null && !(Number.isInteger(h.timerMin) && h.timerMin >= 1 && h.timerMin <= 600)) return 'Návyk „' + h.name + '“ má neplatný časovač.';
@@ -1140,12 +1171,16 @@ function normFreq(f){
       : [];
     return days.length ? { type: 'days', days } : { type: 'daily' };
   }
+  if (f.type === 'every'){
+    const n = Number.isInteger(f.days) ? f.days : parseInt(f.days, 10);
+    return { type: 'every', days: (isFinite(n) && n >= 2 && n <= 365) ? n : 14 };
+  }
   if (f.type === 'weekly' || f.type === 'biweekly' || f.type === 'monthly') return { type: f.type };
   return { type: 'daily' };
 }
 function isPeriodic(h){
   const t = habitFreq(h).type;
-  return t === 'weekly' || t === 'biweekly' || t === 'monthly';
+  return t === 'weekly' || t === 'biweekly' || t === 'monthly' || t === 'every';
 }
 function isScheduled(h, d){
   if (onVacation(h, d)) return false; // prázdniny = nenaplánováno
@@ -1209,6 +1244,23 @@ function fortnightAllVacation(h, fs){
   }
   return true;
 }
+function diffD(a, b){
+  return Math.round((b - a) / 86400000);
+}
+function lastDoneKey(h, refKey){
+  let best = null;
+  for (const k of Object.keys(data.entries)){
+    if (k <= refKey && isDone(h, k) && (!best || k > best)) best = k;
+  }
+  return best;
+}
+function everyDue(h, d){
+  const key = dateKey(d);
+  if (isDone(h, key)) return false; // dnes už splněno
+  const last = lastDoneKey(h, key);
+  if (!last) return true;
+  return diffD(parseKey(last), d) >= habitFreq(h).days;
+}
 function doneInFortnight(h, fs){
   if (h.type === 'number'){ // číselný cíl se sčítá přes celých 14 dní
     return fortnightSum(h, fs) >= (h.goal || 1) ? dateKey(fs) : null;
@@ -1231,6 +1283,7 @@ function periodicPaused(h, refDate){
   if (f.type === 'weekly') return weekAllVacation(h, startOfWeek(refDate));
   if (f.type === 'biweekly') return fortnightAllVacation(h, fortnightStart(refDate));
   if (f.type === 'monthly') return monthAllVacation(h, firstOfMonth(refDate));
+  if (f.type === 'every') return onVacation(h, refDate);
   return false;
 }
 
@@ -1308,7 +1361,8 @@ function mealHistory(field){
 /* ============ Vzhled (barvy) ============ */
 const THEME_BG = ['#f2f2f7','#ffffff','#f6f1e7','#eaf5ee','#e9f1fa','#efecf8','#f9edf0','#fbf0e6','#000000','#16171b','#1c1c1e','#101828','#14231c','#241726','#26180f','#1b2731'];
 const THEME_CARD = ['#ffffff','#f7f7fa','#fbf7ee','#eef7f1','#edf4fc','#f2effb','#fdf1f4','#fdf5ec','#1c1c1e','#222329','#17181d','#182236','#1e2b24','#2a1e2e','#2e2117','#223140'];
-const THEME_DEFAULT = { bg: '#f2f2f7', card: '#ffffff', text: 'auto' };
+const THEME_DEFAULT = { bg: '#f2f2f7', card: '#ffffff', accent: '#0a84ff', text: 'auto' };
+const THEME_ACCENTS = ['#0a84ff', '#5ac8fa', '#34c759', '#ff9f0a', '#ff453a', '#ff375f', '#bf5af2', '#ffd60a'];
 const LEGACY_BG_IDS = { default: '#f2f2f7', cream: '#f6f1e7', mint: '#eaf5ee', sky: '#e9f1fa', lavender: '#efecf8', rose: '#f9edf0', peach: '#fbf0e6' };
 const HEX_RE = /^#[0-9a-f]{6}$/i;
 const LINK_RE = /^[a-z][a-z0-9+.\-]*:\/\/\S*$/i;
@@ -1327,8 +1381,13 @@ function normTheme(t){
   return {
     bg: (typeof src.bg === 'string' && HEX_RE.test(src.bg)) ? src.bg.toLowerCase() : THEME_DEFAULT.bg,
     card: (typeof src.card === 'string' && HEX_RE.test(src.card)) ? src.card.toLowerCase() : THEME_DEFAULT.card,
+    accent: (typeof src.accent === 'string' && HEX_RE.test(src.accent)) ? src.accent.toLowerCase() : THEME_DEFAULT.accent,
     text: ['auto', 'dark', 'light'].includes(src.text) ? src.text : 'auto'
   };
+}
+function hexRgb(h){
+  const n = parseInt(h.slice(1), 16);
+  return ((n >> 16) & 255) + ',' + ((n >> 8) & 255) + ',' + (n & 255);
 }
 function applyTheme(){
   const t = normTheme(data && data.theme);
@@ -1348,6 +1407,10 @@ function applyTheme(){
   R.setProperty('--text-bg', bgDark ? '#f2f2f7' : '#1c1c1e');
   R.setProperty('--muted-bg', bgDark ? '#a3a3ab' : '#8a8a8e');
   R.setProperty('--tabbar-bg', bgDark ? 'rgba(18,19,22,.9)' : 'rgba(249,249,251,.9)');
+  R.setProperty('--accent', t.accent);
+  R.setProperty('--accent-text', lum(t.accent) > 0.62 ? '#1c1c1e' : '#ffffff');
+  R.setProperty('--accent-soft', 'rgba(' + hexRgb(t.accent) + ',.38)');
+  R.setProperty('--accent-ring', 'rgba(' + hexRgb(t.accent) + ',.22)');
 }
 
 /* ============ Poznámky ke dni ============ */
@@ -1533,6 +1596,7 @@ function timerTick(){
 function freqLabel(h){
   const f = habitFreq(h);
   if (f.type === 'days') return f.days.map(i => WD[i]).join(' · ');
+  if (f.type === 'every') return '1× za ' + f.days + ' ' + plural(f.days, 'den', 'dny', 'dní');
   return FREQ_NAMES[f.type];
 }
 function weekSum(h, mon){
@@ -1592,6 +1656,17 @@ function currentStreak(habit){
     }
     return n;
   }
+  if (f.type === 'every'){
+    const dones = Object.keys(data.entries).filter(k => isDone(habit, k)).sort();
+    if (!dones.length) return 0;
+    if (diffD(parseKey(dones[dones.length - 1]), today()) > f.days) return 0; // interval prošvihnut
+    let n = 1;
+    for (let i = dones.length - 1; i > 0; i--){
+      if (diffD(parseKey(dones[i - 1]), parseKey(dones[i])) <= f.days) n++;
+      else break;
+    }
+    return n;
+  }
   if (f.type === 'biweekly'){
     let fs = fortnightStart(today());
     let n = 0, guard = 0, current = true;
@@ -1643,6 +1718,16 @@ function longestStreak(habit){
       if (doneInWeek(habit, mon)){ run++; if (run > best) best = run; }
       else if (!weekAllVacation(habit, mon)) run = 0; // prázdninový týden nepřerušuje
       mon = addDays(mon, 7);
+    }
+    return best;
+  }
+  if (f.type === 'every'){
+    const dones = Object.keys(data.entries).filter(k => isDone(habit, k)).sort();
+    let best = dones.length ? 1 : 0, run = 1;
+    for (let i = 1; i < dones.length; i++){
+      if (diffD(parseKey(dones[i - 1]), parseKey(dones[i])) <= f.days) run++;
+      else run = 1;
+      if (run > best) best = run;
     }
     return best;
   }
@@ -1706,6 +1791,18 @@ function habitRate(habit){
       if (doneInWeek(habit, mon)) done++;
     }
     return total ? Math.round(done / total * 100) : 0;
+  }
+  if (f.type === 'every'){
+    const dones = Object.keys(data.entries).filter(k => isDone(habit, k)).sort();
+    if (!dones.length) return 0;
+    const gaps = [];
+    for (let i = Math.max(1, dones.length - 6); i < dones.length; i++){
+      gaps.push(diffD(parseKey(dones[i - 1]), parseKey(dones[i])));
+    }
+    const overdue = diffD(parseKey(dones[dones.length - 1]), today()) > f.days;
+    if (!gaps.length) return overdue ? 0 : 100;
+    const ok = gaps.filter(g => g <= f.days).length + (overdue ? 0 : 1);
+    return Math.round(ok / (gaps.length + 1) * 100);
   }
   if (f.type === 'biweekly'){
     let done = 0, total = 0;
@@ -1786,6 +1883,34 @@ function dayRow(h, key, isFuture){
 }
 function periodicRow(h, key){
   const f = habitFreq(h);
+  if (f.type === 'every'){
+    const d = parseKey(key);
+    const doneToday = isDone(h, key);
+    const last = lastDoneKey(h, key);
+    const due = everyDue(h, d);
+    const done = !due;
+    const pop = popRef && popRef.id === h.id && popRef.key === key;
+    const nextFrom = doneToday ? d : (last ? parseKey(last) : null);
+    const status = doneToday
+      ? '✓ splněno — dnes · znovu ' + fmtKeyShort(dateKey(addDays(d, f.days)))
+      : (!due && last)
+      ? '✓ splněno — ' + fmtKeyShort(last) + ' · znovu ' + fmtKeyShort(dateKey(addDays(parseKey(last), f.days)))
+      : last
+      ? 'na řadě — naposledy ' + fmtKeyShort(last)
+      : 'na řadě — zatím poprvé';
+    const noteDot = getNote(key, h.id) ? ' <span class="note-dot" aria-label="Má poznámku">📝</span>' : '';
+    const lnk = h.link ? '<a class="icon-btn lnk" href="' + esc(h.link) + '" data-action="openLink" rel="noopener" aria-label="Otevřít aplikaci">↗</a>' : '';
+    const tmr = (h.timerMin && !doneToday) ? '<button class="icon-btn tmr" data-action="startTimer" data-id="' + esc(h.id) + '" data-key="' + key + '" aria-label="Spustit časovač ' + h.timerMin + ' min">⏱️</button>' : '';
+    return '<div class="habit-row check' + (done ? ' done' : '') + '" role="checkbox" aria-checked="' + doneToday + '" tabindex="0" data-action="rowToggle" data-id="' + esc(h.id) + '" aria-label="' + esc(h.name) + '">'
+      + '<span class="pop-wrap' + (pop ? ' pop' : '') + '">' + habitBadge(h) + '</span>'
+      + '<span class="h-main"><span class="h-name">' + esc(h.name) + noteDot + '</span>'
+      +   '<span class="h-meta"><span class="h-goal">' + status + '</span></span></span>'
+      + lnk
+      + tmr
+      + streakBadge(h)
+      + '<span class="checkbox" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path class="' + (pop ? 'draw' : '') + '" d="M5 13l4 4L19 7"/></svg></span>'
+      + '</div>';
+  }
   const scopeDone = f.type === 'weekly'
     ? doneInWeek(h, startOfWeek(parseKey(key)))
     : f.type === 'biweekly'
@@ -1861,6 +1986,7 @@ function renderDay(){
   const offCnt = hs.filter(h => !isPeriodic(h) && !isScheduled(h, selectedDate) && !onVacation(h, selectedDate)).length;
   const weekHs = hs.filter(h => habitFreq(h).type === 'weekly' && !periodicPaused(h, selectedDate));
   const biweekHs = hs.filter(h => habitFreq(h).type === 'biweekly' && !periodicPaused(h, selectedDate));
+  const everyHs = hs.filter(h => habitFreq(h).type === 'every' && !periodicPaused(h, selectedDate));
   const monthHs = hs.filter(h => habitFreq(h).type === 'monthly' && !periodicPaused(h, selectedDate));
   const vacHs = hs.filter(h => isPeriodic(h) ? periodicPaused(h, selectedDate) : onVacation(h, selectedDate));
   const st = dayStats(key);
@@ -1877,8 +2003,9 @@ function renderDay(){
   const shownDay = hide ? dayHs.filter(h => !isDone(h, key)) : dayHs;
   const shownWeek = hide ? weekHs.filter(h => !doneInWeek(h, startOfWeek(selectedDate))) : weekHs;
   const shownBiweek = hide ? biweekHs.filter(h => !doneInFortnight(h, fortnightStart(selectedDate))) : biweekHs;
+  const shownEvery = hide ? everyHs.filter(h => everyDue(h, selectedDate)) : everyHs;
   const shownMonth = hide ? monthHs.filter(h => !doneInMonth(h, firstOfMonth(selectedDate))) : monthHs;
-  const hiddenCnt = (dayHs.length - shownDay.length) + (weekHs.length - shownWeek.length) + (biweekHs.length - shownBiweek.length) + (monthHs.length - shownMonth.length);
+  const hiddenCnt = (dayHs.length - shownDay.length) + (weekHs.length - shownWeek.length) + (biweekHs.length - shownBiweek.length) + (everyHs.length - shownEvery.length) + (monthHs.length - shownMonth.length);
 
   if (dayHs.length){
     html += '<div class="card progress-card"><div class="progress-txt"><strong>Splněno ' + st.done + ' z ' + st.total + '</strong><span class="muted">' + st.pct + ' %</span></div>'
@@ -1899,8 +2026,8 @@ function renderDay(){
     html += '<div class="habit-list">' + hs.map((h, i) => editRow(h, i, hs.length)).join('') + '</div>'
       + '<p class="hint">Pořadí změníte přetažením (na počítači) nebo šipkami ↑ ↓. Ikonou 🏖️ nastavíte návyku prázdniny. Podržením prstu na návyku (mimo režim úprav) přidáte poznámku ke dni.</p>';
   } else {
-    const hasSections = weekHs.length || biweekHs.length || monthHs.length;
-    if (hide && !shownDay.length && !shownWeek.length && !shownBiweek.length && !shownMonth.length && hiddenCnt){
+    const hasSections = weekHs.length || biweekHs.length || everyHs.length || monthHs.length;
+    if (hide && !shownDay.length && !shownWeek.length && !shownBiweek.length && !shownEvery.length && !shownMonth.length && hiddenCnt){
       html += '<div class="card empty">🎉 Všechno hotovo — splněno ' + hiddenCnt + ' ' + plural(hiddenCnt, 'návyk', 'návyky', 'návyků') + '.</div>';
     } else {
       if (shownDay.length){
@@ -1915,6 +2042,9 @@ function renderDay(){
       if (shownBiweek.length){
         html += '<div class="sec-title">Jednou za 2 týdny</div><div class="habit-list">' + shownBiweek.map(h => periodicRow(h, key)).join('') + '</div>';
       }
+      if (shownEvery.length){
+        html += '<div class="sec-title">V intervalu</div><div class="habit-list">' + shownEvery.map(h => periodicRow(h, key)).join('') + '</div>';
+      }
       if (shownMonth.length){
         html += '<div class="sec-title">Jednou měsíčně</div><div class="habit-list">' + shownMonth.map(h => periodicRow(h, key)).join('') + '</div>';
       }
@@ -1923,9 +2053,12 @@ function renderDay(){
       }
     }
     if (vacHs.length){
-      html += '<div class="card vac-card"><span class="vac-emo">🏖️</span><span class="vac-tx"><strong>Na prázdninách</strong><span>'
-        + vacHs.map(h => esc(h.name) + (vacUntil(h, selectedDate) ? ' (do ' + fmtKeyShort(vacUntil(h, selectedDate)) + ')' : '')).join(', ')
-        + '</span></span></div>';
+      html += '<details class="vac-card"><summary><span class="vac-emo">🏖️</span>'
+        + '<span class="vac-sum"><strong>Na prázdninách</strong><span>' + vacHs.length + ' ' + plural(vacHs.length, 'návyk', 'návyky', 'návyků') + '</span></span>'
+        + '<span class="vac-chev">›</span></summary>'
+        + '<ul class="vac-list">'
+        + vacHs.map(h => '<li><span class="vac-nm">' + habitBadge(h) + ' ' + esc(h.name) + '</span><span class="vac-until">' + (vacUntil(h, selectedDate) ? 'do ' + fmtKeyShort(vacUntil(h, selectedDate)) : 'bez konce') + '</span></li>').join('')
+        + '</ul></details>';
     }
   }
 
@@ -2063,6 +2196,49 @@ function renderCal(){
 }
 
 /* ============ Render: Přehled ============ */
+let yearShift = 0;
+function renderYear(){
+  const t = today();
+  const y = t.getFullYear() + yearShift;
+  let sum = 0, cnt = 0;
+  let head = '<div class="yr-head">';
+  for (let m = 0; m < 12; m++) head += '<span>' + (m + 1) + '</span>';
+  head += '</div>';
+  let rows = '';
+  for (let day = 1; day <= 31; day++){
+    rows += '<div class="yr-row">';
+    for (let m = 0; m < 12; m++){
+      const dim = new Date(y, m + 1, 0).getDate();
+      if (day > dim){ rows += '<span class="yc void"></span>'; continue; }
+      const d = new Date(y, m, day);
+      if (d > t){ rows += '<span class="yc future"></span>'; continue; }
+      const key = dateKey(d);
+      const st = dayStats(key);
+      let cls, ti = day + '. ' + (m + 1) + '. ' + y + ' — ';
+      if (!st.total){ cls = 'off'; ti += 'nic naplánováno'; }
+      else {
+        sum += st.pct; cnt++;
+        cls = !st.done ? 'l0' : st.pct < 25 ? 'l1' : st.pct < 50 ? 'l2' : st.pct < 75 ? 'l3' : 'l4';
+        ti += 'splněno ' + st.done + ' z ' + st.total + ' (' + st.pct + ' %)';
+      }
+      rows += '<button class="yc ' + cls + (sameDay(d, t) ? ' today' : '') + '" data-action="gotoDay" data-key="' + key + '" title="' + ti + '" aria-label="' + ti + '"></button>';
+    }
+    rows += '</div>';
+  }
+  const avg = cnt ? Math.round(sum / cnt) : 0;
+  let html = '<div class="daynav">'
+    + '<button class="icon-btn" data-action="yrPrev" aria-label="Předchozí rok">‹</button>'
+    + '<div class="daynav-mid"><div class="daynav-date">' + y + '</div>'
+    + (yearShift ? '<div class="daynav-sub"><button class="linklike" data-action="yrNow">Zpět na letošek</button></div>'
+                 : '<div class="daynav-sub">průměrná úspěšnost ' + avg + ' %</div>')
+    + '</div>'
+    + '<button class="icon-btn" data-action="yrNext" aria-label="Další rok"' + (yearShift >= 0 ? ' disabled' : '') + '>›</button>'
+    + '</div>';
+  html += '<div class="card yr-card">' + head + rows + '</div>';
+  html += '<div class="hm-foot"><span class="hm-legend">méně <i class="hm l0"></i><i class="hm l1"></i><i class="hm l2"></i><i class="hm l3"></i><i class="hm l4"></i> více</span></div>';
+  html += '<p class="hint">Každý sloupec je měsíc, každý řádek den v měsíci. Ťuknutím na políčko den otevřete.</p>';
+  $('#view-year').innerHTML = html;
+}
 function renderStats(){
   const hs = activeHabits();
   const arch = archivedHabits();
@@ -2277,9 +2453,9 @@ function openHabitModal(habit){
   const h = habit || { name: '', emoji: '', type: 'check', goal: 10, unit: '', freq: { type: 'daily' } };
   const f = normFreq(h.freq);
   const emojiBtns = EMOJI_PICKS.map(e => '<button class="emoji-pick" data-action="pickEmoji" data-emoji="' + e + '">' + e + '</button>').join('');
-  const freqBtns = ['daily', 'days', 'weekly', 'biweekly', 'monthly'].map(t =>
+  const freqBtns = ['daily', 'days', 'weekly', 'biweekly', 'monthly', 'every'].map(t =>
     '<button class="seg-btn' + (f.type === t ? ' on' : '') + '" data-action="setFreq" data-freq="' + t + '">'
-    + ({ daily: 'Denně', days: 'Vybrané dny', weekly: '1× týdně', biweekly: '1× za 2 týdny', monthly: '1× měsíčně' })[t] + '</button>').join('');
+    + ({ daily: 'Denně', days: 'Vybrané dny', weekly: '1× týdně', biweekly: '1× za 2 týdny', monthly: '1× měsíčně', every: 'Interval' })[t] + '</button>').join('');
   const dayBtns = WD.map((w, i) =>
     '<button class="day-chip' + (f.type === 'days' && f.days.indexOf(i) !== -1 ? ' on' : '') + '" data-action="toggleDay" data-day="' + i + '">' + w + '</button>').join('');
   openModal(
@@ -2297,6 +2473,7 @@ function openHabitModal(habit){
     + '</div>'
     + '<div class="field"><span class="field-lbl">Jak často</span><div class="seg freq" id="freq-seg">' + freqBtns + '</div></div>'
     + '<div id="days-fields" class="field"' + (f.type === 'days' ? '' : ' hidden') + '><span class="field-lbl">Které dny</span><div class="day-picker">' + dayBtns + '</div></div>'
+    + '<label id="every-fields" class="field"' + (f.type === 'every' ? '' : ' hidden') + '><span class="field-lbl">Znovu za kolik dní od splnění</span><input id="f-every" inputmode="numeric" value="' + (f.type === 'every' ? f.days : 14) + '"></label>'
     + '<label class="field"><span class="field-lbl">⏱️ Časovač v minutách (volitelné)</span><input id="f-timer" inputmode="numeric" value="' + (h.timerMin || '') + '" placeholder="— bez časovače"></label>'
     + '<label class="field"><span class="field-lbl">🔗 Odkaz do aplikace (volitelné)</span><input id="f-link" inputmode="url" autocapitalize="off" autocorrect="off" spellcheck="false" value="' + esc(h.link || '') + '" placeholder="např. duolingo://"></label>'
     + '<div class="modal-actions"><button class="btn" data-action="closeModal">Zrušit</button>'
@@ -2365,6 +2542,7 @@ function openThemeModal(){
     '<div class="sheet-title">🎨 Vzhled</div>'
     + '<div class="field-lbl theme-lbl">Pozadí</div>' + themeSwRow(THEME_BG, t.bg, 'setThemeBg')
     + '<div class="field-lbl theme-lbl">Karty a řádky</div>' + themeSwRow(THEME_CARD, t.card, 'setThemeCard')
+    + '<div class="field-lbl theme-lbl">Zvýraznění</div>' + themeSwRow(THEME_ACCENTS, t.accent, 'setThemeAccent')
     + '<div class="field-lbl theme-lbl">Text</div>'
     + '<div class="seg">'
     +   [['auto', 'Automaticky'], ['dark', 'Tmavý'], ['light', 'Světlý']].map(o =>
@@ -2540,6 +2718,7 @@ document.addEventListener('click', ev => {
     case 'openTheme': openThemeModal(); break;
     case 'setThemeBg': data.theme = normTheme({ ...normTheme(data.theme), bg: el.dataset.v }); save(); applyTheme(); openThemeModal(); break;
     case 'setThemeCard': data.theme = normTheme({ ...normTheme(data.theme), card: el.dataset.v }); save(); applyTheme(); openThemeModal(); break;
+    case 'setThemeAccent': data.theme = normTheme({ ...normTheme(data.theme), accent: el.dataset.v }); save(); applyTheme(); openThemeModal(); break;
     case 'setThemeText': data.theme = normTheme({ ...normTheme(data.theme), text: el.dataset.v }); save(); applyTheme(); openThemeModal(); break;
     case 'resetTheme': data.theme = { ...THEME_DEFAULT }; save(); applyTheme(); openThemeModal(); break;
     case 'mealHist': openMealHistModal(el.dataset.f); break;
@@ -2589,6 +2768,9 @@ document.addEventListener('click', ev => {
       } else copyMealsWeek(txt);
       break;
     }
+    case 'yrPrev': yearShift--; render(); break;
+    case 'yrNext': if (yearShift < 0){ yearShift++; render(); } break;
+    case 'yrNow': yearShift = 0; render(); break;
     case 'gotoDay': {
       let d = parseKey(el.dataset.key);
       if (d > today()) d = today();
@@ -2646,7 +2828,10 @@ document.addEventListener('click', ev => {
       const was = isDone(h, key);
       if (!was && isPeriodic(h)){
         const f = habitFreq(h);
-        const dk = f.type === 'weekly' ? doneInWeek(h, startOfWeek(selectedDate)) : doneInMonth(h, firstOfMonth(selectedDate));
+        const dk = f.type === 'weekly' ? doneInWeek(h, startOfWeek(selectedDate))
+          : f.type === 'biweekly' ? doneInFortnight(h, fortnightStart(selectedDate))
+          : f.type === 'monthly' ? doneInMonth(h, firstOfMonth(selectedDate))
+          : null; // interval: splnit jde kdykoli, restartuje odpočet
         if (dk && dk !== key){
           toast('„' + h.name + '“ už je splněno — ' + fmtKeyShort(dk) + '. Zrušit to jde jen na tom dni.');
           break;
@@ -2689,6 +2874,8 @@ document.addEventListener('click', ev => {
       document.querySelectorAll('#freq-seg .seg-btn').forEach(b => b.classList.toggle('on', b === el));
       const df = $('#days-fields');
       if (df) df.hidden = el.dataset.freq !== 'days';
+      const ef = $('#every-fields');
+      if (ef) ef.hidden = el.dataset.freq !== 'every';
       break;
     }
     case 'toggleDay': el.classList.toggle('on'); break;
@@ -2777,6 +2964,12 @@ document.addEventListener('click', ev => {
         const days = [...document.querySelectorAll('#days-fields .day-chip.on')].map(b => Number(b.dataset.day));
         if (!days.length){ toast('Vyberte aspoň jeden den v týdnu', true); break; }
         freq.days = days;
+      }
+      if (freq.type === 'every'){
+        if (type === 'number'){ toast('Interval „znovu za X dní" funguje jen u ano/ne návyků', true); break; }
+        const ev = parseInt(($('#f-every') && $('#f-every').value || '').trim(), 10);
+        if (!isFinite(ev) || ev < 2 || ev > 365){ toast('Zadejte interval 2–365 dní', true); break; }
+        freq.days = ev;
       }
       freq = normFreq(freq);
       const tmRaw = ($('#f-timer') && $('#f-timer').value || '').trim();
@@ -2921,12 +3114,15 @@ function toast(msg, isErr){
 /* ============ Hlavní render ============ */
 function render(){
   applyTheme();
-  ['day', 'cal', 'meals', 'stats', 'plan'].forEach(v => { $('#view-' + v).hidden = v !== tab; });
+  const td = document.querySelector('.tab-day');
+  if (td) td.textContent = String(today().getDate());
+  ['day', 'cal', 'meals', 'stats', 'plan', 'year'].forEach(v => { $('#view-' + v).hidden = v !== tab; });
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('on', b.dataset.tab === tab));
   if (tab === 'day') renderDay();
   else if (tab === 'cal') renderCal();
   else if (tab === 'meals') renderMeals();
   else if (tab === 'plan') renderPlan();
+  else if (tab === 'year') renderYear();
   else renderStats();
   popRef = null;
 }
