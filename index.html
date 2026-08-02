@@ -289,7 +289,7 @@ input,textarea{-webkit-appearance:none;appearance:none;}
 .tab-center{overflow:visible;}
 .tab-day{
   width:54px;height:54px;border-radius:50%;background:var(--accent);color:var(--accent-text);
-  display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;line-height:1;font-variant-numeric:tabular-nums;
+  display:flex;align-items:center;justify-content:center;font-size:14.5px;font-weight:800;line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-.02em;
   margin-top:-28px;border:4px solid var(--bg);flex:0 0 auto;
   box-shadow:0 6px 16px var(--accent-soft),0 2px 5px rgba(0,0,0,.18);
   transition:transform .12s ease,opacity .15s;
@@ -538,6 +538,19 @@ input.meal-sn{min-height:46px;resize:none;margin-bottom:8px;}
   display:inline-block;font-size:10.5px;font-weight:800;letter-spacing:.02em;text-transform:none;
   background:var(--accent);color:var(--accent-text);border-radius:999px;padding:2px 8px;vertical-align:1px;
 }
+
+.ck-sgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr) minmax(0,.8fr);gap:8px;}
+.ck-strow{padding:9px 0;border-top:1px solid var(--line);}
+.ck-strow:first-child{border-top:0;padding-top:0;}
+.ck-strow:last-child{padding-bottom:0;}
+.ck-mini.ck-solo{max-width:140px;}
+.ck-send{text-align:center;padding:16px 14px;}
+.ck-send-t{font-size:15.5px;font-weight:800;margin-bottom:4px;}
+.ck-send p{margin:0 0 12px;font-size:13.5px;color:var(--muted);}
+.ck-send .btn{width:100%;}
+.ck-shoulder{margin-top:22px;}
+.ck-shoulder-body{padding:2px 14px 12px;}
+.ck-shoulder-body .ck-srow:first-child{border-top:1px solid var(--line);padding-top:8px;}
 
 /* ---------- milníky ---------- */
 .mile-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;}
@@ -1347,14 +1360,17 @@ function normMeal(v){
   return m;
 }
 /* ============ Trenérský check-in ============ */
+const CK_START = '2026-08-03'; // pondělí týdne č. 1
 const CK_PATHS = (() => {
-  const p = ['no'];
+  const p = [];
   for (let i = 0; i < 7; i++) for (const f of ['hr', 'sl', 'en', 'so']) p.push('morning.' + i + '.' + f);
-  return p.concat(['weight.st', 'weight.pa', 'weight.ne', 'shoulder.pain', 'shoulder.when', 'sleep.to', 'sleep.up',
+  p.push('weight.st', 'weight.pa', 'weight.ne', 'sleep.range', 'shoulder.pain', 'shoulder.when',
     'runs.q.done', 'runs.q.feel', 'runs.e.time', 'runs.e.pace', 'runs.e.hr',
     'runs.lr.time', 'runs.lr.km', 'runs.lr.pace', 'runs.lr.hr',
-    'strength.ia', 'strength.row', 'strength.sq', 'strength.rdla', 'strength.pull', 'strength.ohp', 'strength.rdlb', 'strength.bulg',
-    'other.sw1', 'other.sw2', 'other.skip', 'other.note']);
+    'other.sw1', 'other.sw2');
+  for (const ex of ['ia', 'row', 'sq', 'rdla', 'pull', 'ohp', 'rdlb', 'bulg'])
+    for (const f of ['w', 'r', 'rir']) p.push('strength.' + ex + '.' + f);
+  return p;
 })();
 function ckRead(obj, path){
   let o = obj;
@@ -1373,9 +1389,16 @@ function ckWrite(obj, path, val){
   }
   o[ks[ks.length - 1]] = val;
 }
-let ckShift = 0;
+let ckDate = null; // den otevřený v check-inu (null = dnes)
+function ckDay(){
+  return ckDate || today();
+}
 function ckWeekKey(){
-  return dateKey(addDays(startOfWeek(today()), 7 * ckShift));
+  return dateKey(startOfWeek(ckDay()));
+}
+function ckWeekNo(wk){
+  const n = Math.floor((parseKey(wk) - parseKey(CK_START)) / 604800000) + 1;
+  return n >= 1 ? n : 0;
 }
 function ckGet(wk, path){
   const v = ckRead(data.checkins[wk] || {}, path);
@@ -1385,52 +1408,55 @@ function ckSet(wk, path, val){
   if (CK_PATHS.indexOf(path) === -1) return;
   const t = String(val || '').slice(0, 500);
   if (!data.checkins[wk]) data.checkins[wk] = {};
-  if (t.trim()) ckWrite(data.checkins[wk], path, t);
-  else {
-    ckWrite(data.checkins[wk], path, '');
-  }
+  ckWrite(data.checkins[wk], path, t.trim() ? t : '');
   save();
 }
 function ckPad(v, n){
   return String(v && String(v).trim() ? String(v).trim() : '__').padStart(n);
 }
+function ckStrengthLine(wk, ex){
+  const w = ckGet(wk, 'strength.' + ex + '.w').trim();
+  const r = ckGet(wk, 'strength.' + ex + '.r').trim();
+  const rir = ckGet(wk, 'strength.' + ex + '.rir').trim();
+  if (!w && !r && !rir) return '__';
+  let out = w ? w + ': ' : '';
+  out += r;
+  if (rir) out += (out.trim() ? ', ' : '') + 'RIR ' + rir;
+  return out.trim();
+}
 function checkinText(wk){
-  const g = p => ckGet(wk, p);
-  const gg = p => (g(p).trim() ? g(p).trim() : '');
+  const g = p => ckGet(wk, p).trim();
+  const no = ckWeekNo(wk);
   const WDS = ['Po', 'Út', 'St', 'Čt', 'Pá', 'So', 'Ne'];
-  let out = 'TÝDEN Č.: ' + gg('no') + '\n';
-  out += '── RÁNO (denně) ──\n';
+  let out = 'TÝDEN Č.: ' + (no || '') + '\n';
+  out += '── RÁNO (denně, známky 1–5, 5 = super) ──\n';
   out += '        tep | spánek | energie | bolavost\n';
   for (let i = 0; i < 7; i++){
     out += WDS[i] + ':' + ckPad(g('morning.' + i + '.hr'), 8) + ' | ' + ckPad(g('morning.' + i + '.sl'), 5) + '  | ' + ckPad(g('morning.' + i + '.en'), 5) + '   | ' + ckPad(g('morning.' + i + '.so'), 5) + '\n';
   }
-  out += '(známky 1–5, 5 = super)\n';
   out += '── VÁHA ──\n';
-  out += 'St: ' + (gg('weight.st') || '__') + '  Pá: ' + (gg('weight.pa') || '__') + '  Ne: ' + (gg('weight.ne') || '__') + '\n';
+  out += 'St: ' + (g('weight.st') || '__') + '   Pá: ' + (g('weight.pa') || '__') + '   Ne: ' + (g('weight.ne') || '__') + '\n';
+  out += '── SPÁNEK (typické časy tento týden) ──\n';
+  out += 'od - do ' + (g('sleep.range') || '____') + '\n';
   out += '── RAMENO ──\n';
-  out += 'Bolest 0–10: ' + gg('shoulder.pain') + '\n';
-  out += 'Kdy/při čem: ' + gg('shoulder.when') + '\n';
-  out += '── SPÁNEK ──\n';
-  out += 'Chodím spát: ' + gg('sleep.to') + '\n';
-  out += 'Vstávám: ' + gg('sleep.up') + '\n';
+  out += 'Bolest 0–10: ' + (g('shoulder.pain') || '__') + '\n';
+  out += 'Kdy/při čem: ' + (g('shoulder.when') || '__') + '\n';
   out += '── BĚHY ──\n';
-  out += 'Po Q-běh | odběháno: ' + (gg('runs.q.done') || 'ano/ne') + ' | pocit: ' + gg('runs.q.feel') + '\n';
-  out += 'St E-běh | čas: ' + (gg('runs.e.time') || '__') + ' | tempo/km: ' + (gg('runs.e.pace') || '__') + ' | prům. tep: ' + (gg('runs.e.hr') || '__') + '\n';
-  out += 'So longrun | čas: ' + (gg('runs.lr.time') || '__') + ' | km: ' + (gg('runs.lr.km') || '__') + ' | tempo/km: ' + (gg('runs.lr.pace') || '__') + ' | prům. tep: ' + (gg('runs.lr.hr') || '__') + '\n';
-  out += '── SÍLA (váha: opakování sérií + RIR poslední série) ──\n';
-  out += 'Upper A – incline press: ' + gg('strength.ia') + '\n';
-  out += 'Upper A – row: ' + gg('strength.row') + '\n';
-  out += 'Lower A – dřep: ' + gg('strength.sq') + '\n';
-  out += 'Lower A – RDL/nordic: ' + gg('strength.rdla') + '\n';
-  out += 'Upper B – shyby: ' + gg('strength.pull') + '\n';
-  out += 'Upper B – OHP: ' + gg('strength.ohp') + '\n';
-  out += 'Lower B – RDL: ' + gg('strength.rdlb') + '\n';
-  out += 'Lower B – bulhar: ' + gg('strength.bulg') + '\n';
-  out += '── OSTATNÍ ──\n';
-  out += 'Plavání 1: ' + gg('other.sw1') + '\n';
-  out += 'Plavání 2: ' + gg('other.sw2') + '\n';
-  out += 'Vynechal jsem: ' + gg('other.skip') + '\n';
-  out += 'Poznámka: ' + gg('other.note');
+  out += 'Po Q-běh: odběháno ' + (g('runs.q.done') || 'ano/ne') + (g('runs.q.feel') ? ' + pocit: ' + g('runs.q.feel') : '') + '\n';
+  out += 'St E-běh: čas ' + (g('runs.e.time') || '__') + ' | tempo/km ' + (g('runs.e.pace') || '__') + ' | prům. tep ' + (g('runs.e.hr') || '__') + '\n';
+  out += 'So longrun: čas ' + (g('runs.lr.time') || '__') + ' | km ' + (g('runs.lr.km') || '__') + ' | tempo/km ' + (g('runs.lr.pace') || '__') + ' | prům. tep ' + (g('runs.lr.hr') || '__') + '\n';
+  out += '── SÍLA (zápis: váha: opakování sérií + RIR, např. „26: 10/9/8, RIR 2") ──\n';
+  out += 'Upper A – incline press: ' + ckStrengthLine(wk, 'ia') + '\n';
+  out += 'Upper A – row: ' + ckStrengthLine(wk, 'row') + '\n';
+  out += 'Lower A – dřep: ' + ckStrengthLine(wk, 'sq') + '\n';
+  out += 'Lower A – nordic: ' + ckStrengthLine(wk, 'rdla') + '\n';
+  out += 'Upper B – shyby: ' + ckStrengthLine(wk, 'pull') + '\n';
+  out += 'Upper B – OHP: ' + ckStrengthLine(wk, 'ohp') + '\n';
+  out += 'Lower B – RDL: ' + ckStrengthLine(wk, 'rdlb') + '\n';
+  out += 'Lower B – bulhar: ' + ckStrengthLine(wk, 'bulg') + '\n';
+  out += '── PLAVÁNÍ (byl/nebyl + jedna věta co šlo / co drhlo) ──\n';
+  out += 'Plavání 1: ' + (g('other.sw1') || '__') + '\n';
+  out += 'Plavání 2: ' + (g('other.sw2') || '__');
   return out;
 }
 function mealsWeekText(anyDay){
@@ -2339,108 +2365,113 @@ function ckInput(wk, path, opts){
     + (o.ph ? ' placeholder="' + esc(o.ph) + '"' : '')
     + ' maxlength="' + (o.max || 60) + '" value="' + esc(ckGet(wk, path)) + '" aria-label="' + esc(o.lbl || path) + '">';
 }
-function ckBadge(txt){
-  return '<span class="ck-today">dnes' + (txt ? ' · ' + txt : '') + '</span>';
+function ckStrengthRows(wk, list){
+  return list.map(x =>
+    '<div class="ck-strow"><div class="ck-run-t">' + x[1] + '</div><div class="ck-sgrid">'
+    + '<label class="ck-mini"><span>váha (kg)</span>' + ckInput(wk, 'strength.' + x[0] + '.w', { num: true, max: 8, ph: '26', lbl: x[1] + ' váha' }) + '</label>'
+    + '<label class="ck-mini"><span>opakování sérií</span>' + ckInput(wk, 'strength.' + x[0] + '.r', { max: 24, ph: '10/9/8', lbl: x[1] + ' opakování' }) + '</label>'
+    + '<label class="ck-mini"><span>RIR</span>' + ckInput(wk, 'strength.' + x[0] + '.rir', { num: true, max: 4, ph: '2', lbl: x[1] + ' RIR' }) + '</label>'
+    + '</div></div>').join('');
 }
 function renderCheckin(){
+  const d = ckDay();
   const wk = ckWeekKey();
   const mon = parseKey(wk);
   const sun = addDays(mon, 6);
-  const wd = ckShift === 0 ? weekdayIdx(today()) : -1; // zvýraznění jen v aktuálním týdnu
-  const prevNo = parseInt(ckGet(dateKey(addDays(mon, -7)), 'no'), 10);
+  const wd = weekdayIdx(d);
+  const isToday = sameDay(d, today());
+  const no = ckWeekNo(wk);
   const WDS = ['Po', 'Út', 'St', 'Čt', 'Pá', 'So', 'Ne'];
 
-  let html = '<div class="ck-tools"><a class="btn small" href="claude://" data-action="openLink" aria-label="Otevřít Claude">🤖 Claude</a>'
-    + '<button class="btn small primary" data-action="exportCheckin">📤 Odeslat check-in</button></div>';
+  let html = '<div class="ck-tools"><a class="btn small" href="claude://" data-action="openLink" aria-label="Otevřít Claude" title="Otevřít Claude">🤖</a>'
+    + '<button class="btn small' + (wd === 6 ? ' primary' : '') + '" data-action="exportCheckin" aria-label="Zkopírovat check-in" title="Zkopírovat check-in">📋</button></div>';
 
   html += '<div class="daynav">'
-    + '<button class="icon-btn" data-action="ckPrev" aria-label="Předchozí týden">‹</button>'
-    + '<div class="daynav-mid"><div class="daynav-date">Týden ' + mon.getDate() + '. ' + (mon.getMonth() + 1) + '. – ' + sun.getDate() + '. ' + (sun.getMonth() + 1) + '.</div>'
-    + (ckShift ? '<div class="daynav-sub"><button class="linklike" data-action="ckNow">Zpět na tento týden</button></div>'
-               : '<div class="daynav-sub">check-in pro trenéra</div>')
+    + '<button class="icon-btn" data-action="ckPrevDay" aria-label="Předchozí den">‹</button>'
+    + '<div class="daynav-mid"><div class="daynav-date">' + (isToday ? 'Dnes' : fmtDateFull(d)) + '</div>'
+    + '<div class="daynav-sub">' + (isToday ? '' : '<button class="linklike" data-action="ckToday">Zpět na dnešek</button> · ')
+    + 'týden ' + mon.getDate() + '. ' + (mon.getMonth() + 1) + '. – ' + sun.getDate() + '. ' + (sun.getMonth() + 1) + '.' + (no ? ' · č. ' + no : '') + '</div>'
     + '</div>'
-    + '<button class="icon-btn" data-action="ckNext" aria-label="Další týden"' + (ckShift >= 0 ? ' disabled' : '') + '>›</button>'
+    + '<button class="icon-btn" data-action="ckNextDay" aria-label="Další den"' + (d >= today() ? ' disabled' : '') + '>›</button>'
     + '</div>';
 
-  html += '<div class="card ck-card"><div class="ck-row-top"><span class="ck-lbl">Týden č.</span>'
-    + ckInput(wk, 'no', { num: true, max: 6, ph: isFinite(prevNo) ? 'minule ' + prevNo : 'např. 1', lbl: 'Číslo týdne' }) + '</div></div>';
-
-  html += '<div class="sec-title">🌅 Ráno (denně)' + (wd > -1 ? ' <span class="ck-today">dnes: ' + WDS[wd] + '</span>' : '') + '</div>'
+  html += '<div class="sec-title">🌅 Ráno po probuzení</div>'
     + '<div class="card ck-card"><div class="ck-grid ck-head"><span></span><span>tep</span><span>spánek</span><span>energie</span><span>bolavost</span></div>'
-    + WDS.map((w, i) =>
-        '<div class="ck-grid' + (i === wd ? ' ck-now' : '') + '"><span class="ck-day">' + w + '</span>'
-        + ckInput(wk, 'morning.' + i + '.hr', { num: true, max: 3, lbl: w + ' tep' })
-        + ckInput(wk, 'morning.' + i + '.sl', { num: true, max: 1, lbl: w + ' spánek' })
-        + ckInput(wk, 'morning.' + i + '.en', { num: true, max: 1, lbl: w + ' energie' })
-        + ckInput(wk, 'morning.' + i + '.so', { num: true, max: 1, lbl: w + ' bolavost' })
-        + '</div>').join('')
-    + '<p class="ck-hint">Známky 1–5, 5 = super. Tep vleže po probuzení.</p></div>';
+    + '<div class="ck-grid"><span class="ck-day">' + WDS[wd] + '</span>'
+    + ckInput(wk, 'morning.' + wd + '.hr', { num: true, max: 3, lbl: 'tep' })
+    + ckInput(wk, 'morning.' + wd + '.sl', { num: true, max: 1, lbl: 'spánek' })
+    + ckInput(wk, 'morning.' + wd + '.en', { num: true, max: 1, lbl: 'energie' })
+    + ckInput(wk, 'morning.' + wd + '.so', { num: true, max: 1, lbl: 'bolavost' })
+    + '</div><p class="ck-hint">Známky 1–5, 5 = super. Tep vleže.</p></div>';
 
-  html += '<div class="sec-title">⚖️ Váha' + ([2, 4, 6].indexOf(wd) !== -1 ? ' ' + ckBadge('nalačno') : '') + '</div>'
-    + '<div class="card ck-card"><div class="ck-flex">'
-    + '<label class="ck-mini' + (wd === 2 ? ' ck-now' : '') + '"><span>St</span>' + ckInput(wk, 'weight.st', { num: true, max: 6, lbl: 'Váha středa' }) + '</label>'
-    + '<label class="ck-mini' + (wd === 4 ? ' ck-now' : '') + '"><span>Pá</span>' + ckInput(wk, 'weight.pa', { num: true, max: 6, lbl: 'Váha pátek' }) + '</label>'
-    + '<label class="ck-mini' + (wd === 6 ? ' ck-now' : '') + '"><span>Ne</span>' + ckInput(wk, 'weight.ne', { num: true, max: 6, lbl: 'Váha neděle' }) + '</label>'
-    + '</div></div>';
+  if (wd === 2 || wd === 4 || wd === 6){
+    const wp = wd === 2 ? 'weight.st' : wd === 4 ? 'weight.pa' : 'weight.ne';
+    html += '<div class="sec-title">⚖️ Váha nalačno</div>'
+      + '<div class="card ck-card"><label class="ck-mini ck-solo"><span>kg</span>' + ckInput(wk, wp, { num: true, max: 6, ph: '82,5', lbl: 'Váha' }) + '</label></div>';
+  }
 
-  const qd = ckGet(wk, 'runs.q.done');
-  html += '<div class="sec-title">🏃 Běhy' + (wd === 0 ? ' ' + ckBadge('Q-běh') : wd === 2 ? ' ' + ckBadge('E-běh') : wd === 5 ? ' ' + ckBadge('longrun') : '') + '</div>'
-    + '<div class="card ck-card">'
-    + '<div class="ck-run' + (wd === 0 ? ' ck-now' : '') + '"><div class="ck-run-t">Po · Q-běh</div><div class="ck-flex">'
-    +   '<span class="ck-lbl">odběháno</span>'
-    +   '<span class="ck-chips"><button class="day-chip' + (qd === 'ano' ? ' on' : '') + '" data-action="ckChip" data-w="' + wk + '" data-path="runs.q.done" data-v="ano">ano</button>'
-    +   '<button class="day-chip' + (qd === 'ne' ? ' on' : '') + '" data-action="ckChip" data-w="' + wk + '" data-path="runs.q.done" data-v="ne">ne</button></span>'
-    +   ckInput(wk, 'runs.q.feel', { ph: 'pocit', max: 120, lbl: 'Q-běh pocit', cls: 'grow' })
-    + '</div></div>'
-    + '<div class="ck-run' + (wd === 2 ? ' ck-now' : '') + '"><div class="ck-run-t">St · E-běh</div><div class="ck-flex">'
-    +   '<label class="ck-mini"><span>čas</span>' + ckInput(wk, 'runs.e.time', { max: 10, ph: '40:00', lbl: 'E-běh čas' }) + '</label>'
-    +   '<label class="ck-mini"><span>tempo/km</span>' + ckInput(wk, 'runs.e.pace', { max: 8, ph: '6:00', lbl: 'E-běh tempo' }) + '</label>'
-    +   '<label class="ck-mini"><span>prům. tep</span>' + ckInput(wk, 'runs.e.hr', { num: true, max: 3, lbl: 'E-běh tep' }) + '</label>'
-    + '</div></div>'
-    + '<div class="ck-run' + (wd === 5 ? ' ck-now' : '') + '"><div class="ck-run-t">So · Longrun</div><div class="ck-flex">'
-    +   '<label class="ck-mini"><span>čas</span>' + ckInput(wk, 'runs.lr.time', { max: 10, ph: '70:00', lbl: 'Longrun čas' }) + '</label>'
-    +   '<label class="ck-mini"><span>km</span>' + ckInput(wk, 'runs.lr.km', { num: true, max: 5, lbl: 'Longrun km' }) + '</label>'
-    +   '<label class="ck-mini"><span>tempo/km</span>' + ckInput(wk, 'runs.lr.pace', { max: 8, ph: '6:00', lbl: 'Longrun tempo' }) + '</label>'
-    +   '<label class="ck-mini"><span>prům. tep</span>' + ckInput(wk, 'runs.lr.hr', { num: true, max: 3, lbl: 'Longrun tep' }) + '</label>'
-    + '</div></div>'
-    + '</div>';
+  if (wd === 0){
+    const qd = ckGet(wk, 'runs.q.done');
+    html += '<div class="sec-title">🏃 Q-běh</div>'
+      + '<div class="card ck-card"><div class="ck-flex">'
+      + '<span class="ck-lbl">odběháno</span>'
+      + '<span class="ck-chips"><button class="day-chip' + (qd === 'ano' ? ' on' : '') + '" data-action="ckChip" data-w="' + wk + '" data-path="runs.q.done" data-v="ano">ano</button>'
+      + '<button class="day-chip' + (qd === 'ne' ? ' on' : '') + '" data-action="ckChip" data-w="' + wk + '" data-path="runs.q.done" data-v="ne">ne</button></span>'
+      + '</div><label class="ck-srow"><span>pocit jednou větou</span>' + ckInput(wk, 'runs.q.feel', { max: 160, ph: 'např. nohy těžké, ale rovinky svižné', lbl: 'Q-běh pocit', cls: 'grow' }) + '</label></div>';
+    html += '<div class="sec-title">🏋️ Síla · Upper A</div><div class="card ck-card">'
+      + ckStrengthRows(wk, [['ia', 'Incline press'], ['row', 'Row']]) + '</div>';
+  }
+  if (wd === 1){
+    html += '<div class="sec-title">🌊 Plavání 1</div>'
+      + '<div class="card ck-card"><label class="ck-srow"><span>byl/nebyl + jedna věta co šlo / co drhlo</span>'
+      + ckInput(wk, 'other.sw1', { max: 200, ph: 'např. byl — výdechy v pohodě, splývání drhne', lbl: 'Plavání 1', cls: 'grow' }) + '</label></div>';
+  }
+  if (wd === 2){
+    html += '<div class="sec-title">🏃 E-běh</div>'
+      + '<div class="card ck-card"><div class="ck-flex">'
+      + '<label class="ck-mini"><span>čas</span>' + ckInput(wk, 'runs.e.time', { max: 10, ph: '40:00', lbl: 'E-běh čas' }) + '</label>'
+      + '<label class="ck-mini"><span>tempo/km</span>' + ckInput(wk, 'runs.e.pace', { max: 8, ph: '6:00', lbl: 'E-běh tempo' }) + '</label>'
+      + '<label class="ck-mini"><span>prům. tep</span>' + ckInput(wk, 'runs.e.hr', { num: true, max: 3, lbl: 'E-běh tep' }) + '</label>'
+      + '</div></div>';
+    html += '<div class="sec-title">🏋️ Síla · Lower A</div><div class="card ck-card">'
+      + ckStrengthRows(wk, [['sq', 'Dřep'], ['rdla', 'Nordic']]) + '</div>';
+  }
+  if (wd === 3){
+    html += '<div class="sec-title">🌊 Plavání 2</div>'
+      + '<div class="card ck-card"><label class="ck-srow"><span>byl/nebyl + jedna věta co šlo / co drhlo</span>'
+      + ckInput(wk, 'other.sw2', { max: 200, ph: 'např. byl — kop už drží tělo nahoře', lbl: 'Plavání 2', cls: 'grow' }) + '</label></div>';
+  }
+  if (wd === 4){
+    html += '<div class="sec-title">🏋️ Síla · Upper B</div><div class="card ck-card">'
+      + ckStrengthRows(wk, [['pull', 'Shyby'], ['ohp', 'OHP']]) + '</div>';
+  }
+  if (wd === 5){
+    html += '<div class="sec-title">🏃 Longrun</div>'
+      + '<div class="card ck-card"><div class="ck-flex">'
+      + '<label class="ck-mini"><span>čas</span>' + ckInput(wk, 'runs.lr.time', { max: 10, ph: '70:00', lbl: 'Longrun čas' }) + '</label>'
+      + '<label class="ck-mini"><span>km</span>' + ckInput(wk, 'runs.lr.km', { num: true, max: 5, ph: '11,5', lbl: 'Longrun km' }) + '</label>'
+      + '<label class="ck-mini"><span>tempo/km</span>' + ckInput(wk, 'runs.lr.pace', { max: 8, ph: '6:00', lbl: 'Longrun tempo' }) + '</label>'
+      + '<label class="ck-mini"><span>prům. tep</span>' + ckInput(wk, 'runs.lr.hr', { num: true, max: 3, lbl: 'Longrun tep' }) + '</label>'
+      + '</div></div>';
+    html += '<div class="sec-title">🏋️ Síla · Lower B</div><div class="card ck-card">'
+      + ckStrengthRows(wk, [['rdlb', 'RDL'], ['bulg', 'Bulharský dřep']]) + '</div>';
+  }
+  if (wd === 6){
+    html += '<div class="sec-title">😴 Spánek (typické časy tento týden)</div>'
+      + '<div class="card ck-card"><label class="ck-srow"><span>od – do</span>'
+      + ckInput(wk, 'sleep.range', { max: 20, ph: '23:00 – 7:00', lbl: 'Spánek od do', cls: 'grow' }) + '</label></div>';
+    html += '<div class="card ck-send"><div class="ck-send-t">🏁 Neděle = den check-inu</div>'
+      + '<p>Projeď šipkou zpátky dny, doplň mezery, zkopíruj a pošli trenérovi.</p>'
+      + '<button class="btn primary" data-action="exportCheckin">📋 Zkopírovat check-in</button></div>';
+  }
 
-  const strengthBadge = wd === 0 ? 'Upper A' : wd === 2 ? 'Lower A' : wd === 4 ? 'Upper B' : wd === 5 ? 'Lower B' : '';
-  const sRow = (path, lbl, now) =>
-    '<label class="ck-srow' + (now ? ' ck-now' : '') + '"><span>' + lbl + '</span>' + ckInput(wk, path, { ph: 'např. 26 kg: 10/9/8, RIR 2', max: 120, lbl, cls: 'grow' }) + '</label>';
-  html += '<div class="sec-title">🏋️ Síla' + (strengthBadge ? ' ' + ckBadge(strengthBadge) : '') + '</div>'
-    + '<div class="card ck-card">'
-    + sRow('strength.ia', 'Upper A – incline press', wd === 0)
-    + sRow('strength.row', 'Upper A – row', wd === 0)
-    + sRow('strength.sq', 'Lower A – dřep', wd === 2)
-    + sRow('strength.rdla', 'Lower A – RDL/nordic', wd === 2)
-    + sRow('strength.pull', 'Upper B – shyby', wd === 4)
-    + sRow('strength.ohp', 'Upper B – OHP', wd === 4)
-    + sRow('strength.rdlb', 'Lower B – RDL', wd === 5)
-    + sRow('strength.bulg', 'Lower B – bulhar', wd === 5)
-    + '<p class="ck-hint">Zápis: váha: opakování sérií + RIR poslední série.</p></div>';
-
-  html += '<div class="sec-title">🩹 Rameno' + (wd === 6 ? ' ' + ckBadge() : '') + '</div>'
-    + '<div class="card ck-card">'
+  html += '<details class="vac-card ck-shoulder"><summary><span class="vac-emo">🩹</span>'
+    + '<span class="vac-sum"><strong>Rameno</strong><span>volitelné — vyplň, jen když zlobí</span></span>'
+    + '<span class="vac-chev">›</span></summary>'
+    + '<div class="ck-shoulder-body">'
     + '<label class="ck-srow"><span>Bolest 0–10</span>' + ckInput(wk, 'shoulder.pain', { num: true, max: 2, lbl: 'Bolest ramene' }) + '</label>'
     + '<label class="ck-srow"><span>Kdy/při čem</span>' + ckInput(wk, 'shoulder.when', { max: 200, lbl: 'Kdy bolí', cls: 'grow' }) + '</label>'
-    + '</div>';
-
-  html += '<div class="sec-title">😴 Spánek' + (wd === 6 ? ' ' + ckBadge() : '') + '</div>'
-    + '<div class="card ck-card"><div class="ck-flex">'
-    + '<label class="ck-mini"><span>Chodím spát</span>' + ckInput(wk, 'sleep.to', { max: 12, ph: '23:00', lbl: 'Chodím spát' }) + '</label>'
-    + '<label class="ck-mini"><span>Vstávám</span>' + ckInput(wk, 'sleep.up', { max: 12, ph: '7:00', lbl: 'Vstávám' }) + '</label>'
-    + '</div></div>';
-
-  html += '<div class="sec-title">🌊 Ostatní' + ((wd === 1 || wd === 3) ? ' ' + ckBadge('plavání') : wd === 6 ? ' ' + ckBadge('check-in') : '') + '</div>'
-    + '<div class="card ck-card">'
-    + '<label class="ck-srow' + (wd === 1 ? ' ck-now' : '') + '"><span>Plavání 1 (Út)</span>' + ckInput(wk, 'other.sw1', { max: 200, lbl: 'Plavání 1', cls: 'grow' }) + '</label>'
-    + '<label class="ck-srow' + (wd === 3 ? ' ck-now' : '') + '"><span>Plavání 2 (Čt)</span>' + ckInput(wk, 'other.sw2', { max: 200, lbl: 'Plavání 2', cls: 'grow' }) + '</label>'
-    + '<label class="ck-srow"><span>Vynechal jsem</span>' + ckInput(wk, 'other.skip', { max: 300, lbl: 'Vynechal jsem', cls: 'grow' }) + '</label>'
-    + '<label class="ck-srow"><span>Poznámka</span>' + ckInput(wk, 'other.note', { max: 500, lbl: 'Poznámka', cls: 'grow' }) + '</label>'
-    + '</div>';
-
-  html += '<p class="hint">' + (wd === 6 && !ckShift ? 'Neděle je den check-inu — projdi formulář a nahoře ho ➤ odešli trenérovi.' : 'Vyplňuj průběžně, zvýrazněná pole patří k dnešku. V neděli celý týden odešleš nahoře.') + '</p>';
+    + '</div></details>';
 
   $('#view-checkin').innerHTML = html;
 }
@@ -2964,9 +2995,9 @@ document.addEventListener('click', ev => {
     }
     case 'cancelTimer': stopTimer(); toast('Časovač zrušen'); break;
     case 'openLink': break; // odkaz řeší prohlížeč, jen nesmí přepnout řádek
-    case 'ckPrev': ckShift--; render(); break;
-    case 'ckNext': if (ckShift < 0){ ckShift++; render(); } break;
-    case 'ckNow': ckShift = 0; render(); break;
+    case 'ckPrevDay': ckDate = addDays(ckDay(), -1); render(); break;
+    case 'ckNextDay': if (ckDay() < today()){ ckDate = addDays(ckDay(), 1); render(); } break;
+    case 'ckToday': ckDate = null; render(); break;
     case 'ckChip': {
       const cur = ckGet(el.dataset.w, el.dataset.path);
       ckSet(el.dataset.w, el.dataset.path, cur === el.dataset.v ? '' : el.dataset.v);
@@ -2974,12 +3005,7 @@ document.addEventListener('click', ev => {
       break;
     }
     case 'exportCheckin': {
-      const txt = checkinText(ckWeekKey());
-      if (navigator.share){
-        navigator.share({ title: 'Check-in', text: txt })
-          .then(() => toast('Check-in odeslán do sdílení'))
-          .catch(err => { if (!err || err.name !== 'AbortError') copyPlainText(txt, 'checkin-' + ckWeekKey() + '.txt', 'Check-in zkopírován do schránky'); });
-      } else copyPlainText(txt, 'checkin-' + ckWeekKey() + '.txt', 'Check-in zkopírován do schránky');
+      copyPlainText(checkinText(ckWeekKey()), 'checkin-' + ckWeekKey() + '.txt', 'Check-in zkopírován — stačí vložit do zprávy');
       break;
     }
     case 'exportMealsWeek': {
@@ -3339,7 +3365,7 @@ function toast(msg, isErr){
 function render(){
   applyTheme();
   const td = document.querySelector('.tab-day');
-  if (td) td.textContent = String(today().getDate());
+  if (td) td.textContent = today().getDate() + '.' + (today().getMonth() + 1) + '.';
   ['day', 'cal', 'meals', 'stats', 'plan', 'checkin'].forEach(v => { $('#view-' + v).hidden = v !== tab; });
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('on', b.dataset.tab === tab));
   if (tab === 'day') renderDay();
