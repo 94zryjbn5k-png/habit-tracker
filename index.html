@@ -497,20 +497,47 @@ input.meal-sn{min-height:46px;resize:none;margin-bottom:8px;}
 .sw-check.lite{color:#f2f2f7;}
 .theme-lbl{display:block;font-size:12.5px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin:14px 2px 8px;}
 
-/* ---------- rok v pixelech ---------- */
-.yr-head{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:3px;margin-bottom:5px;}
-.yr-head span{font-size:9.5px;color:var(--muted);text-align:center;font-weight:700;}
-.yr-row{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:3px;margin-bottom:3px;}
-.yr-row:last-child{margin-bottom:0;}
-.yc{aspect-ratio:1/1;width:100%;border-radius:4px;background:var(--h0);padding:0;display:block;border:none;}
-.yc.off{background:transparent;box-shadow:inset 0 0 0 1px var(--line);}
-.yc.void{background:transparent;}
-.yc.future{background:transparent;box-shadow:inset 0 0 0 1px var(--line);opacity:.35;}
-.yc.l1{background:var(--h1);}
-.yc.l2{background:var(--h2);}
-.yc.l3{background:var(--h3);}
-.yc.l4{background:var(--h4);}
-.yc.today{outline:2px solid var(--accent);outline-offset:1px;}
+/* ---------- trenérský check-in ---------- */
+.ck-tools{display:flex;justify-content:flex-end;gap:8px;margin:0 0 6px;}
+.ck-card{padding:13px 14px;}
+.ck-row-top{display:flex;align-items:center;gap:12px;}
+.ck-row-top .ck-in{max-width:110px;}
+.ck-lbl{font-size:14px;font-weight:700;flex:0 0 auto;}
+.ck-in{
+  min-height:40px;padding:7px 10px;font-size:16px;width:100%;min-width:0;
+  background:var(--field-bg);border:1px solid var(--line);border-radius:10px;color:var(--text);
+  font-variant-numeric:tabular-nums;
+}
+.ck-in.grow{flex:1;}
+.ck-grid{display:grid;grid-template-columns:34px repeat(4,minmax(0,1fr));gap:6px;align-items:center;margin-bottom:6px;border-radius:10px;}
+.ck-grid.ck-head{margin-bottom:4px;}
+.ck-grid.ck-head span{font-size:11px;color:var(--muted);text-align:center;font-weight:700;}
+.ck-grid .ck-in{text-align:center;padding:7px 4px;}
+.ck-day{font-size:13px;font-weight:800;color:var(--muted);}
+.ck-grid.ck-now{outline:2px solid var(--accent-ring);outline-offset:2px;}
+.ck-grid.ck-now .ck-day{color:var(--accent);}
+.ck-now .ck-in{border-color:var(--accent);}
+.ck-hint{font-size:12px;color:var(--muted);margin:8px 2px 0;}
+.ck-flex{display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;}
+.ck-mini{display:flex;flex-direction:column;gap:4px;flex:1;min-width:70px;}
+.ck-mini span{font-size:12px;font-weight:700;color:var(--muted);}
+.ck-mini.ck-now span{color:var(--accent);}
+.ck-run{padding:10px 0;border-top:1px solid var(--line);border-radius:10px;}
+.ck-run:first-child{border-top:0;padding-top:0;}
+.ck-run.ck-now{padding-left:10px;padding-right:10px;margin:0 -10px;outline:2px solid var(--accent-ring);outline-offset:-1px;}
+.ck-run-t{font-size:13px;font-weight:800;margin-bottom:7px;}
+.ck-run.ck-now .ck-run-t{color:var(--accent);}
+.ck-chips{display:inline-flex;gap:6px;flex:0 0 auto;}
+.ck-chips .day-chip{flex:0 0 auto;min-width:56px;}
+.ck-srow{display:flex;flex-direction:column;gap:4px;padding:8px 0;border-top:1px solid var(--line);}
+.ck-srow:first-child{border-top:0;padding-top:0;}
+.ck-srow>span{font-size:12.5px;font-weight:700;color:var(--muted);}
+.ck-srow.ck-now>span{color:var(--accent);}
+.ck-srow.ck-now .ck-in{border-color:var(--accent);}
+.ck-today{
+  display:inline-block;font-size:10.5px;font-weight:800;letter-spacing:.02em;text-transform:none;
+  background:var(--accent);color:var(--accent-text);border-radius:999px;padding:2px 8px;vertical-align:1px;
+}
 
 /* ---------- milníky ---------- */
 .mile-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;}
@@ -554,7 +581,7 @@ input.meal-sn{min-height:46px;resize:none;margin-bottom:8px;}
     <section id="view-day"></section>
     <section id="view-cal" hidden></section>
     <section id="view-meals" hidden></section>
-    <section id="view-year" hidden></section>
+    <section id="view-checkin" hidden></section>
     <section id="view-stats" hidden></section>
     <section id="view-plan" hidden></section>
   </main>
@@ -564,7 +591,7 @@ input.meal-sn{min-height:46px;resize:none;margin-bottom:8px;}
     <button class="tab-btn" data-action="tab" data-tab="cal"><span class="tab-ico">📅</span><span class="tab-lbl">Kalendář</span></button>
     <button class="tab-btn" data-action="tab" data-tab="meals"><span class="tab-ico">🍽️</span><span class="tab-lbl">Jídlo</span></button>
     <button class="tab-btn tab-center on" data-action="tab" data-tab="day"><span class="tab-day">✓</span><span class="tab-lbl">Dnes</span></button>
-    <button class="tab-btn" data-action="tab" data-tab="year"><span class="tab-ico">📆</span><span class="tab-lbl">Rok</span></button>
+    <button class="tab-btn" data-action="tab" data-tab="checkin"><span class="tab-ico">📝</span><span class="tab-lbl">Check-in</span></button>
     <button class="tab-btn" data-action="tab" data-tab="stats"><span class="tab-ico">📊</span><span class="tab-lbl">Přehled</span></button>
   </div>
 </nav>
@@ -929,6 +956,7 @@ function defaultData(){
     meals: {},
     notes: {},
     milestones: {},
+    checkins: {},
     hideDone: false,
     theme: { ...THEME_DEFAULT },
     plan: DEFAULT_PLAN
@@ -992,6 +1020,7 @@ function validateData(obj){
     }
   }
   if (obj.milestones != null && (typeof obj.milestones !== 'object' || Array.isArray(obj.milestones))) return 'Milníky mají špatný formát.';
+  if (obj.checkins != null && (typeof obj.checkins !== 'object' || Array.isArray(obj.checkins))) return 'Check-iny mají špatný formát.';
   if (obj.entries != null){
     if (typeof obj.entries !== 'object' || Array.isArray(obj.entries)) return 'Záznamy („entries“) mají špatný formát.';
     for (const k of Object.keys(obj.entries)){
@@ -1015,6 +1044,7 @@ function normalizeData(obj){
     meals: {},
     notes: {},
     milestones: {},
+    checkins: {},
     hideDone: !!obj.hideDone,
     theme: normTheme(obj.theme || (typeof obj.bg === 'string' && LEGACY_BG_IDS[obj.bg] ? { bg: LEGACY_BG_IDS[obj.bg] } : null)),
     plan: typeof obj.plan === 'string' ? obj.plan.slice(0, 50000) : DEFAULT_PLAN
@@ -1059,6 +1089,20 @@ function normalizeData(obj){
         if (typeof t === 'string' && t.trim()) day[String(hid)] = t.slice(0, 500);
       }
       if (Object.keys(day).length) out.notes[k] = day;
+    }
+  }
+  if (obj.checkins && typeof obj.checkins === 'object' && !Array.isArray(obj.checkins)){
+    for (const wk of Object.keys(obj.checkins)){
+      if (!DATE_RE.test(wk)) continue;
+      const src = obj.checkins[wk];
+      if (!src || typeof src !== 'object') continue;
+      const cw = {};
+      for (const p of CK_PATHS){
+        const v = ckRead(src, p);
+        if (typeof v === 'string' && v.trim()) ckWrite(cw, p, v.slice(0, 500));
+        else if (typeof v === 'number' && isFinite(v)) ckWrite(cw, p, String(v));
+      }
+      if (Object.keys(cw).length) out.checkins[wk] = cw;
     }
   }
   if (obj.milestones && typeof obj.milestones === 'object'){
@@ -1302,6 +1346,93 @@ function normMeal(v){
   if (!m.b.trim() && !m.l.trim() && !m.d.trim() && !m.note.trim() && !m.sn.length) return null;
   return m;
 }
+/* ============ Trenérský check-in ============ */
+const CK_PATHS = (() => {
+  const p = ['no'];
+  for (let i = 0; i < 7; i++) for (const f of ['hr', 'sl', 'en', 'so']) p.push('morning.' + i + '.' + f);
+  return p.concat(['weight.st', 'weight.pa', 'weight.ne', 'shoulder.pain', 'shoulder.when', 'sleep.to', 'sleep.up',
+    'runs.q.done', 'runs.q.feel', 'runs.e.time', 'runs.e.pace', 'runs.e.hr',
+    'runs.lr.time', 'runs.lr.km', 'runs.lr.pace', 'runs.lr.hr',
+    'strength.ia', 'strength.row', 'strength.sq', 'strength.rdla', 'strength.pull', 'strength.ohp', 'strength.rdlb', 'strength.bulg',
+    'other.sw1', 'other.sw2', 'other.skip', 'other.note']);
+})();
+function ckRead(obj, path){
+  let o = obj;
+  for (const k of path.split('.')){
+    if (!o || typeof o !== 'object') return undefined;
+    o = o[k];
+  }
+  return o;
+}
+function ckWrite(obj, path, val){
+  const ks = path.split('.');
+  let o = obj;
+  for (let i = 0; i < ks.length - 1; i++){
+    if (!o[ks[i]] || typeof o[ks[i]] !== 'object') o[ks[i]] = {};
+    o = o[ks[i]];
+  }
+  o[ks[ks.length - 1]] = val;
+}
+let ckShift = 0;
+function ckWeekKey(){
+  return dateKey(addDays(startOfWeek(today()), 7 * ckShift));
+}
+function ckGet(wk, path){
+  const v = ckRead(data.checkins[wk] || {}, path);
+  return typeof v === 'string' ? v : '';
+}
+function ckSet(wk, path, val){
+  if (CK_PATHS.indexOf(path) === -1) return;
+  const t = String(val || '').slice(0, 500);
+  if (!data.checkins[wk]) data.checkins[wk] = {};
+  if (t.trim()) ckWrite(data.checkins[wk], path, t);
+  else {
+    ckWrite(data.checkins[wk], path, '');
+  }
+  save();
+}
+function ckPad(v, n){
+  return String(v && String(v).trim() ? String(v).trim() : '__').padStart(n);
+}
+function checkinText(wk){
+  const g = p => ckGet(wk, p);
+  const gg = p => (g(p).trim() ? g(p).trim() : '');
+  const WDS = ['Po', 'Út', 'St', 'Čt', 'Pá', 'So', 'Ne'];
+  let out = 'TÝDEN Č.: ' + gg('no') + '\n';
+  out += '── RÁNO (denně) ──\n';
+  out += '        tep | spánek | energie | bolavost\n';
+  for (let i = 0; i < 7; i++){
+    out += WDS[i] + ':' + ckPad(g('morning.' + i + '.hr'), 8) + ' | ' + ckPad(g('morning.' + i + '.sl'), 5) + '  | ' + ckPad(g('morning.' + i + '.en'), 5) + '   | ' + ckPad(g('morning.' + i + '.so'), 5) + '\n';
+  }
+  out += '(známky 1–5, 5 = super)\n';
+  out += '── VÁHA ──\n';
+  out += 'St: ' + (gg('weight.st') || '__') + '  Pá: ' + (gg('weight.pa') || '__') + '  Ne: ' + (gg('weight.ne') || '__') + '\n';
+  out += '── RAMENO ──\n';
+  out += 'Bolest 0–10: ' + gg('shoulder.pain') + '\n';
+  out += 'Kdy/při čem: ' + gg('shoulder.when') + '\n';
+  out += '── SPÁNEK ──\n';
+  out += 'Chodím spát: ' + gg('sleep.to') + '\n';
+  out += 'Vstávám: ' + gg('sleep.up') + '\n';
+  out += '── BĚHY ──\n';
+  out += 'Po Q-běh | odběháno: ' + (gg('runs.q.done') || 'ano/ne') + ' | pocit: ' + gg('runs.q.feel') + '\n';
+  out += 'St E-běh | čas: ' + (gg('runs.e.time') || '__') + ' | tempo/km: ' + (gg('runs.e.pace') || '__') + ' | prům. tep: ' + (gg('runs.e.hr') || '__') + '\n';
+  out += 'So longrun | čas: ' + (gg('runs.lr.time') || '__') + ' | km: ' + (gg('runs.lr.km') || '__') + ' | tempo/km: ' + (gg('runs.lr.pace') || '__') + ' | prům. tep: ' + (gg('runs.lr.hr') || '__') + '\n';
+  out += '── SÍLA (váha: opakování sérií + RIR poslední série) ──\n';
+  out += 'Upper A – incline press: ' + gg('strength.ia') + '\n';
+  out += 'Upper A – row: ' + gg('strength.row') + '\n';
+  out += 'Lower A – dřep: ' + gg('strength.sq') + '\n';
+  out += 'Lower A – RDL/nordic: ' + gg('strength.rdla') + '\n';
+  out += 'Upper B – shyby: ' + gg('strength.pull') + '\n';
+  out += 'Upper B – OHP: ' + gg('strength.ohp') + '\n';
+  out += 'Lower B – RDL: ' + gg('strength.rdlb') + '\n';
+  out += 'Lower B – bulhar: ' + gg('strength.bulg') + '\n';
+  out += '── OSTATNÍ ──\n';
+  out += 'Plavání 1: ' + gg('other.sw1') + '\n';
+  out += 'Plavání 2: ' + gg('other.sw2') + '\n';
+  out += 'Vynechal jsem: ' + gg('other.skip') + '\n';
+  out += 'Poznámka: ' + gg('other.note');
+  return out;
+}
 function mealsWeekText(anyDay){
   const mon = startOfWeek(anyDay);
   const sun = addDays(mon, 6);
@@ -1329,6 +1460,11 @@ function downloadText(txt, fname){
   a.click();
   setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
   toast('Jídelníček stažen');
+}
+function copyPlainText(txt, fname, okMsg){
+  if (navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(() => toast(okMsg)).catch(() => downloadText(txt, fname));
+  } else downloadText(txt, fname);
 }
 function copyMealsWeek(txt){
   const fname = 'jidelnicek-' + dateKey(startOfWeek(selectedDate)) + '.txt';
@@ -2196,48 +2332,117 @@ function renderCal(){
 }
 
 /* ============ Render: Přehled ============ */
-let yearShift = 0;
-function renderYear(){
-  const t = today();
-  const y = t.getFullYear() + yearShift;
-  let sum = 0, cnt = 0;
-  let head = '<div class="yr-head">';
-  for (let m = 0; m < 12; m++) head += '<span>' + (m + 1) + '</span>';
-  head += '</div>';
-  let rows = '';
-  for (let day = 1; day <= 31; day++){
-    rows += '<div class="yr-row">';
-    for (let m = 0; m < 12; m++){
-      const dim = new Date(y, m + 1, 0).getDate();
-      if (day > dim){ rows += '<span class="yc void"></span>'; continue; }
-      const d = new Date(y, m, day);
-      if (d > t){ rows += '<span class="yc future"></span>'; continue; }
-      const key = dateKey(d);
-      const st = dayStats(key);
-      let cls, ti = day + '. ' + (m + 1) + '. ' + y + ' — ';
-      if (!st.total){ cls = 'off'; ti += 'nic naplánováno'; }
-      else {
-        sum += st.pct; cnt++;
-        cls = !st.done ? 'l0' : st.pct < 25 ? 'l1' : st.pct < 50 ? 'l2' : st.pct < 75 ? 'l3' : 'l4';
-        ti += 'splněno ' + st.done + ' z ' + st.total + ' (' + st.pct + ' %)';
-      }
-      rows += '<button class="yc ' + cls + (sameDay(d, t) ? ' today' : '') + '" data-action="gotoDay" data-key="' + key + '" title="' + ti + '" aria-label="' + ti + '"></button>';
-    }
-    rows += '</div>';
-  }
-  const avg = cnt ? Math.round(sum / cnt) : 0;
-  let html = '<div class="daynav">'
-    + '<button class="icon-btn" data-action="yrPrev" aria-label="Předchozí rok">‹</button>'
-    + '<div class="daynav-mid"><div class="daynav-date">' + y + '</div>'
-    + (yearShift ? '<div class="daynav-sub"><button class="linklike" data-action="yrNow">Zpět na letošek</button></div>'
-                 : '<div class="daynav-sub">průměrná úspěšnost ' + avg + ' %</div>')
+function ckInput(wk, path, opts){
+  const o = opts || {};
+  return '<input class="ck-in' + (o.cls ? ' ' + o.cls : '') + '" data-ck="' + path + '" data-w="' + wk + '"'
+    + (o.num ? ' inputmode="decimal"' : '')
+    + (o.ph ? ' placeholder="' + esc(o.ph) + '"' : '')
+    + ' maxlength="' + (o.max || 60) + '" value="' + esc(ckGet(wk, path)) + '" aria-label="' + esc(o.lbl || path) + '">';
+}
+function ckBadge(txt){
+  return '<span class="ck-today">dnes' + (txt ? ' · ' + txt : '') + '</span>';
+}
+function renderCheckin(){
+  const wk = ckWeekKey();
+  const mon = parseKey(wk);
+  const sun = addDays(mon, 6);
+  const wd = ckShift === 0 ? weekdayIdx(today()) : -1; // zvýraznění jen v aktuálním týdnu
+  const prevNo = parseInt(ckGet(dateKey(addDays(mon, -7)), 'no'), 10);
+  const WDS = ['Po', 'Út', 'St', 'Čt', 'Pá', 'So', 'Ne'];
+
+  let html = '<div class="ck-tools"><a class="btn small" href="claude://" data-action="openLink" aria-label="Otevřít Claude">🤖 Claude</a>'
+    + '<button class="btn small primary" data-action="exportCheckin">📤 Odeslat check-in</button></div>';
+
+  html += '<div class="daynav">'
+    + '<button class="icon-btn" data-action="ckPrev" aria-label="Předchozí týden">‹</button>'
+    + '<div class="daynav-mid"><div class="daynav-date">Týden ' + mon.getDate() + '. ' + (mon.getMonth() + 1) + '. – ' + sun.getDate() + '. ' + (sun.getMonth() + 1) + '.</div>'
+    + (ckShift ? '<div class="daynav-sub"><button class="linklike" data-action="ckNow">Zpět na tento týden</button></div>'
+               : '<div class="daynav-sub">check-in pro trenéra</div>')
     + '</div>'
-    + '<button class="icon-btn" data-action="yrNext" aria-label="Další rok"' + (yearShift >= 0 ? ' disabled' : '') + '>›</button>'
+    + '<button class="icon-btn" data-action="ckNext" aria-label="Další týden"' + (ckShift >= 0 ? ' disabled' : '') + '>›</button>'
     + '</div>';
-  html += '<div class="card yr-card">' + head + rows + '</div>';
-  html += '<div class="hm-foot"><span class="hm-legend">méně <i class="hm l0"></i><i class="hm l1"></i><i class="hm l2"></i><i class="hm l3"></i><i class="hm l4"></i> více</span></div>';
-  html += '<p class="hint">Každý sloupec je měsíc, každý řádek den v měsíci. Ťuknutím na políčko den otevřete.</p>';
-  $('#view-year').innerHTML = html;
+
+  html += '<div class="card ck-card"><div class="ck-row-top"><span class="ck-lbl">Týden č.</span>'
+    + ckInput(wk, 'no', { num: true, max: 6, ph: isFinite(prevNo) ? 'minule ' + prevNo : 'např. 1', lbl: 'Číslo týdne' }) + '</div></div>';
+
+  html += '<div class="sec-title">🌅 Ráno (denně)' + (wd > -1 ? ' <span class="ck-today">dnes: ' + WDS[wd] + '</span>' : '') + '</div>'
+    + '<div class="card ck-card"><div class="ck-grid ck-head"><span></span><span>tep</span><span>spánek</span><span>energie</span><span>bolavost</span></div>'
+    + WDS.map((w, i) =>
+        '<div class="ck-grid' + (i === wd ? ' ck-now' : '') + '"><span class="ck-day">' + w + '</span>'
+        + ckInput(wk, 'morning.' + i + '.hr', { num: true, max: 3, lbl: w + ' tep' })
+        + ckInput(wk, 'morning.' + i + '.sl', { num: true, max: 1, lbl: w + ' spánek' })
+        + ckInput(wk, 'morning.' + i + '.en', { num: true, max: 1, lbl: w + ' energie' })
+        + ckInput(wk, 'morning.' + i + '.so', { num: true, max: 1, lbl: w + ' bolavost' })
+        + '</div>').join('')
+    + '<p class="ck-hint">Známky 1–5, 5 = super. Tep vleže po probuzení.</p></div>';
+
+  html += '<div class="sec-title">⚖️ Váha' + ([2, 4, 6].indexOf(wd) !== -1 ? ' ' + ckBadge('nalačno') : '') + '</div>'
+    + '<div class="card ck-card"><div class="ck-flex">'
+    + '<label class="ck-mini' + (wd === 2 ? ' ck-now' : '') + '"><span>St</span>' + ckInput(wk, 'weight.st', { num: true, max: 6, lbl: 'Váha středa' }) + '</label>'
+    + '<label class="ck-mini' + (wd === 4 ? ' ck-now' : '') + '"><span>Pá</span>' + ckInput(wk, 'weight.pa', { num: true, max: 6, lbl: 'Váha pátek' }) + '</label>'
+    + '<label class="ck-mini' + (wd === 6 ? ' ck-now' : '') + '"><span>Ne</span>' + ckInput(wk, 'weight.ne', { num: true, max: 6, lbl: 'Váha neděle' }) + '</label>'
+    + '</div></div>';
+
+  const qd = ckGet(wk, 'runs.q.done');
+  html += '<div class="sec-title">🏃 Běhy' + (wd === 0 ? ' ' + ckBadge('Q-běh') : wd === 2 ? ' ' + ckBadge('E-běh') : wd === 5 ? ' ' + ckBadge('longrun') : '') + '</div>'
+    + '<div class="card ck-card">'
+    + '<div class="ck-run' + (wd === 0 ? ' ck-now' : '') + '"><div class="ck-run-t">Po · Q-běh</div><div class="ck-flex">'
+    +   '<span class="ck-lbl">odběháno</span>'
+    +   '<span class="ck-chips"><button class="day-chip' + (qd === 'ano' ? ' on' : '') + '" data-action="ckChip" data-w="' + wk + '" data-path="runs.q.done" data-v="ano">ano</button>'
+    +   '<button class="day-chip' + (qd === 'ne' ? ' on' : '') + '" data-action="ckChip" data-w="' + wk + '" data-path="runs.q.done" data-v="ne">ne</button></span>'
+    +   ckInput(wk, 'runs.q.feel', { ph: 'pocit', max: 120, lbl: 'Q-běh pocit', cls: 'grow' })
+    + '</div></div>'
+    + '<div class="ck-run' + (wd === 2 ? ' ck-now' : '') + '"><div class="ck-run-t">St · E-běh</div><div class="ck-flex">'
+    +   '<label class="ck-mini"><span>čas</span>' + ckInput(wk, 'runs.e.time', { max: 10, ph: '40:00', lbl: 'E-běh čas' }) + '</label>'
+    +   '<label class="ck-mini"><span>tempo/km</span>' + ckInput(wk, 'runs.e.pace', { max: 8, ph: '6:00', lbl: 'E-běh tempo' }) + '</label>'
+    +   '<label class="ck-mini"><span>prům. tep</span>' + ckInput(wk, 'runs.e.hr', { num: true, max: 3, lbl: 'E-běh tep' }) + '</label>'
+    + '</div></div>'
+    + '<div class="ck-run' + (wd === 5 ? ' ck-now' : '') + '"><div class="ck-run-t">So · Longrun</div><div class="ck-flex">'
+    +   '<label class="ck-mini"><span>čas</span>' + ckInput(wk, 'runs.lr.time', { max: 10, ph: '70:00', lbl: 'Longrun čas' }) + '</label>'
+    +   '<label class="ck-mini"><span>km</span>' + ckInput(wk, 'runs.lr.km', { num: true, max: 5, lbl: 'Longrun km' }) + '</label>'
+    +   '<label class="ck-mini"><span>tempo/km</span>' + ckInput(wk, 'runs.lr.pace', { max: 8, ph: '6:00', lbl: 'Longrun tempo' }) + '</label>'
+    +   '<label class="ck-mini"><span>prům. tep</span>' + ckInput(wk, 'runs.lr.hr', { num: true, max: 3, lbl: 'Longrun tep' }) + '</label>'
+    + '</div></div>'
+    + '</div>';
+
+  const strengthBadge = wd === 0 ? 'Upper A' : wd === 2 ? 'Lower A' : wd === 4 ? 'Upper B' : wd === 5 ? 'Lower B' : '';
+  const sRow = (path, lbl, now) =>
+    '<label class="ck-srow' + (now ? ' ck-now' : '') + '"><span>' + lbl + '</span>' + ckInput(wk, path, { ph: 'např. 26 kg: 10/9/8, RIR 2', max: 120, lbl, cls: 'grow' }) + '</label>';
+  html += '<div class="sec-title">🏋️ Síla' + (strengthBadge ? ' ' + ckBadge(strengthBadge) : '') + '</div>'
+    + '<div class="card ck-card">'
+    + sRow('strength.ia', 'Upper A – incline press', wd === 0)
+    + sRow('strength.row', 'Upper A – row', wd === 0)
+    + sRow('strength.sq', 'Lower A – dřep', wd === 2)
+    + sRow('strength.rdla', 'Lower A – RDL/nordic', wd === 2)
+    + sRow('strength.pull', 'Upper B – shyby', wd === 4)
+    + sRow('strength.ohp', 'Upper B – OHP', wd === 4)
+    + sRow('strength.rdlb', 'Lower B – RDL', wd === 5)
+    + sRow('strength.bulg', 'Lower B – bulhar', wd === 5)
+    + '<p class="ck-hint">Zápis: váha: opakování sérií + RIR poslední série.</p></div>';
+
+  html += '<div class="sec-title">🩹 Rameno' + (wd === 6 ? ' ' + ckBadge() : '') + '</div>'
+    + '<div class="card ck-card">'
+    + '<label class="ck-srow"><span>Bolest 0–10</span>' + ckInput(wk, 'shoulder.pain', { num: true, max: 2, lbl: 'Bolest ramene' }) + '</label>'
+    + '<label class="ck-srow"><span>Kdy/při čem</span>' + ckInput(wk, 'shoulder.when', { max: 200, lbl: 'Kdy bolí', cls: 'grow' }) + '</label>'
+    + '</div>';
+
+  html += '<div class="sec-title">😴 Spánek' + (wd === 6 ? ' ' + ckBadge() : '') + '</div>'
+    + '<div class="card ck-card"><div class="ck-flex">'
+    + '<label class="ck-mini"><span>Chodím spát</span>' + ckInput(wk, 'sleep.to', { max: 12, ph: '23:00', lbl: 'Chodím spát' }) + '</label>'
+    + '<label class="ck-mini"><span>Vstávám</span>' + ckInput(wk, 'sleep.up', { max: 12, ph: '7:00', lbl: 'Vstávám' }) + '</label>'
+    + '</div></div>';
+
+  html += '<div class="sec-title">🌊 Ostatní' + ((wd === 1 || wd === 3) ? ' ' + ckBadge('plavání') : wd === 6 ? ' ' + ckBadge('check-in') : '') + '</div>'
+    + '<div class="card ck-card">'
+    + '<label class="ck-srow' + (wd === 1 ? ' ck-now' : '') + '"><span>Plavání 1 (Út)</span>' + ckInput(wk, 'other.sw1', { max: 200, lbl: 'Plavání 1', cls: 'grow' }) + '</label>'
+    + '<label class="ck-srow' + (wd === 3 ? ' ck-now' : '') + '"><span>Plavání 2 (Čt)</span>' + ckInput(wk, 'other.sw2', { max: 200, lbl: 'Plavání 2', cls: 'grow' }) + '</label>'
+    + '<label class="ck-srow"><span>Vynechal jsem</span>' + ckInput(wk, 'other.skip', { max: 300, lbl: 'Vynechal jsem', cls: 'grow' }) + '</label>'
+    + '<label class="ck-srow"><span>Poznámka</span>' + ckInput(wk, 'other.note', { max: 500, lbl: 'Poznámka', cls: 'grow' }) + '</label>'
+    + '</div>';
+
+  html += '<p class="hint">' + (wd === 6 && !ckShift ? 'Neděle je den check-inu — projdi formulář a nahoře ho ➤ odešli trenérovi.' : 'Vyplňuj průběžně, zvýrazněná pole patří k dnešku. V neděli celý týden odešleš nahoře.') + '</p>';
+
+  $('#view-checkin').innerHTML = html;
 }
 function renderStats(){
   const hs = activeHabits();
@@ -2759,6 +2964,24 @@ document.addEventListener('click', ev => {
     }
     case 'cancelTimer': stopTimer(); toast('Časovač zrušen'); break;
     case 'openLink': break; // odkaz řeší prohlížeč, jen nesmí přepnout řádek
+    case 'ckPrev': ckShift--; render(); break;
+    case 'ckNext': if (ckShift < 0){ ckShift++; render(); } break;
+    case 'ckNow': ckShift = 0; render(); break;
+    case 'ckChip': {
+      const cur = ckGet(el.dataset.w, el.dataset.path);
+      ckSet(el.dataset.w, el.dataset.path, cur === el.dataset.v ? '' : el.dataset.v);
+      render();
+      break;
+    }
+    case 'exportCheckin': {
+      const txt = checkinText(ckWeekKey());
+      if (navigator.share){
+        navigator.share({ title: 'Check-in', text: txt })
+          .then(() => toast('Check-in odeslán do sdílení'))
+          .catch(err => { if (!err || err.name !== 'AbortError') copyPlainText(txt, 'checkin-' + ckWeekKey() + '.txt', 'Check-in zkopírován do schránky'); });
+      } else copyPlainText(txt, 'checkin-' + ckWeekKey() + '.txt', 'Check-in zkopírován do schránky');
+      break;
+    }
     case 'exportMealsWeek': {
       const txt = mealsWeekText(selectedDate);
       if (navigator.share){
@@ -2768,9 +2991,6 @@ document.addEventListener('click', ev => {
       } else copyMealsWeek(txt);
       break;
     }
-    case 'yrPrev': yearShift--; render(); break;
-    case 'yrNext': if (yearShift < 0){ yearShift++; render(); } break;
-    case 'yrNow': yearShift = 0; render(); break;
     case 'gotoDay': {
       let d = parseKey(el.dataset.key);
       if (d > today()) d = today();
@@ -3044,6 +3264,10 @@ document.addEventListener('input', ev => {
   const t = ev.target;
   if (!t) return;
   if (t.id === 'plan-ta'){ planDraft = t.value; return; }
+  if (t.classList && t.classList.contains('ck-in')){
+    ckSet(t.dataset.w, t.dataset.ck, t.value);
+    return;
+  }
   if (t.id === 'meal-b' || t.id === 'meal-l' || t.id === 'meal-d' || t.id === 'meal-note' || t.classList.contains('meal-sn')){
     const k = dateKey(selectedDate);
     const m = mealObj(k);
@@ -3116,13 +3340,13 @@ function render(){
   applyTheme();
   const td = document.querySelector('.tab-day');
   if (td) td.textContent = String(today().getDate());
-  ['day', 'cal', 'meals', 'stats', 'plan', 'year'].forEach(v => { $('#view-' + v).hidden = v !== tab; });
+  ['day', 'cal', 'meals', 'stats', 'plan', 'checkin'].forEach(v => { $('#view-' + v).hidden = v !== tab; });
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('on', b.dataset.tab === tab));
   if (tab === 'day') renderDay();
   else if (tab === 'cal') renderCal();
   else if (tab === 'meals') renderMeals();
   else if (tab === 'plan') renderPlan();
-  else if (tab === 'year') renderYear();
+  else if (tab === 'checkin') renderCheckin();
   else renderStats();
   popRef = null;
 }
