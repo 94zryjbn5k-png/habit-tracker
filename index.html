@@ -544,10 +544,6 @@ input.meal-sn{min-height:46px;resize:none;margin-bottom:8px;}
 .ck-strow:first-child{border-top:0;padding-top:0;}
 .ck-strow:last-child{padding-bottom:0;}
 .ck-mini.ck-solo{max-width:140px;}
-.ck-send{text-align:center;padding:16px 14px;}
-.ck-send-t{font-size:15.5px;font-weight:800;margin-bottom:4px;}
-.ck-send p{margin:0 0 12px;font-size:13.5px;color:var(--muted);}
-.ck-send .btn{width:100%;}
 .ck-shoulder{margin-top:22px;}
 .ck-shoulder-body{padding:2px 14px 12px;}
 .ck-shoulder-body .ck-srow:first-child{border-top:1px solid var(--line);padding-top:8px;}
@@ -2460,9 +2456,6 @@ function renderCheckin(){
     html += '<div class="sec-title">😴 Spánek (typické časy tento týden)</div>'
       + '<div class="card ck-card"><label class="ck-srow"><span>od – do</span>'
       + ckInput(wk, 'sleep.range', { max: 20, ph: '23:00 – 7:00', lbl: 'Spánek od do', cls: 'grow' }) + '</label></div>';
-    html += '<div class="card ck-send"><div class="ck-send-t">🏁 Neděle = den check-inu</div>'
-      + '<p>Projeď šipkou zpátky dny, doplň mezery, zkopíruj a pošli trenérovi.</p>'
-      + '<button class="btn primary" data-action="exportCheckin">📋 Zkopírovat check-in</button></div>';
   }
 
   html += '<details class="vac-card ck-shoulder"><summary><span class="vac-emo">🩹</span>'
