@@ -289,7 +289,7 @@ input,textarea{-webkit-appearance:none;appearance:none;}
 .tab-center{overflow:visible;}
 .tab-day{
   width:54px;height:54px;border-radius:50%;background:var(--accent);color:var(--accent-text);
-  display:flex;align-items:center;justify-content:center;font-size:14.5px;font-weight:800;line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-.02em;
+  display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;line-height:1;
   margin-top:-28px;border:4px solid var(--bg);flex:0 0 auto;
   box-shadow:0 6px 16px var(--accent-soft),0 2px 5px rgba(0,0,0,.18);
   transition:transform .12s ease,opacity .15s;
@@ -499,6 +499,8 @@ input.meal-sn{min-height:46px;resize:none;margin-bottom:8px;}
 
 /* ---------- trenérský check-in ---------- */
 .ck-tools{display:flex;justify-content:flex-end;gap:8px;margin:0 0 6px;}
+.ck-sec{display:flex;align-items:center;justify-content:space-between;}
+.ck-sec .lnk{min-height:26px;min-width:30px;font-size:14px;}
 .ck-card{padding:13px 14px;}
 .ck-row-top{display:flex;align-items:center;gap:12px;}
 .ck-row-top .ck-in{max-width:110px;}
@@ -547,6 +549,28 @@ input.meal-sn{min-height:46px;resize:none;margin-bottom:8px;}
 .ck-shoulder{margin-top:22px;}
 .ck-shoulder-body{padding:2px 14px 12px;}
 .ck-shoulder-body .ck-srow:first-child{border-top:1px solid var(--line);padding-top:8px;}
+
+/* ---------- nákup a plán jídel ---------- */
+.shop-card{margin-top:18px;opacity:1;}
+.shop-body{padding:2px 14px 14px;}
+.shop-body .meal-f{margin-bottom:4px;}
+.shop-lbl{margin-top:12px;}
+.shop-list{list-style:none;margin:2px 0 4px;padding:0;}
+.shop-it{display:flex;align-items:center;gap:10px;padding:4px 0;border-bottom:1px solid var(--line);min-height:46px;}
+.shop-it:last-child{border-bottom:0;}
+.shop-chk{
+  width:26px;height:26px;border-radius:50%;border:2px solid var(--line);flex:0 0 auto;
+  display:inline-flex;align-items:center;justify-content:center;padding:0;transition:background .15s,border-color .15s;
+}
+.shop-it.done .shop-chk{background:var(--green);border-color:var(--green);}
+.shop-it.done .shop-chk span::after{content:'✓';color:#fff;font-size:14px;font-weight:800;}
+.shop-t{flex:1;min-width:0;font-size:15.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:pointer;}
+.shop-it.done .shop-t{color:var(--muted);text-decoration:line-through;}
+.shop-del{min-width:38px;min-height:38px;box-shadow:none;background:transparent;color:var(--muted);font-size:14px;}
+.shop-empty{font-size:13.5px;margin:6px 0 8px;}
+.shop-add{display:flex;gap:8px;margin-top:8px;}
+.shop-add .meal-f{flex:1;margin:0;}
+.shop-add .btn{flex:0 0 auto;min-width:52px;font-size:19px;}
 
 /* ---------- milníky ---------- */
 .mile-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;}
@@ -966,6 +990,7 @@ function defaultData(){
     notes: {},
     milestones: {},
     checkins: {},
+    shopping: { note: '', items: [] },
     hideDone: false,
     theme: { ...THEME_DEFAULT },
     plan: DEFAULT_PLAN
@@ -1030,6 +1055,10 @@ function validateData(obj){
   }
   if (obj.milestones != null && (typeof obj.milestones !== 'object' || Array.isArray(obj.milestones))) return 'Milníky mají špatný formát.';
   if (obj.checkins != null && (typeof obj.checkins !== 'object' || Array.isArray(obj.checkins))) return 'Check-iny mají špatný formát.';
+  if (obj.shopping != null){
+    if (typeof obj.shopping !== 'object' || Array.isArray(obj.shopping)) return 'Nákupní seznam má špatný formát.';
+    if (obj.shopping.items != null && !Array.isArray(obj.shopping.items)) return 'Položky nákupu mají špatný formát.';
+  }
   if (obj.entries != null){
     if (typeof obj.entries !== 'object' || Array.isArray(obj.entries)) return 'Záznamy („entries“) mají špatný formát.';
     for (const k of Object.keys(obj.entries)){
@@ -1054,6 +1083,7 @@ function normalizeData(obj){
     notes: {},
     milestones: {},
     checkins: {},
+    shopping: { note: '', items: [] },
     hideDone: !!obj.hideDone,
     theme: normTheme(obj.theme || (typeof obj.bg === 'string' && LEGACY_BG_IDS[obj.bg] ? { bg: LEGACY_BG_IDS[obj.bg] } : null)),
     plan: typeof obj.plan === 'string' ? obj.plan.slice(0, 50000) : DEFAULT_PLAN
@@ -1098,6 +1128,15 @@ function normalizeData(obj){
         if (typeof t === 'string' && t.trim()) day[String(hid)] = t.slice(0, 500);
       }
       if (Object.keys(day).length) out.notes[k] = day;
+    }
+  }
+  if (obj.shopping && typeof obj.shopping === 'object' && !Array.isArray(obj.shopping)){
+    if (typeof obj.shopping.note === 'string') out.shopping.note = obj.shopping.note.slice(0, 2000);
+    if (Array.isArray(obj.shopping.items)){
+      out.shopping.items = obj.shopping.items
+        .filter(it => it && typeof it.t === 'string' && it.t.trim())
+        .slice(0, 100)
+        .map(it => ({ t: it.t.trim().slice(0, 120), done: !!it.done }));
     }
   }
   if (obj.checkins && typeof obj.checkins === 'object' && !Array.isArray(obj.checkins)){
@@ -2391,7 +2430,7 @@ function renderCheckin(){
     + '<button class="icon-btn" data-action="ckNextDay" aria-label="Další den"' + (d >= today() ? ' disabled' : '') + '>›</button>'
     + '</div>';
 
-  html += '<div class="sec-title">🌅 Ráno po probuzení</div>'
+  html += '<div class="sec-title ck-sec"><span>🌅 Ráno po probuzení</span><a class="lnk" href="x-apple-health://" data-action="openLink" rel="noopener" aria-label="Otevřít Zdraví" title="Otevřít Zdraví">↗</a></div>'
     + '<div class="card ck-card"><div class="ck-grid ck-head"><span></span><span>tep</span><span>spánek</span><span>energie</span><span>bolavost</span></div>'
     + '<div class="ck-grid"><span class="ck-day">' + WDS[wd] + '</span>'
     + ckInput(wk, 'morning.' + wd + '.hr', { num: true, max: 3, lbl: 'tep' })
@@ -2558,7 +2597,30 @@ function renderMeals(){
     + (m.note ? '<div class="meal-group"><div class="meal-lbl">📝 Poznámka</div>'
         + '<textarea id="meal-note" class="meal-f" rows="2" maxlength="2000" aria-label="Poznámka">' + esc(m.note) + '</textarea></div>' : '')
     + '</div>';
-  html += '<p class="hint">' + (future ? 'Plánujete dopředu — uloží se k tomuto dni.' : 'Ukládá se automaticky, pro každý den zvlášť.') + ' Mezi dny listujete šipkami nahoře.</p>';
+  const sh = data.shopping || { note: '', items: [] };
+  const shDone = sh.items.filter(i => i.done).length;
+  html += '<details class="vac-card shop-card"><summary><span class="vac-emo">🛒</span>'
+    + '<span class="vac-sum"><strong>Nákup a plán jídel</strong><span>'
+    + (sh.items.length ? shDone + ' / ' + sh.items.length + ' nakoupeno' : 'seznam + co uvařit')
+    + '</span></span><span class="vac-chev">›</span></summary>'
+    + '<div class="shop-body">'
+    + '<div class="meal-lbl"><span>🍳 Jídla na uvaření</span></div>'
+    + '<textarea id="shop-note" class="meal-f" rows="2" maxlength="2000" placeholder="např. čočkové kari, lasagne, poke bowl…" aria-label="Jídla na uvaření">' + esc(sh.note) + '</textarea>'
+    + '<div class="meal-lbl shop-lbl"><span>🛒 Nákupní seznam</span>'
+    + (shDone ? '<button class="linklike" data-action="shopClearDone">Smazat nakoupené</button>' : '')
+    + '</div>'
+    + (sh.items.length
+        ? '<ul class="shop-list">' + sh.items.map((it, i) =>
+            '<li class="shop-it' + (it.done ? ' done' : '') + '">'
+            + '<button class="shop-chk" data-action="shopToggle" data-i="' + i + '" role="checkbox" aria-checked="' + !!it.done + '" aria-label="' + esc(it.t) + '"><span></span></button>'
+            + '<span class="shop-t" data-action="shopToggle" data-i="' + i + '">' + esc(it.t) + '</span>'
+            + '<button class="icon-btn shop-del" data-action="shopDel" data-i="' + i + '" aria-label="Smazat ' + esc(it.t) + '">✕</button>'
+            + '</li>').join('') + '</ul>'
+        : '<p class="muted shop-empty">Zatím prázdno — přidejte první položku.</p>')
+    + '<div class="shop-add"><input id="shop-new" class="meal-f" maxlength="120" placeholder="např. mléko" aria-label="Nová položka" enterkeyhint="done">'
+    + '<button class="btn small" data-action="shopAdd">＋</button></div>'
+    + '</div></details>';
+  html += '<p class="hint">' + (future ? 'Plánujete dopředu — uloží se k tomuto dni.' : 'Ukládá se automaticky, pro každý den zvlášť.') + ' Mezi dny listujete šipkami nahoře. Nákup a plán jídel jsou společné pro všechny dny.</p>';
   $('#view-meals').innerHTML = html;
 }
 
@@ -3001,6 +3063,51 @@ document.addEventListener('click', ev => {
       copyPlainText(checkinText(ckWeekKey()), 'checkin-' + ckWeekKey() + '.txt', 'Check-in zkopírován — stačí vložit do zprávy');
       break;
     }
+    case 'shopAdd': {
+      const inp = $('#shop-new');
+      const t = (inp && inp.value || '').trim().slice(0, 120);
+      if (!t) break;
+      if (data.shopping.items.length >= 100){ toast('Seznam je plný (max 100 položek)', true); break; }
+      data.shopping.items.push({ t, done: false });
+      save();
+      const det = document.querySelector('.shop-card');
+      const wasOpen = det ? det.open : true;
+      render();
+      const d2 = document.querySelector('.shop-card');
+      if (d2 && wasOpen){ d2.open = true; const ni = $('#shop-new'); if (ni) ni.focus(); }
+      break;
+    }
+    case 'shopToggle': {
+      const it = data.shopping.items[Number(el.dataset.i)];
+      if (!it) break;
+      it.done = !it.done;
+      save();
+      const det = document.querySelector('.shop-card');
+      const wasOpen = det ? det.open : true;
+      render();
+      const d2 = document.querySelector('.shop-card');
+      if (d2 && wasOpen) d2.open = true;
+      break;
+    }
+    case 'shopDel': {
+      data.shopping.items.splice(Number(el.dataset.i), 1);
+      save();
+      const det = document.querySelector('.shop-card');
+      const wasOpen = det ? det.open : true;
+      render();
+      const d2 = document.querySelector('.shop-card');
+      if (d2 && wasOpen) d2.open = true;
+      break;
+    }
+    case 'shopClearDone': {
+      data.shopping.items = data.shopping.items.filter(i => !i.done);
+      save();
+      render();
+      const d2 = document.querySelector('.shop-card');
+      if (d2) d2.open = true;
+      toast('Nakoupené smazáno');
+      break;
+    }
     case 'exportMealsWeek': {
       const txt = mealsWeekText(selectedDate);
       if (navigator.share){
@@ -3287,6 +3394,11 @@ document.addEventListener('input', ev => {
     ckSet(t.dataset.w, t.dataset.ck, t.value);
     return;
   }
+  if (t.id === 'shop-note'){
+    data.shopping.note = t.value.slice(0, 2000);
+    save();
+    return;
+  }
   if (t.id === 'meal-b' || t.id === 'meal-l' || t.id === 'meal-d' || t.id === 'meal-note' || t.classList.contains('meal-sn')){
     const k = dateKey(selectedDate);
     const m = mealObj(k);
@@ -3303,6 +3415,12 @@ document.addEventListener('input', ev => {
 });
 
 document.addEventListener('keydown', ev => {
+  if (ev.key === 'Enter' && ev.target && ev.target.id === 'shop-new'){
+    ev.preventDefault();
+    const btn = document.querySelector('[data-action="shopAdd"]');
+    if (btn) btn.click();
+    return;
+  }
   if (ev.key === 'Escape' && $('#modal-root').firstChild){ closeModal(); return; }
   if ((ev.key === 'Enter' || ev.key === ' ') && ev.target.classList && ev.target.classList.contains('habit-row') && ev.target.dataset.action === 'rowToggle'){
     ev.preventDefault();
@@ -3358,7 +3476,7 @@ function toast(msg, isErr){
 function render(){
   applyTheme();
   const td = document.querySelector('.tab-day');
-  if (td) td.textContent = today().getDate() + '.' + (today().getMonth() + 1) + '.';
+  if (td) td.textContent = WD[weekdayIdx(today())];
   ['day', 'cal', 'meals', 'stats', 'plan', 'checkin'].forEach(v => { $('#view-' + v).hidden = v !== tab; });
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('on', b.dataset.tab === tab));
   if (tab === 'day') renderDay();
