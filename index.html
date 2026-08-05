@@ -568,6 +568,11 @@ input.meal-sn{min-height:46px;resize:none;margin-bottom:8px;}
 .shop-it.done .shop-t{color:var(--muted);text-decoration:line-through;}
 .shop-del{min-width:38px;min-height:38px;box-shadow:none;background:transparent;color:var(--muted);font-size:14px;}
 .shop-empty{font-size:13.5px;margin:6px 0 8px;}
+.shop-h{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 0 2px;list-style:none;}
+.shop-it + .shop-h,.shop-h:not(:first-child){border-top:1px solid var(--line);margin-top:4px;padding-top:12px;}
+.shop-ht{font-size:11.5px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;}
+.shop-h .shop-del{min-height:30px;min-width:30px;font-size:12px;opacity:.6;}
+.shop-acts{display:inline-flex;align-items:center;gap:4px;color:var(--muted);font-size:13px;}
 .shop-add{display:flex;gap:8px;margin-top:8px;}
 .shop-add .meal-f{flex:1;margin:0;}
 .shop-add .btn{flex:0 0 auto;min-width:52px;font-size:19px;}
@@ -1135,8 +1140,8 @@ function normalizeData(obj){
     if (Array.isArray(obj.shopping.items)){
       out.shopping.items = obj.shopping.items
         .filter(it => it && typeof it.t === 'string' && it.t.trim())
-        .slice(0, 100)
-        .map(it => ({ t: it.t.trim().slice(0, 120), done: !!it.done }));
+        .slice(0, 200)
+        .map(it => Object.assign({ t: it.t.trim().slice(0, 120), done: !!it.done }, it.h ? { h: true } : {}));
     }
   }
   if (obj.checkins && typeof obj.checkins === 'object' && !Array.isArray(obj.checkins)){
@@ -1493,6 +1498,30 @@ function checkinText(wk){
   out += 'Plavání 1: ' + (g('other.sw1') || '__') + '\n';
   out += 'Plavání 2: ' + (g('other.sw2') || '__');
   return out;
+}
+function parseShopText(txt){
+  const lines = String(txt || '').split(/\r?\n/);
+  const hasBullets = lines.some(l => /^\s*[•\-\*–▪·]/.test(l));
+  const out = [];
+  for (const raw of lines){
+    let l = raw.trim();
+    if (!l) continue;
+    const isBullet = /^[•\-\*–▪·]/.test(l);
+    l = l.replace(/^[•\-\*–▪·]+\s*/, '').trim();
+    if (!l) continue;
+    if (hasBullets && !isBullet) out.push({ t: l.slice(0, 120), done: false, h: true }); // řádek bez odrážky = nadpis kategorie
+    else out.push({ t: l.slice(0, 120), done: false });
+  }
+  return out;
+}
+function openShopPasteModal(){
+  openModal(
+    '<div class="sheet-title">📋 Vložit seznam</div>'
+    + '<p class="muted" style="margin:0 0 10px;font-size:13.5px">Vlož text — odrážky (•, -, *) budou položky, řádky bez odrážek nadpisy kategorií.</p>'
+    + '<textarea id="shop-paste" class="meal-f" rows="8" maxlength="8000" placeholder="Vejce a mléčné\n• vejce 30 ks\n• tvaroh 5× 250 g"></textarea>'
+    + '<div class="modal-actions"><button class="btn" data-action="closeModal">Zrušit</button>'
+    + '<button class="btn primary" data-action="shopPasteAdd">Přidat do seznamu</button></div>'
+  );
 }
 function mealsWeekText(anyDay){
   const mon = startOfWeek(anyDay);
@@ -2598,24 +2627,29 @@ function renderMeals(){
         + '<textarea id="meal-note" class="meal-f" rows="2" maxlength="2000" aria-label="Poznámka">' + esc(m.note) + '</textarea></div>' : '')
     + '</div>';
   const sh = data.shopping || { note: '', items: [] };
-  const shDone = sh.items.filter(i => i.done).length;
+  const shReal = sh.items.filter(i => !i.h);
+  const shDone = shReal.filter(i => i.done).length;
   html += '<details class="vac-card shop-card"><summary><span class="vac-emo">🛒</span>'
     + '<span class="vac-sum"><strong>Nákup a plán jídel</strong><span>'
-    + (sh.items.length ? shDone + ' / ' + sh.items.length + ' nakoupeno' : 'seznam + co uvařit')
+    + (shReal.length ? shDone + ' / ' + shReal.length + ' nakoupeno' : 'seznam + co uvařit')
     + '</span></span><span class="vac-chev">›</span></summary>'
     + '<div class="shop-body">'
     + '<div class="meal-lbl"><span>🍳 Jídla na uvaření</span></div>'
     + '<textarea id="shop-note" class="meal-f" rows="2" maxlength="2000" placeholder="např. čočkové kari, lasagne, poke bowl…" aria-label="Jídla na uvaření">' + esc(sh.note) + '</textarea>'
     + '<div class="meal-lbl shop-lbl"><span>🛒 Nákupní seznam</span>'
-    + (shDone ? '<button class="linklike" data-action="shopClearDone">Smazat nakoupené</button>' : '')
-    + '</div>'
+    + '<span class="shop-acts"><button class="linklike" data-action="shopPaste">📋 Vložit seznam</button>'
+    + (shDone ? ' · <button class="linklike" data-action="shopClearDone">Smazat nakoupené</button>' : '')
+    + '</span></div>'
     + (sh.items.length
         ? '<ul class="shop-list">' + sh.items.map((it, i) =>
-            '<li class="shop-it' + (it.done ? ' done' : '') + '">'
-            + '<button class="shop-chk" data-action="shopToggle" data-i="' + i + '" role="checkbox" aria-checked="' + !!it.done + '" aria-label="' + esc(it.t) + '"><span></span></button>'
-            + '<span class="shop-t" data-action="shopToggle" data-i="' + i + '">' + esc(it.t) + '</span>'
-            + '<button class="icon-btn shop-del" data-action="shopDel" data-i="' + i + '" aria-label="Smazat ' + esc(it.t) + '">✕</button>'
-            + '</li>').join('') + '</ul>'
+            it.h
+            ? '<li class="shop-h"><span class="shop-ht">' + esc(it.t) + '</span>'
+              + '<button class="icon-btn shop-del" data-action="shopDel" data-i="' + i + '" aria-label="Smazat ' + esc(it.t) + '">✕</button></li>'
+            : '<li class="shop-it' + (it.done ? ' done' : '') + '">'
+              + '<button class="shop-chk" data-action="shopToggle" data-i="' + i + '" role="checkbox" aria-checked="' + !!it.done + '" aria-label="' + esc(it.t) + '"><span></span></button>'
+              + '<span class="shop-t" data-action="shopToggle" data-i="' + i + '">' + esc(it.t) + '</span>'
+              + '<button class="icon-btn shop-del" data-action="shopDel" data-i="' + i + '" aria-label="Smazat ' + esc(it.t) + '">✕</button>'
+              + '</li>').join('') + '</ul>'
         : '<p class="muted shop-empty">Zatím prázdno — přidejte první položku.</p>')
     + '<div class="shop-add"><input id="shop-new" class="meal-f" maxlength="120" placeholder="např. mléko" aria-label="Nová položka" enterkeyhint="done">'
     + '<button class="btn small" data-action="shopAdd">＋</button></div>'
@@ -3097,6 +3131,20 @@ document.addEventListener('click', ev => {
       render();
       const d2 = document.querySelector('.shop-card');
       if (d2 && wasOpen) d2.open = true;
+      break;
+    }
+    case 'shopPaste': openShopPasteModal(); break;
+    case 'shopPasteAdd': {
+      const parsed = parseShopText(($('#shop-paste') && $('#shop-paste').value) || '');
+      if (!parsed.length){ toast('Nic k přidání — vlož text seznamu', true); break; }
+      data.shopping.items = data.shopping.items.concat(parsed).slice(0, 200);
+      save();
+      closeModal();
+      render();
+      const d2 = document.querySelector('.shop-card');
+      if (d2) d2.open = true;
+      const real = parsed.filter(i => !i.h).length;
+      toast('Přidáno ' + real + ' ' + plural(real, 'položka', 'položky', 'položek'));
       break;
     }
     case 'shopClearDone': {
