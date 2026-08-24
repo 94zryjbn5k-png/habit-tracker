@@ -1,0 +1,894 @@
+{
+ "version": 1,
+ "habits": [
+  {
+   "id": "449beb16-d8cf-48e1-9a9a-df5eb8e71c6c",
+   "name": "Spánek",
+   "emoji": "😴",
+   "type": "number",
+   "goal": 8,
+   "unit": "h",
+   "archived": false,
+   "order": 5,
+   "createdAt": 1784006508999,
+   "freq": {
+    "type": "daily"
+   },
+   "vacations": [
+    {
+     "from": "2026-07-20",
+     "to": "2026-07-26"
+    }
+   ],
+   "timerMin": null,
+   "link": "x-apple-health://browse/sleep"
+  },
+  {
+   "id": "3ddddf2c-6f07-4245-8543-48d941ec2d54",
+   "name": "Čtení",
+   "emoji": "📖",
+   "type": "check",
+   "goal": null,
+   "unit": "",
+   "archived": false,
+   "order": 17,
+   "createdAt": 1784006508999,
+   "freq": {
+    "type": "daily"
+   },
+   "vacations": [
+    {
+     "from": "2026-07-20",
+     "to": "2026-07-26"
+    }
+   ],
+   "timerMin": null,
+   "link": null
+  },
+  {
+   "id": "81cceb09-bbfb-4d13-aa67-078b8f6c3491",
+   "name": "Silový trénink",
+   "emoji": "💪",
+   "type": "check",
+   "goal": null,
+   "unit": "",
+   "archived": false,
+   "order": 0,
+   "createdAt": 1784006508999,
+   "freq": {
+    "type": "days",
+    "days": [
+     0,
+     2,
+     4,
+     5
+    ]
+   },
+   "vacations": [
+    {
+     "from": "2026-07-20",
+     "to": "2026-07-26"
+    },
+    {
+     "from": "2026-07-27",
+     "to": "2026-08-02"
+    }
+   ],
+   "timerMin": null,
+   "link": "claude://"
+  },
+  {
+   "id": "b4688e59-ac69-45a2-9b81-683ffd8cfa4b",
+   "name": "Kreatin",
+   "emoji": "💊",
+   "type": "check",
+   "goal": null,
+   "unit": "",
+   "archived": false,
+   "order": 6,
+   "createdAt": 1784006508999,
+   "freq": {
+    "type": "daily"
+   },
+   "vacations": [
+    {
+     "from": "2026-07-20",
+     "to": "2026-07-26"
+    }
+   ],
+   "timerMin": null,
+   "link": null
+  },
+  {
+   "id": "18db1387-1ae9-4fda-b271-250d80ec1e60",
+   "name": "Duolingo",
+   "emoji": "🦉",
+   "type": "check",
+   "goal": null,
+   "unit": "",
+   "archived": false,
+   "order": 11,
+   "createdAt": 1784006508999,
+   "freq": {
+    "type": "daily"
+   },
+   "vacations": [
+    {
+     "from": "2026-07-20",
+     "to": "2026-07-26"
+    }
+   ],
+   "timerMin": null,
+   "link": "duolingo://"
+  },
+  {
+   "id": "b6679887-e191-40c3-af4b-0c55862a3a5b",
+   "name": "Učení se",
+   "emoji": "🎓",
+   "type": "check",
+   "goal": null,
+   "unit": "",
+   "archived": false,
+   "order": 14,
+   "createdAt": 1784006508999,
+   "freq": {
+    "type": "daily"
+   },
+   "vacations": [
+    {
+     "from": "2026-07-01",
+     "to": "2026-09-20"
+    },
+    {
+     "from": "2026-07-20",
+     "to": "2026-07-26"
+    }
+   ],
+   "timerMin": null,
+   "link": null
+  },
+  {
+   "id": "05438702-6033-4e10-a86a-3337629d6f7d",
+   "name": "Práce",
+   "emoji": "💼",
+   "type": "number",
+   "goal": 80,
+   "unit": "odpracované hodiny",
+   "archived": false,
+   "order": 13,
+   "createdAt": 1784006508999,
+   "freq": {
+    "type": "monthly"
+   },
+   "vacations": [
+    {
+     "from": "2026-07-20",
+     "to": "2026-07-26"
+    }
+   ],
+   "timerMin": null,
+   "link": null
+  },
+  {
+   "id": "508fa5d2-cd59-44d6-bb61-35b98eae9db3",
+   "name": "10k kroků",
+   "emoji": "🚶",
+   "type": "check",
+   "goal": null,
+   "unit": "",
+   "archived": false,
+   "order": 15,
+   "createdAt": 1784006508999,
+   "freq": {
+    "type": "daily"
+   },
+   "vacations": [
+    {
+     "from": "2026-07-20",
+     "to": "2026-07-26"
+    }
+   ],
+   "timerMin": null,
+   "link": "x-apple-health://"
+  },
+  {
+   "id": "f810ac47-3054-4680-a4e5-c80b868d1c14",
+   "name": "Bez cukru",
+   "emoji": "🚫",
+   "type": "check",
+   "goal": null,
+   "unit": "",
+   "archived": false,
+   "order": 16,
+   "createdAt": 1784006508999,
+   "freq": {
+    "type": "daily"
+   },
+   "vacations": [
+    {
+     "from": "2026-07-20",
+     "to": "2026-07-26"
+    }
+   ],
+   "timerMin": null,
+   "link": null
+  },
+  {
+   "id": "64178208-875f-49e8-a372-bb9fdb622f0d",
+   "name": "Běh",
+   "emoji": "🏃",
+   "type": "check",
+   "goal": null,
+   "unit": "",
+   "archived": false,
+   "order": 1,
+   "createdAt": 1784006622197,
+   "freq": {
+    "type": "days",
+    "days": [
+     0,
+     2,
+     3,
+     5
+    ]
+   },
+   "vacations": [
+    {
+     "from": "2026-07-20",
+     "to": "2026-07-26"
+    },
+    {
+     "from": "2026-07-27",
+     "to": "2026-08-02"
+    }
+   ],
+   "timerMin": null,
+   "link": null
+  },
+  {
+   "id": "0455bc0d-f85c-484f-a5d4-81620f019785",
+   "name": "Kolagen",
+   "emoji": "💊",
+   "type": "check",
+   "goal": null,
+   "unit": "",
+   "archived": false,
+   "order": 8,
+   "createdAt": 1784006855829,
+   "freq": {
+    "type": "daily"
+   },
+   "vacations": [
+    {
+     "from": "2026-07-20",
+     "to": "2026-07-26"
+    }
+   ],
+   "timerMin": null,
+   "link": null
+  },
+  {
+   "id": "1b56c16a-59af-4de5-b599-fca89b20a170",
+   "name": "Převléct postel",
+   "emoji": "🛌",
+   "type": "check",
+   "goal": null,
+   "unit": "",
+   "archived": false,
+   "order": 18,
+   "createdAt": 1784027257882,
+   "freq": {
+    "type": "every",
+    "days": 14
+   },
+   "vacations": [
+    {
+     "from": "2026-07-20",
+     "to": "2026-07-26"
+    }
+   ],
+   "timerMin": null,
+   "link": null
+  },
+  {
+   "id": "2a30f0fb-3c90-400e-901d-36ff1cdea84c",
+   "name": "Plavání",
+   "emoji": "🏊",
+   "type": "check",
+   "goal": null,
+   "unit": "",
+   "archived": false,
+   "order": 3,
+   "createdAt": 1784032611243,
+   "freq": {
+    "type": "days",
+    "days": [
+     1,
+     3
+    ]
+   },
+   "vacations": [
+    {
+     "from": "2026-07-20",
+     "to": "2026-07-26"
+    }
+   ],
+   "timerMin": null,
+   "link": null
+  },
+  {
+   "id": "07a85881-5898-4fa2-a1f7-9c97583d5365",
+   "name": "Protažení",
+   "emoji": "🧘",
+   "type": "check",
+   "goal": null,
+   "unit": "",
+   "archived": false,
+   "order": 19,
+   "createdAt": 1785524220301,
+   "freq": {
+    "type": "daily"
+   },
+   "vacations": [],
+   "timerMin": null,
+   "link": "shortcuts://run-shortcut?name=protazeni"
+  },
+  {
+   "id": "38cc6cfa-f73b-47e3-a276-f441f141d58e",
+   "name": "Omega 3",
+   "emoji": "💊",
+   "type": "check",
+   "goal": null,
+   "unit": "",
+   "archived": false,
+   "order": 10,
+   "createdAt": 1785912795985,
+   "freq": {
+    "type": "daily"
+   },
+   "vacations": [],
+   "timerMin": null,
+   "link": null
+  }
+ ],
+ "entries": {
+  "2026-07-14": {
+   "449beb16-d8cf-48e1-9a9a-df5eb8e71c6c": 7,
+   "18db1387-1ae9-4fda-b271-250d80ec1e60": true,
+   "81cceb09-bbfb-4d13-aa67-078b8f6c3491": true,
+   "b4688e59-ac69-45a2-9b81-683ffd8cfa4b": true,
+   "05438702-6033-4e10-a86a-3337629d6f7d": 7,
+   "0455bc0d-f85c-484f-a5d4-81620f019785": true,
+   "f810ac47-3054-4680-a4e5-c80b868d1c14": true
+  },
+  "2026-07-13": {
+   "449beb16-d8cf-48e1-9a9a-df5eb8e71c6c": 7,
+   "18db1387-1ae9-4fda-b271-250d80ec1e60": true,
+   "05438702-6033-4e10-a86a-3337629d6f7d": 5,
+   "64178208-875f-49e8-a372-bb9fdb622f0d": true,
+   "508fa5d2-cd59-44d6-bb61-35b98eae9db3": true
+  },
+  "2026-07-07": {
+   "05438702-6033-4e10-a86a-3337629d6f7d": 10
+  },
+  "2026-07-06": {
+   "05438702-6033-4e10-a86a-3337629d6f7d": 5
+  },
+  "2026-07-05": {
+   "05438702-6033-4e10-a86a-3337629d6f7d": 10
+  },
+  "2026-07-03": {
+   "05438702-6033-4e10-a86a-3337629d6f7d": 10
+  },
+  "2026-07-15": {
+   "449beb16-d8cf-48e1-9a9a-df5eb8e71c6c": 8,
+   "18db1387-1ae9-4fda-b271-250d80ec1e60": true,
+   "05438702-6033-4e10-a86a-3337629d6f7d": 3,
+   "b4688e59-ac69-45a2-9b81-683ffd8cfa4b": true,
+   "0455bc0d-f85c-484f-a5d4-81620f019785": true,
+   "f810ac47-3054-4680-a4e5-c80b868d1c14": true
+  },
+  "2026-07-16": {
+   "81cceb09-bbfb-4d13-aa67-078b8f6c3491": true,
+   "449beb16-d8cf-48e1-9a9a-df5eb8e71c6c": 6,
+   "18db1387-1ae9-4fda-b271-250d80ec1e60": true,
+   "508fa5d2-cd59-44d6-bb61-35b98eae9db3": true
+  },
+  "2026-07-17": {
+   "449beb16-d8cf-48e1-9a9a-df5eb8e71c6c": 8,
+   "64178208-875f-49e8-a372-bb9fdb622f0d": true,
+   "508fa5d2-cd59-44d6-bb61-35b98eae9db3": true,
+   "18db1387-1ae9-4fda-b271-250d80ec1e60": true,
+   "0455bc0d-f85c-484f-a5d4-81620f019785": true,
+   "b4688e59-ac69-45a2-9b81-683ffd8cfa4b": true,
+   "81cceb09-bbfb-4d13-aa67-078b8f6c3491": true,
+   "05438702-6033-4e10-a86a-3337629d6f7d": 10
+  },
+  "2026-07-18": {
+   "449beb16-d8cf-48e1-9a9a-df5eb8e71c6c": 6,
+   "18db1387-1ae9-4fda-b271-250d80ec1e60": true,
+   "508fa5d2-cd59-44d6-bb61-35b98eae9db3": true,
+   "b4688e59-ac69-45a2-9b81-683ffd8cfa4b": true
+  },
+  "2026-07-19": {
+   "449beb16-d8cf-48e1-9a9a-df5eb8e71c6c": 6,
+   "05438702-6033-4e10-a86a-3337629d6f7d": 10,
+   "18db1387-1ae9-4fda-b271-250d80ec1e60": true,
+   "b4688e59-ac69-45a2-9b81-683ffd8cfa4b": true
+  },
+  "2026-07-27": {
+   "05438702-6033-4e10-a86a-3337629d6f7d": 10,
+   "81cceb09-bbfb-4d13-aa67-078b8f6c3491": true,
+   "449beb16-d8cf-48e1-9a9a-df5eb8e71c6c": 7,
+   "18db1387-1ae9-4fda-b271-250d80ec1e60": true
+  },
+  "2026-07-28": {
+   "05438702-6033-4e10-a86a-3337629d6f7d": 5,
+   "81cceb09-bbfb-4d13-aa67-078b8f6c3491": true,
+   "508fa5d2-cd59-44d6-bb61-35b98eae9db3": true,
+   "18db1387-1ae9-4fda-b271-250d80ec1e60": true
+  },
+  "2026-07-29": {
+   "05438702-6033-4e10-a86a-3337629d6f7d": 7,
+   "b4688e59-ac69-45a2-9b81-683ffd8cfa4b": true,
+   "0455bc0d-f85c-484f-a5d4-81620f019785": true,
+   "449beb16-d8cf-48e1-9a9a-df5eb8e71c6c": 7,
+   "18db1387-1ae9-4fda-b271-250d80ec1e60": true
+  },
+  "2026-07-30": {
+   "2a30f0fb-3c90-400e-901d-36ff1cdea84c": true,
+   "449beb16-d8cf-48e1-9a9a-df5eb8e71c6c": 8,
+   "b4688e59-ac69-45a2-9b81-683ffd8cfa4b": true,
+   "0455bc0d-f85c-484f-a5d4-81620f019785": true
+  },
+  "2026-07-31": {
+   "18db1387-1ae9-4fda-b271-250d80ec1e60": true,
+   "64178208-875f-49e8-a372-bb9fdb622f0d": true,
+   "449beb16-d8cf-48e1-9a9a-df5eb8e71c6c": 6,
+   "07a85881-5898-4fa2-a1f7-9c97583d5365": true,
+   "b4688e59-ac69-45a2-9b81-683ffd8cfa4b": true,
+   "0455bc0d-f85c-484f-a5d4-81620f019785": true,
+   "508fa5d2-cd59-44d6-bb61-35b98eae9db3": true
+  },
+  "2026-08-01": {
+   "64178208-875f-49e8-a372-bb9fdb622f0d": true,
+   "449beb16-d8cf-48e1-9a9a-df5eb8e71c6c": 8,
+   "18db1387-1ae9-4fda-b271-250d80ec1e60": true,
+   "508fa5d2-cd59-44d6-bb61-35b98eae9db3": true,
+   "b4688e59-ac69-45a2-9b81-683ffd8cfa4b": true,
+   "0455bc0d-f85c-484f-a5d4-81620f019785": true,
+   "07a85881-5898-4fa2-a1f7-9c97583d5365": true
+  },
+  "2026-08-02": {
+   "449beb16-d8cf-48e1-9a9a-df5eb8e71c6c": 6,
+   "1b56c16a-59af-4de5-b599-fca89b20a170": true,
+   "18db1387-1ae9-4fda-b271-250d80ec1e60": true,
+   "b4688e59-ac69-45a2-9b81-683ffd8cfa4b": true,
+   "0455bc0d-f85c-484f-a5d4-81620f019785": true,
+   "508fa5d2-cd59-44d6-bb61-35b98eae9db3": true,
+   "07a85881-5898-4fa2-a1f7-9c97583d5365": true
+  },
+  "2026-08-03": {
+   "64178208-875f-49e8-a372-bb9fdb622f0d": true,
+   "449beb16-d8cf-48e1-9a9a-df5eb8e71c6c": 7,
+   "b4688e59-ac69-45a2-9b81-683ffd8cfa4b": true,
+   "05438702-6033-4e10-a86a-3337629d6f7d": 5,
+   "0455bc0d-f85c-484f-a5d4-81620f019785": true,
+   "508fa5d2-cd59-44d6-bb61-35b98eae9db3": true,
+   "81cceb09-bbfb-4d13-aa67-078b8f6c3491": true,
+   "18db1387-1ae9-4fda-b271-250d80ec1e60": true,
+   "07a85881-5898-4fa2-a1f7-9c97583d5365": true
+  },
+  "2026-08-04": {
+   "449beb16-d8cf-48e1-9a9a-df5eb8e71c6c": 7,
+   "05438702-6033-4e10-a86a-3337629d6f7d": 5,
+   "b4688e59-ac69-45a2-9b81-683ffd8cfa4b": true,
+   "18db1387-1ae9-4fda-b271-250d80ec1e60": true,
+   "07a85881-5898-4fa2-a1f7-9c97583d5365": true,
+   "2a30f0fb-3c90-400e-901d-36ff1cdea84c": true,
+   "0455bc0d-f85c-484f-a5d4-81620f019785": true
+  },
+  "2026-08-05": {
+   "64178208-875f-49e8-a372-bb9fdb622f0d": true,
+   "b4688e59-ac69-45a2-9b81-683ffd8cfa4b": true,
+   "449beb16-d8cf-48e1-9a9a-df5eb8e71c6c": 7,
+   "38cc6cfa-f73b-47e3-a276-f441f141d58e": true,
+   "18db1387-1ae9-4fda-b271-250d80ec1e60": true,
+   "05438702-6033-4e10-a86a-3337629d6f7d": 5,
+   "508fa5d2-cd59-44d6-bb61-35b98eae9db3": true,
+   "81cceb09-bbfb-4d13-aa67-078b8f6c3491": true,
+   "0455bc0d-f85c-484f-a5d4-81620f019785": true,
+   "07a85881-5898-4fa2-a1f7-9c97583d5365": true
+  },
+  "2026-08-06": {
+   "05438702-6033-4e10-a86a-3337629d6f7d": 7,
+   "449beb16-d8cf-48e1-9a9a-df5eb8e71c6c": 7,
+   "b4688e59-ac69-45a2-9b81-683ffd8cfa4b": true,
+   "38cc6cfa-f73b-47e3-a276-f441f141d58e": true,
+   "07a85881-5898-4fa2-a1f7-9c97583d5365": true,
+   "2a30f0fb-3c90-400e-901d-36ff1cdea84c": true,
+   "0455bc0d-f85c-484f-a5d4-81620f019785": true,
+   "18db1387-1ae9-4fda-b271-250d80ec1e60": true
+  },
+  "2026-08-07": {
+   "449beb16-d8cf-48e1-9a9a-df5eb8e71c6c": 7,
+   "05438702-6033-4e10-a86a-3337629d6f7d": 10,
+   "508fa5d2-cd59-44d6-bb61-35b98eae9db3": true,
+   "b4688e59-ac69-45a2-9b81-683ffd8cfa4b": true,
+   "0455bc0d-f85c-484f-a5d4-81620f019785": true,
+   "38cc6cfa-f73b-47e3-a276-f441f141d58e": true,
+   "18db1387-1ae9-4fda-b271-250d80ec1e60": true
+  },
+  "2026-08-08": {
+   "81cceb09-bbfb-4d13-aa67-078b8f6c3491": true,
+   "64178208-875f-49e8-a372-bb9fdb622f0d": true,
+   "508fa5d2-cd59-44d6-bb61-35b98eae9db3": true,
+   "b4688e59-ac69-45a2-9b81-683ffd8cfa4b": true,
+   "38cc6cfa-f73b-47e3-a276-f441f141d58e": true,
+   "449beb16-d8cf-48e1-9a9a-df5eb8e71c6c": 6,
+   "18db1387-1ae9-4fda-b271-250d80ec1e60": true,
+   "07a85881-5898-4fa2-a1f7-9c97583d5365": true
+  },
+  "2026-08-09": {
+   "449beb16-d8cf-48e1-9a9a-df5eb8e71c6c": 7,
+   "508fa5d2-cd59-44d6-bb61-35b98eae9db3": true,
+   "b4688e59-ac69-45a2-9b81-683ffd8cfa4b": true,
+   "38cc6cfa-f73b-47e3-a276-f441f141d58e": true,
+   "18db1387-1ae9-4fda-b271-250d80ec1e60": true,
+   "07a85881-5898-4fa2-a1f7-9c97583d5365": true,
+   "05438702-6033-4e10-a86a-3337629d6f7d": 3
+  },
+  "2026-08-10": {
+   "449beb16-d8cf-48e1-9a9a-df5eb8e71c6c": 7,
+   "b4688e59-ac69-45a2-9b81-683ffd8cfa4b": true,
+   "38cc6cfa-f73b-47e3-a276-f441f141d58e": true,
+   "64178208-875f-49e8-a372-bb9fdb622f0d": true,
+   "05438702-6033-4e10-a86a-3337629d6f7d": 2,
+   "0455bc0d-f85c-484f-a5d4-81620f019785": true,
+   "18db1387-1ae9-4fda-b271-250d80ec1e60": true,
+   "508fa5d2-cd59-44d6-bb61-35b98eae9db3": true,
+   "81cceb09-bbfb-4d13-aa67-078b8f6c3491": true,
+   "07a85881-5898-4fa2-a1f7-9c97583d5365": true,
+   "f810ac47-3054-4680-a4e5-c80b868d1c14": true
+  },
+  "2026-08-11": {
+   "449beb16-d8cf-48e1-9a9a-df5eb8e71c6c": 6,
+   "2a30f0fb-3c90-400e-901d-36ff1cdea84c": true,
+   "b4688e59-ac69-45a2-9b81-683ffd8cfa4b": true,
+   "38cc6cfa-f73b-47e3-a276-f441f141d58e": true,
+   "18db1387-1ae9-4fda-b271-250d80ec1e60": true,
+   "05438702-6033-4e10-a86a-3337629d6f7d": 5,
+   "508fa5d2-cd59-44d6-bb61-35b98eae9db3": true,
+   "0455bc0d-f85c-484f-a5d4-81620f019785": true,
+   "07a85881-5898-4fa2-a1f7-9c97583d5365": true
+  },
+  "2026-08-12": {
+   "b4688e59-ac69-45a2-9b81-683ffd8cfa4b": true,
+   "64178208-875f-49e8-a372-bb9fdb622f0d": true,
+   "449beb16-d8cf-48e1-9a9a-df5eb8e71c6c": 8,
+   "18db1387-1ae9-4fda-b271-250d80ec1e60": true,
+   "508fa5d2-cd59-44d6-bb61-35b98eae9db3": true,
+   "38cc6cfa-f73b-47e3-a276-f441f141d58e": true,
+   "0455bc0d-f85c-484f-a5d4-81620f019785": true,
+   "07a85881-5898-4fa2-a1f7-9c97583d5365": true,
+   "81cceb09-bbfb-4d13-aa67-078b8f6c3491": true
+  },
+  "2026-08-13": {
+   "2a30f0fb-3c90-400e-901d-36ff1cdea84c": true,
+   "449beb16-d8cf-48e1-9a9a-df5eb8e71c6c": 6,
+   "b4688e59-ac69-45a2-9b81-683ffd8cfa4b": true,
+   "38cc6cfa-f73b-47e3-a276-f441f141d58e": true,
+   "18db1387-1ae9-4fda-b271-250d80ec1e60": true,
+   "508fa5d2-cd59-44d6-bb61-35b98eae9db3": true,
+   "07a85881-5898-4fa2-a1f7-9c97583d5365": true,
+   "0455bc0d-f85c-484f-a5d4-81620f019785": true,
+   "1b56c16a-59af-4de5-b599-fca89b20a170": true
+  },
+  "2026-08-14": {
+   "449beb16-d8cf-48e1-9a9a-df5eb8e71c6c": 8,
+   "05438702-6033-4e10-a86a-3337629d6f7d": 10,
+   "81cceb09-bbfb-4d13-aa67-078b8f6c3491": true,
+   "18db1387-1ae9-4fda-b271-250d80ec1e60": true,
+   "b4688e59-ac69-45a2-9b81-683ffd8cfa4b": true,
+   "0455bc0d-f85c-484f-a5d4-81620f019785": true,
+   "38cc6cfa-f73b-47e3-a276-f441f141d58e": true,
+   "508fa5d2-cd59-44d6-bb61-35b98eae9db3": true,
+   "07a85881-5898-4fa2-a1f7-9c97583d5365": true
+  },
+  "2026-08-15": {
+   "64178208-875f-49e8-a372-bb9fdb622f0d": true,
+   "449beb16-d8cf-48e1-9a9a-df5eb8e71c6c": 7,
+   "508fa5d2-cd59-44d6-bb61-35b98eae9db3": true,
+   "81cceb09-bbfb-4d13-aa67-078b8f6c3491": true,
+   "b4688e59-ac69-45a2-9b81-683ffd8cfa4b": true,
+   "0455bc0d-f85c-484f-a5d4-81620f019785": true,
+   "38cc6cfa-f73b-47e3-a276-f441f141d58e": true,
+   "18db1387-1ae9-4fda-b271-250d80ec1e60": true,
+   "07a85881-5898-4fa2-a1f7-9c97583d5365": true
+  },
+  "2026-08-16": {
+   "449beb16-d8cf-48e1-9a9a-df5eb8e71c6c": 8,
+   "b4688e59-ac69-45a2-9b81-683ffd8cfa4b": true,
+   "0455bc0d-f85c-484f-a5d4-81620f019785": true,
+   "508fa5d2-cd59-44d6-bb61-35b98eae9db3": true,
+   "38cc6cfa-f73b-47e3-a276-f441f141d58e": true,
+   "18db1387-1ae9-4fda-b271-250d80ec1e60": true,
+   "07a85881-5898-4fa2-a1f7-9c97583d5365": true
+  },
+  "2026-08-17": {
+   "64178208-875f-49e8-a372-bb9fdb622f0d": true,
+   "449beb16-d8cf-48e1-9a9a-df5eb8e71c6c": 6,
+   "b4688e59-ac69-45a2-9b81-683ffd8cfa4b": true,
+   "81cceb09-bbfb-4d13-aa67-078b8f6c3491": true,
+   "18db1387-1ae9-4fda-b271-250d80ec1e60": true,
+   "508fa5d2-cd59-44d6-bb61-35b98eae9db3": true,
+   "0455bc0d-f85c-484f-a5d4-81620f019785": true,
+   "38cc6cfa-f73b-47e3-a276-f441f141d58e": true,
+   "07a85881-5898-4fa2-a1f7-9c97583d5365": true,
+   "05438702-6033-4e10-a86a-3337629d6f7d": 5
+  },
+  "2026-08-18": {
+   "b4688e59-ac69-45a2-9b81-683ffd8cfa4b": true,
+   "0455bc0d-f85c-484f-a5d4-81620f019785": true,
+   "38cc6cfa-f73b-47e3-a276-f441f141d58e": true,
+   "18db1387-1ae9-4fda-b271-250d80ec1e60": true,
+   "508fa5d2-cd59-44d6-bb61-35b98eae9db3": true,
+   "449beb16-d8cf-48e1-9a9a-df5eb8e71c6c": 7
+  },
+  "2026-08-19": {
+   "449beb16-d8cf-48e1-9a9a-df5eb8e71c6c": 7,
+   "81cceb09-bbfb-4d13-aa67-078b8f6c3491": true,
+   "64178208-875f-49e8-a372-bb9fdb622f0d": true,
+   "b4688e59-ac69-45a2-9b81-683ffd8cfa4b": true,
+   "0455bc0d-f85c-484f-a5d4-81620f019785": true,
+   "38cc6cfa-f73b-47e3-a276-f441f141d58e": true,
+   "18db1387-1ae9-4fda-b271-250d80ec1e60": true,
+   "508fa5d2-cd59-44d6-bb61-35b98eae9db3": true,
+   "07a85881-5898-4fa2-a1f7-9c97583d5365": true
+  },
+  "2026-08-20": {
+   "64178208-875f-49e8-a372-bb9fdb622f0d": true,
+   "449beb16-d8cf-48e1-9a9a-df5eb8e71c6c": 7,
+   "18db1387-1ae9-4fda-b271-250d80ec1e60": true,
+   "2a30f0fb-3c90-400e-901d-36ff1cdea84c": true,
+   "b4688e59-ac69-45a2-9b81-683ffd8cfa4b": true,
+   "0455bc0d-f85c-484f-a5d4-81620f019785": true,
+   "38cc6cfa-f73b-47e3-a276-f441f141d58e": true,
+   "508fa5d2-cd59-44d6-bb61-35b98eae9db3": true,
+   "07a85881-5898-4fa2-a1f7-9c97583d5365": true
+  },
+  "2026-08-21": {
+   "81cceb09-bbfb-4d13-aa67-078b8f6c3491": true,
+   "449beb16-d8cf-48e1-9a9a-df5eb8e71c6c": 6,
+   "b4688e59-ac69-45a2-9b81-683ffd8cfa4b": true,
+   "0455bc0d-f85c-484f-a5d4-81620f019785": true,
+   "38cc6cfa-f73b-47e3-a276-f441f141d58e": true,
+   "18db1387-1ae9-4fda-b271-250d80ec1e60": true
+  },
+  "2026-08-22": {
+   "449beb16-d8cf-48e1-9a9a-df5eb8e71c6c": 8,
+   "64178208-875f-49e8-a372-bb9fdb622f0d": true,
+   "05438702-6033-4e10-a86a-3337629d6f7d": 3,
+   "81cceb09-bbfb-4d13-aa67-078b8f6c3491": true,
+   "18db1387-1ae9-4fda-b271-250d80ec1e60": true,
+   "508fa5d2-cd59-44d6-bb61-35b98eae9db3": true,
+   "07a85881-5898-4fa2-a1f7-9c97583d5365": true
+  },
+  "2026-08-23": {
+   "449beb16-d8cf-48e1-9a9a-df5eb8e71c6c": 9,
+   "b4688e59-ac69-45a2-9b81-683ffd8cfa4b": true,
+   "38cc6cfa-f73b-47e3-a276-f441f141d58e": true,
+   "0455bc0d-f85c-484f-a5d4-81620f019785": true,
+   "18db1387-1ae9-4fda-b271-250d80ec1e60": true,
+   "508fa5d2-cd59-44d6-bb61-35b98eae9db3": true
+  },
+  "2026-08-24": {
+   "64178208-875f-49e8-a372-bb9fdb622f0d": true,
+   "b4688e59-ac69-45a2-9b81-683ffd8cfa4b": true
+  }
+ },
+ "meals": {
+  "2026-07-14": {
+   "b": "banán",
+   "l": "kuře na paprice s těstovinami",
+   "d": "chleba s humusem",
+   "sn": [
+    "2 housky se syrem"
+   ],
+   "note": ""
+  }
+ },
+ "notes": {},
+ "milestones": {
+  "streak7": "2026-07-19",
+  "hours100": "2026-08-04",
+  "done100": "2026-08-09",
+  "streak30": "2026-08-19"
+ },
+ "checkins": {
+  "2026-08-03": {
+   "weight": {
+    "st": "80",
+    "pa": "80,8",
+    "ne": "80,4"
+   },
+   "runs": {
+    "q": {
+     "feel": "bolely me holene, ale bylo to docela lehke az na ty kopecky"
+    }
+   },
+   "other": {
+    "sw1": "pri splyvani m sly nohy hrozne ryhcle dolu, ty bublinky pro vydechovani mi vadi v ocich a nose"
+   },
+   "strength": {
+    "ia": {
+     "w": "27,5",
+     "r": "8/8/8",
+     "rir": "2"
+    },
+    "row": {
+     "w": "60",
+     "r": "11/11/11/",
+     "rir": "2"
+    },
+    "rdlb": {
+     "w": "70,80,80",
+     "r": "8,8,8",
+     "rir": "2"
+    },
+    "bulg": {
+     "w": "14",
+     "r": "8/8/8",
+     "rir": "2"
+    }
+   }
+  },
+  "2026-08-10": {
+   "weight": {
+    "st": "82,2",
+    "pa": "81,4",
+    "ne": "82,3"
+   },
+   "runs": {
+    "q": {
+     "feel": "zase mi trochu bolely holene"
+    }
+   },
+   "other": {
+    "sw1": "pohoda, lehke",
+    "sw2": "pohoda"
+   },
+   "strength": {
+    "ia": {
+     "w": "27,5",
+     "r": "10/10/10",
+     "rir": "2"
+    },
+    "row": {
+     "w": "60",
+     "r": "10/10/10/9",
+     "rir": "2"
+    },
+    "sq": {
+     "w": "80",
+     "r": "6/6",
+     "rir": "1,2"
+    },
+    "rdla": {
+     "w": "0",
+     "r": "4/4/4",
+     "rir": "2"
+    },
+    "pull": {
+     "w": "0",
+     "r": "9/8/8",
+     "rir": "2"
+    },
+    "ohp": {
+     "w": "22,5",
+     "r": "8/8/6",
+     "rir": "2"
+    },
+    "rdlb": {
+     "w": "100",
+     "r": "8/8/8",
+     "rir": "4"
+    },
+    "bulg": {
+     "w": "15",
+     "r": "10",
+     "rir": "2"
+    }
+   }
+  },
+  "2026-08-17": {
+   "weight": {
+    "pa": "82,4",
+    "ne": "82,2"
+   },
+   "extra": {
+    "note": "v nedeli jdu na tenis"
+   },
+   "runs": {
+    "q": {
+     "where": "pás",
+     "feel": "nebylo to tezke, ale docela jsem se zapotil, asi kvuli hork, zona3"
+    },
+    "e": {
+     "where": "venku",
+     "feel": "dobre, ale jiny jak jsem byl venku"
+    },
+    "z": {
+     "where": "pás",
+     "feel": "bolely nohy"
+    },
+    "lr": {
+     "where": "pás",
+     "feel": "docela vpoho, akorat se nudim, zona 1 silne primarne"
+    }
+   },
+   "other": {
+    "sw1was": "nebyl",
+    "sw2": "pohoda",
+    "sw2was": "byl"
+   },
+   "strength": {
+    "ia": {
+     "w": "30",
+     "r": "10/8/7",
+     "rir": "1"
+    },
+    "row": {
+     "w": "60",
+     "r": "10/10/8/8",
+     "rir": "2"
+    },
+    "sq": {
+     "w": "80",
+     "r": "6/6/6/6",
+     "rir": "2"
+    },
+    "pull": {
+     "w": "10",
+     "r": "6/6/5/5",
+     "rir": "1"
+    },
+    "ohp": {
+     "w": "22,5",
+     "r": "8/6/7",
+     "rir": "2"
+    },
+    "rdlb": {
+     "w": "110",
+     "r": "8/8/8",
+     "rir": "2,5"
+    },
+    "bulg": {
+     "w": "15",
+     "r": "10/10",
+     "rir": "3"
+    }
+   }
+  },
+  "2026-08-24": {
+   "runs": {
+    "q": {
+     "where": "pás",
+     "feel": "jelikoz jsem v takove rychlosti behal 5 minut v kuse tak opravdu az moc lehke"
+    }
+   }
+  }
+ },
+ "shopping": {
+  "note": "",
+  "items": []
+ },
+ "hideDone": false,
+ "theme": {
+  "bg": "#000000",
+  "card": "#1c1c1e",
+  "accent": "#5ac8fa",
+  "text": "auto"
+ },
+ "plan": "🗓️ TÝDENNÍ HARMONOGRAM (10 FÁZÍ)\n• PONDĚLÍ\n• Fáze 1: Běh – Intervaly (VO2 Max)\n• Fáze 2: Silový trénink – Vršek A (Síla)\n• ÚTERÝ\n• Fáze 3: Silový trénink – Spodek A (Síla)\n• STŘEDA\n• Fáze 5: Jízda na kole (Zóna 2)\n• ČTVRTEK\n• Fáze 6: Silový trénink – Vršek B (Hypertrofie)\n• Fáze 7: Plavání (Regenerace)\n• PÁTEK\n• Fáze 8: Běh (Zóna 2)\n• Fáze 9: Silový trénink – Spodek B (Hypertrofie)\n• SOBOTA\n• Fáze 10: Horský výšlap / Rucking (2–4 hodiny)\n• NEDĚLE\n• Volno: Absolutní regenerace, spánek, příprava jídla na týden.\n\n🏋️ SILOVÝ TRÉNINK (Rozpis cviků)\nPauzy: 2–3 minuty u silových cviků (první dva cviky). 60–90 sekund u hypertrofických cviků a břicha.\n\nPONDĚLÍ: Vršek A (Důraz na absolutní sílu)\n1. Bench press na rovné lavici: 4 série x 3–5 opakování\n2. Shyby se zátěží (nebo těžká kladka): 4 série x 4–6 opakování\n3. Tlaky s jednoručkami vsedě (Ramena): 3 série x 8–10 opakování\n4. Přítahy osy v předklonu: 3 série x 8–10 opakování\n5. Bicepsový zdvih s velkou osou + Tricepsové stahování kladky: 3 série x 10–12 opakování (Supersérie)\n6. Cable Crunches (Zkracovačky na kladce): 3 série x 12–15 opakování\n7. Leg Raises (Zvedání nohou ve visu nebo vleže): 3 série x 10–15 opakování\n\nÚTERÝ: Spodek A (Důraz na absolutní sílu)\n1. Dřepy s osou na zádech: 4 série x 3–5 opakování\n2. Rumunský mrtvý tah (RDL): 3 série x 6–8 opakování\n3. Bulharské dřepy s jednoručkami: 3 série x 8–10 opakování na každou nohu\n4. Zakopávání na stroji: 3 série x 10–12 opakování\n5. Výpony na lýtka ve stoji: 4 série x 10–15 opakování\n6. Cable Crunches: 3 série x 12–15 opakování\n7. Leg Raises: 3 série x 10–15 opakování\n\nČTVRTEK: Vršek B (Důraz na hypertrofii / svalový objem)\n1. Tlaky s jednoručkami na šikmé lavici (Incline): 4 série x 8–10 opakování\n2. Přítahy jednoručky v předklonu s oporou: 4 série x 8–10 opakování\n3. Kliky na bradlech (Dips) s náklonem vpřed: 3 série x 10–12 opakování\n4. Upažování s jednoručkami ve stoji (Střední delty): 4 série x 12–15 opakování\n5. Face pulls + Kladivové zdvihy na biceps: 3 série x 12–15 opakování (Supersérie)\n6. Cable Crunches: 3 série x 15–20 opakování (Lehčí váha, maximální kontrakce)\n7. Leg Raises: 3 série x 12–15 opakování\n\nPÁTEK: Spodek B (Důraz na hypertrofii / svalový objem)\n1. Mrtvý tah (Trap osa nebo konvenční): 3 série x 5 opakování (Těžší váha, ale kontrolovaně)\n2. Leg press: 3 série x 10–12 opakování\n3. Předkopávání na stroji: 3 série x 12–15 opakování\n4. Hyperextenze (zaměření na hýždě/hamstringy): 3 série x 12–15 opakování\n5. Výpony na lýtka vsedě: 4 série x 15–20 opakování\n6. Cable Crunches: 3 série x 15–20 opakování\n7. Leg Raises: 3 série x 12–15 opakování\n\n🏃‍♂️ KARDIO A DOPLŇKOVÉ AKTIVITY (Motor a regenerace)\nPONDĚLÍ: Běh – Intervaly\n• Cíl: Budování VO2 max a laktátové tolerance. Bude to bolet.\n• Intenzita: Zóna 5 (90–95 % maximální tepové frekvence). RPE 8.5–9/10.\n• Struktura:\n  * 10 minut lehký rozklus a dynamický strečink.\n  * 4x 4 minuty ostrého běhu (závodní tempo).\n  * Mezi každým úsekem 3 minuty aktivní odpočinek (pomalá chůze/volný klus).\n  * 10 minut lehký výklus na závěr.\n• Alternativa: 6–8x 45 sekund sprint do prudkého kopce, dolů chůze.\n\nSTŘEDA: Jízda na kole \n• Cíl: Vyplavení kyseliny mléčné po dřepování, budování aerobní baze (kapilarizace svalů).\n• Délka: 60–90 minut.\n• Intenzita: Striktní Zóna 2 (60–70 % TF max). RPE 3–4/10. Musíš být schopen celou dobu dýchat pouze nosem nebo mluvit v celých větách. Šlapej lehký převod s vyšší kadencí.\n\nČTVRTEK: Plavání \n• Cíl: Aktivní regenerace, uvolnění kloubů a páteře, lymfatická drenáž.\n• Délka: 30–45 minut.\n• Intenzita: Zóna 1–2. Velmi pomalé, relaxační tempo. Střídej kraul, znak a prsa. Žádné sprinty.\n\nPÁTEK: Běh – Zóna 2 \n• Cíl: Budování aerobního motoru a výdrže pro nohy před odpoledním tréninkem.\n• Délka: 45–60 minut.\n• Intenzita: Striktní Zóna 2 (60–70 % TF max). Opět test dýchání nosem. Pokud ti tep vyletí kvůli kopci, okamžitě přejdi do chůze, než tep spadne.\n\nSOBOTA: Horský výšlap \n• Cíl: Budování odolnosti šlach, vazů, zad a dlouhodobé vytrvalosti v přírodě.\n• Délka: 2–4 hodiny.\n• Intenzita: Zóna 1–2, v prudkých stoupáních přirozeně Zóna 3.\n• Zátěž: Cca 10–15 % tvé tělesné váhy v batohu. Nutná pevná obuv."
+}
