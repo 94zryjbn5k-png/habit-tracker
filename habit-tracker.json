@@ -896,7 +896,57 @@
  },
  "shopping": {
   "note": "",
-  "items": []
+  "items": [
+   {
+    "t": "mražená zeleninová směs (wok/asijská) 1 balení",
+    "done": false
+   },
+   {
+    "t": "cherry rajčata 1 balení",
+    "done": false
+   },
+   {
+    "t": "avokádo 1",
+    "done": false
+   },
+   {
+    "t": "cibule 3",
+    "done": false
+   },
+   {
+    "t": "česnek 1",
+    "done": false
+   },
+   {
+    "t": "banány 4",
+    "done": false
+   },
+   {
+    "t": "ovoce k tvarohu/skyru",
+    "done": false
+   },
+   {
+    "t": "ořechy (zkontroluj)",
+    "done": false
+   },
+   {
+    "t": "Koření (zkontroluj):",
+    "done": false,
+    "h": true
+   },
+   {
+    "t": "mletá paprika, kmín (quesadilly)",
+    "done": false
+   },
+   {
+    "t": "oregáno (boloňské)",
+    "done": false
+   },
+   {
+    "t": "zázvor (volitelně do stir-fry)",
+    "done": false
+   }
+  ]
  },
  "hideDone": false,
  "theme": {
