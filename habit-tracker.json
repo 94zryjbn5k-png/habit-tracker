@@ -898,6 +898,70 @@
   "note": "",
   "items": [
    {
+    "t": "kuřecí prsa 1,4 kg (quesadilly 700 + stir-fry 700)",
+    "done": false
+   },
+   {
+    "t": "mleté hovězí 440 g",
+    "done": false
+   },
+   {
+    "t": "Mléčné a vejce:**",
+    "done": false
+   },
+   {
+    "t": "vejce 10 ks",
+    "done": false
+   },
+   {
+    "t": "tvaroh 3× 250 g",
+    "done": false
+   },
+   {
+    "t": "skyr 2×",
+    "done": false
+   },
+   {
+    "t": "mléko 2 l",
+    "done": false
+   },
+   {
+    "t": "sýr strouhaný/blok 300 g",
+    "done": false
+   },
+   {
+    "t": "bílý jogurt 1 malý (dip)",
+    "done": false
+   },
+   {
+    "t": "tortilly 2 balení",
+    "done": false
+   },
+   {
+    "t": "těstoviny 500 g",
+    "done": false
+   },
+   {
+    "t": "rýže 350 g",
+    "done": false
+   },
+   {
+    "t": "toastový chléb 1×",
+    "done": false
+   },
+   {
+    "t": "ovesné vločky (zkontroluj)",
+    "done": false
+   },
+   {
+    "t": "passata 1× (500 g)",
+    "done": false
+   },
+   {
+    "t": "sójová omáčka (zkontroluj)",
+    "done": false
+   },
+   {
     "t": "mražená zeleninová směs (wok/asijská) 1 balení",
     "done": false
    },
@@ -922,17 +986,12 @@
     "done": false
    },
    {
-    "t": "ovoce k tvarohu/skyru",
-    "done": false
-   },
-   {
     "t": "ořechy (zkontroluj)",
     "done": false
    },
    {
-    "t": "Koření (zkontroluj):",
-    "done": false,
-    "h": true
+    "t": "Koření (zkontroluj):**",
+    "done": false
    },
    {
     "t": "mletá paprika, kmín (quesadilly)",
@@ -945,6 +1004,11 @@
    {
     "t": "zázvor (volitelně do stir-fry)",
     "done": false
+   },
+   {
+    "t": "Menu: **po/út quesadilly · st boloňské · čt stir-fry.** 🛒",
+    "done": false,
+    "h": true
    }
   ]
  },
