@@ -913,12 +913,7 @@
  },
  "shopping": {
   "note": "",
-  "items": [
-   {
-    "t": "mražená zeleninová směs (wok/asijská) 1 balení",
-    "done": false
-   }
-  ]
+  "items": []
  },
  "hideDone": false,
  "theme": {
