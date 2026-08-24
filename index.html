@@ -1196,16 +1196,34 @@ function save(){
   checkMilestones();
   if (syncConfigured()) scheduleSync();
 }
-/* ============ Synchronizace na GitHub Gist ============ */
+/* ============ Synchronizace do GitHub repozitáře (větev data) ============ */
 const SYNC_T = 'ht-sync-token';
-const SYNC_G = 'ht-sync-gist';
+const SYNC_R = 'ht-sync-repo'; // {owner, repo, branch, sha}
 const SYNC_M = 'ht-sync-meta';
 const SYNC_FILE = 'habit-tracker.json';
+const SYNC_BRANCH = 'data';
 let syncTimer = null;
 let SYNC_DEBOUNCE = 40000; // po změně počká, ať se nenahrává každé ťuknutí
+let syncBusy = false;
+function ghRepoDefault(){
+  let owner = '94zryjbn5k-png', repo = 'habit-tracker';
+  try {
+    if (location.hostname.endsWith('.github.io')) owner = location.hostname.split('.')[0];
+    const seg = location.pathname.split('/').filter(Boolean)[0];
+    if (seg) repo = seg;
+  } catch (e) {}
+  return { owner, repo };
+}
 function syncToken(){ try { return localStorage.getItem(SYNC_T) || ''; } catch (e) { return ''; } }
-function syncGist(){ try { return localStorage.getItem(SYNC_G) || ''; } catch (e) { return ''; } }
-function syncConfigured(){ return !!(syncToken() && syncGist()); }
+function syncRepo(){
+  try { return JSON.parse(localStorage.getItem(SYNC_R)) || null; } catch (e) { return null; }
+}
+function setSyncRepo(patch){
+  const r = Object.assign(syncRepo() || {}, patch);
+  try { localStorage.setItem(SYNC_R, JSON.stringify(r)); } catch (e) {}
+  return r;
+}
+function syncConfigured(){ return !!(syncToken() && syncRepo()); }
 function syncMeta(){
   try { return JSON.parse(localStorage.getItem(SYNC_M)) || {}; } catch (e) { return {}; }
 }
@@ -1215,86 +1233,118 @@ function setSyncMeta(patch){
   return m;
 }
 function syncRawUrl(){
-  const m = syncMeta();
-  return m.user && syncGist() ? 'https://gist.githubusercontent.com/' + m.user + '/' + syncGist() + '/raw/' + SYNC_FILE : '';
+  const r = syncRepo();
+  return r ? 'https://raw.githubusercontent.com/' + r.owner + '/' + r.repo + '/' + SYNC_BRANCH + '/' + SYNC_FILE : '';
 }
 function ghHeaders(){
   return { 'Authorization': 'Bearer ' + syncToken(), 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json' };
+}
+function ghApi(path){
+  const r = syncRepo() || ghRepoDefault();
+  return 'https://api.github.com/repos/' + r.owner + '/' + r.repo + path;
+}
+function b64encode(str){
+  const bytes = new TextEncoder().encode(str);
+  let bin = '';
+  for (let i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
+  return btoa(bin);
+}
+function b64decode(b64){
+  const bin = atob(String(b64 || '').replace(/\s/g, ''));
+  const bytes = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  return new TextDecoder().decode(bytes);
 }
 function scheduleSync(){
   setSyncMeta({ pending: true });
   if (syncTimer) clearTimeout(syncTimer);
   syncTimer = setTimeout(() => { syncNow(); }, SYNC_DEBOUNCE);
 }
+function syncPut(retry){
+  const body = {
+    message: 'sync ' + dateKey(today()),
+    content: b64encode(JSON.stringify(data, null, 1)),
+    branch: SYNC_BRANCH
+  };
+  const sha = (syncRepo() || {}).sha;
+  if (sha) body.sha = sha;
+  return fetch(ghApi('/contents/' + SYNC_FILE), { method: 'PUT', headers: ghHeaders(), body: JSON.stringify(body) })
+    .then(r => {
+      if (r.ok) return r.json().then(j => {
+        setSyncRepo({ sha: j.content && j.content.sha });
+        setSyncMeta({ lastAt: Date.now(), err: null, pending: false });
+      });
+      if ((r.status === 409 || r.status === 422) && !retry){
+        // sha zastaralá (zápis odjinud) — načíst novou a zkusit jednou znovu
+        return fetch(ghApi('/contents/' + SYNC_FILE + '?ref=' + SYNC_BRANCH), { headers: ghHeaders() })
+          .then(r2 => r2.ok ? r2.json() : null)
+          .then(j => { if (j && j.sha) setSyncRepo({ sha: j.sha }); return syncPut(true); });
+      }
+      setSyncMeta({ err: r.status, pending: true });
+    });
+}
 function syncNow(){
-  if (!syncConfigured() || typeof fetch === 'undefined') return Promise.resolve();
+  if (!syncConfigured() || typeof fetch === 'undefined' || syncBusy) return Promise.resolve();
   if (syncTimer){ clearTimeout(syncTimer); syncTimer = null; }
-  const body = {};
-  body.files = {};
-  body.files[SYNC_FILE] = { content: JSON.stringify(data, null, 1) };
-  return fetch('https://api.github.com/gists/' + syncGist(), {
-    method: 'PATCH', headers: ghHeaders(), body: JSON.stringify(body)
-  }).then(r => {
-    if (r.ok) setSyncMeta({ lastAt: Date.now(), err: null, pending: false });
-    else setSyncMeta({ err: r.status, pending: true });
-  }).catch(() => { setSyncMeta({ err: 'offline', pending: true }); })
-    .then(() => { if (tab === 'stats') render(); });
+  syncBusy = true;
+  return syncPut(false)
+    .catch(() => { setSyncMeta({ err: 'offline', pending: true }); })
+    .then(() => { syncBusy = false; if (tab === 'stats') render(); });
 }
 function syncConnect(token){
   if (typeof fetch === 'undefined'){ toast('Prohlížeč nepodporuje synchronizaci', true); return; }
   try { localStorage.setItem(SYNC_T, token); } catch (e) {}
+  const def = ghRepoDefault();
+  setSyncRepo({ owner: def.owner, repo: def.repo, branch: SYNC_BRANCH, sha: null });
   toast('Ověřuji token…');
-  fetch('https://api.github.com/gists?per_page=100', { headers: ghHeaders() })
+  fetch(ghApi('/contents/' + SYNC_FILE + '?ref=' + SYNC_BRANCH), { headers: ghHeaders() })
     .then(r => {
-      if (!r.ok) throw new Error('token');
-      return r.json();
-    })
-    .then(list => {
-      const found = (list || []).find(g => g.files && g.files[SYNC_FILE]);
-      if (found){
-        try { localStorage.setItem(SYNC_G, found.id); } catch (e) {}
-        setSyncMeta({ user: found.owner && found.owner.login || '', err: null });
+      if (r.status === 200) return r.json().then(j => {
+        setSyncRepo({ sha: j.sha });
         openModal(
           '<div class="sheet-title">☁️ Nalezena existující záloha</div>'
-          + '<p class="muted" style="margin:0 0 12px;font-size:14px">V účtu už je záloha Habit Trackeru (naposledy změněná ' + new Date(found.updated_at).toLocaleDateString('cs-CZ') + '). Co s ní?</p>'
+          + '<p class="muted" style="margin:0 0 12px;font-size:14px">Ve větvi „data\u201c už záloha je. Co s ní?</p>'
           + '<div class="modal-actions" style="flex-direction:column;gap:8px">'
           + '<button class="btn primary" data-action="syncPull">⬇️ Stáhnout zálohu do appky</button>'
           + '<button class="btn" data-action="syncPushInit">⬆️ Přepsat ji daty z tohoto zařízení</button>'
           + '</div>'
         );
-      } else {
-        return fetch('https://api.github.com/gists', {
-          method: 'POST', headers: ghHeaders(),
-          body: JSON.stringify({ description: 'Habit Tracker — data', public: false, files: { [SYNC_FILE]: { content: JSON.stringify(data, null, 1) } } })
-        }).then(r => {
-          if (!r.ok) throw new Error('create');
-          return r.json();
-        }).then(g => {
-          try { localStorage.setItem(SYNC_G, g.id); } catch (e) {}
-          setSyncMeta({ user: g.owner && g.owner.login || '', lastAt: Date.now(), err: null, pending: false });
-          closeModal();
-          render();
-          toast('Záloha vytvořena — od teď se synchronizuje sama');
-        });
-      }
+        return null;
+      });
+      if (r.status === 404) return ensureDataBranch().then(() => syncNow()).then(() => {
+        const ok = !syncMeta().err;
+        if (ok){ render(); toast('Záloha vytvořena — od teď se synchronizuje sama'); }
+        else throw new Error('put');
+      });
+      throw new Error('token');
     })
     .catch(() => {
-      try { localStorage.removeItem(SYNC_T); } catch (e) {}
-      toast('Token nefunguje — zkontrolujte, že má právo „gist"', true);
+      try { localStorage.removeItem(SYNC_T); localStorage.removeItem(SYNC_R); } catch (e) {}
+      toast('Token nefunguje — potřebuje právo Contents (čtení a zápis) k repozitáři', true);
+    });
+}
+function ensureDataBranch(){
+  return fetch(ghApi('/branches/' + SYNC_BRANCH), { headers: ghHeaders() })
+    .then(r => {
+      if (r.ok) return null;
+      return fetch(ghApi(''), { headers: ghHeaders() })
+        .then(r2 => r2.json())
+        .then(info => fetch(ghApi('/git/ref/heads/' + (info.default_branch || 'main')), { headers: ghHeaders() }))
+        .then(r3 => r3.json())
+        .then(ref => fetch(ghApi('/git/refs'), {
+          method: 'POST', headers: ghHeaders(),
+          body: JSON.stringify({ ref: 'refs/heads/' + SYNC_BRANCH, sha: ref.object.sha })
+        }));
     });
 }
 function syncPull(){
-  fetch('https://api.github.com/gists/' + syncGist(), { headers: ghHeaders() })
+  fetch(ghApi('/contents/' + SYNC_FILE + '?ref=' + SYNC_BRANCH), { headers: ghHeaders() })
     .then(r => r.json())
-    .then(g => {
-      const f = g.files && g.files[SYNC_FILE];
-      if (!f) throw new Error('nofile');
-      return f.truncated ? fetch(f.raw_url).then(r => r.text()) : Promise.resolve(f.content);
-    })
-    .then(txt => {
-      const obj = JSON.parse(txt);
+    .then(j => {
+      const obj = JSON.parse(b64decode(j.content));
       const err = validateData(obj);
       if (err) throw new Error(err);
+      setSyncRepo({ sha: j.sha });
       data = normalizeData(obj);
       save();
       closeModal();
@@ -1305,7 +1355,7 @@ function syncPull(){
     .catch(() => toast('Zálohu se nepodařilo načíst', true));
 }
 function syncDisconnect(){
-  try { localStorage.removeItem(SYNC_T); localStorage.removeItem(SYNC_G); localStorage.removeItem(SYNC_M); } catch (e) {}
+  try { localStorage.removeItem(SYNC_T); localStorage.removeItem(SYNC_R); localStorage.removeItem(SYNC_M); } catch (e) {}
   if (syncTimer){ clearTimeout(syncTimer); syncTimer = null; }
   render();
   toast('Synchronizace odpojena (záloha na GitHubu zůstává)');
@@ -2689,7 +2739,7 @@ function renderStats(){
   else syncStatus = '—';
   html += '<div class="card"><div class="sec-title" style="margin-top:0">☁️ Synchronizace pro Clauda</div>'
     + (syncConfigured()
-      ? '<p class="muted" style="margin:6px 0 12px">' + syncStatus + ' Data se po každé změně sama nahrají do soukromého gistu na GitHubu.</p>'
+      ? '<p class="muted" style="margin:6px 0 12px">' + syncStatus + ' Data se po každé změně sama nahrají do větve \u201edata\u201c ve vašem repozitáři.</p>'
         + '<div class="row-btns"><button class="btn" data-action="syncNow">🔄 Nahrát teď</button>'
         + '<button class="btn" data-action="syncCopyLink">📋 Odkaz pro Clauda</button>'
         + '<button class="btn" data-action="syncDisconnect">Odpojit</button></div>'
@@ -3512,7 +3562,7 @@ document.addEventListener('click', ev => {
     case 'syncSetup':
       openModal(
         '<div class="sheet-title">☁️ Nastavit synchronizaci</div>'
-        + '<p class="muted" style="margin:0 0 10px;font-size:13.5px">Vložte GitHub token (classic) s jediným právem <strong>gist</strong>. Uloží se jen v tomto zařízení a nikdy neopouští appku jinam než na GitHub.</p>'
+        + '<p class="muted" style="margin:0 0 10px;font-size:13.5px">Vložte GitHub token (fine-grained) s právem <strong>Contents: Read and write</strong> jen pro repozitář habit-tracker. Uloží se jen v tomto zařízení a nikdy neopouští appku jinam než na GitHub.</p>'
         + '<label class="field"><span class="field-lbl">GitHub token</span><input id="sync-token" type="password" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="ghp_…"></label>'
         + '<div class="modal-actions"><button class="btn" data-action="closeModal">Zrušit</button>'
         + '<button class="btn primary" data-action="syncConnect">Připojit</button></div>'
