@@ -349,6 +349,23 @@
    "vacations": [],
    "timerMin": null,
    "link": null
+  },
+  {
+   "id": "5af8d2f5-bb31-43da-a993-9641293918e6",
+   "name": "Podívat se na letenky",
+   "emoji": "🛩️",
+   "type": "check",
+   "goal": null,
+   "unit": "",
+   "freq": {
+    "type": "daily"
+   },
+   "archived": false,
+   "order": 20,
+   "createdAt": 1787615653446,
+   "vacations": [],
+   "timerMin": null,
+   "link": "https://honzovyletenky.cz/"
   }
  ],
  "entries": {
