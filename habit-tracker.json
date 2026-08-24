@@ -879,6 +879,13 @@
      "where": "pás",
      "feel": "jelikoz jsem v takove rychlosti behal 5 minut v kuse tak opravdu az moc lehke"
     }
+   },
+   "strength": {
+    "ia": {
+     "w": "30",
+     "r": "8",
+     "rir": "2"
+    }
    }
   }
  },
