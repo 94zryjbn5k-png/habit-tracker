@@ -22,7 +22,7 @@
    ],
    "timerMin": null,
    "link": "x-apple-health://browse/sleep",
-   "color": null
+   "color": "#bf5af2"
   },
   {
    "id": "3ddddf2c-6f07-4245-8543-48d941ec2d54",
@@ -101,7 +101,7 @@
    ],
    "timerMin": null,
    "link": null,
-   "color": null
+   "color": "#ff453a"
   },
   {
    "id": "18db1387-1ae9-4fda-b271-250d80ec1e60",
@@ -124,7 +124,7 @@
    ],
    "timerMin": null,
    "link": "duolingo://",
-   "color": null
+   "color": "#34c759"
   },
   {
    "id": "b6679887-e191-40c3-af4b-0c55862a3a5b",
@@ -220,7 +220,7 @@
    ],
    "timerMin": null,
    "link": null,
-   "color": null
+   "color": "#ff453a"
   },
   {
    "id": "64178208-875f-49e8-a372-bb9fdb622f0d",
@@ -276,7 +276,7 @@
    ],
    "timerMin": null,
    "link": null,
-   "color": null
+   "color": "#ff453a"
   },
   {
    "id": "1b56c16a-59af-4de5-b599-fca89b20a170",
@@ -327,7 +327,7 @@
    ],
    "timerMin": null,
    "link": null,
-   "color": "#ffd60a"
+   "color": null
   },
   {
    "id": "07a85881-5898-4fa2-a1f7-9c97583d5365",
@@ -363,7 +363,7 @@
    "vacations": [],
    "timerMin": null,
    "link": null,
-   "color": null
+   "color": "#ff453a"
   },
   {
    "id": "5af8d2f5-bb31-43da-a993-9641293918e6",
@@ -726,6 +726,9 @@
    "38cc6cfa-f73b-47e3-a276-f441f141d58e": true,
    "508fa5d2-cd59-44d6-bb61-35b98eae9db3": true,
    "07a85881-5898-4fa2-a1f7-9c97583d5365": true
+  },
+  "2026-08-25": {
+   "449beb16-d8cf-48e1-9a9a-df5eb8e71c6c": 6
   }
  },
  "meals": {
