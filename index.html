@@ -840,6 +840,12 @@ input,textarea,select,.meal-f,.ck-in{border-radius:13px;}
 .rest-c{font-size:13px;color:var(--muted);}
 .stat-i{width:26px;height:26px;display:inline-block;vertical-align:-4px;}
 .mile-i{width:22px;height:22px;}
+
+.day-track .sec-title{position:relative;z-index:1;background:var(--bg);padding:3px 0;}
+.ck-step-f{display:flex;align-items:center;justify-content:space-between;gap:10px;}
+.ck-save{flex:1;text-align:center;font-size:12px;}
+.btn.ghost{background:transparent;color:var(--muted);padding:0 14px;min-height:46px;border-radius:14px;}
+.btn.ghost:disabled{opacity:.3;}
 </style>
 </head>
 <body>
@@ -1684,7 +1690,13 @@ function isPeriodic(h){
   const t = habitFreq(h).type;
   return t === 'weekly' || t === 'biweekly' || t === 'monthly' || t === 'every';
 }
+function startedBy(h, d){
+  if (!h.createdAt) return true;
+  const c = new Date(h.createdAt);
+  return dateKey(d) >= dateKey(new Date(c.getFullYear(), c.getMonth(), c.getDate()));
+}
 function isScheduled(h, d){
+  if (!startedBy(h, d)) return false; // před založením návyku se nic nepočítá
   if (onVacation(h, d)) return false; // prázdniny = nenaplánováno
   const f = habitFreq(h);
   if (f.type === 'daily') return true;
@@ -2537,7 +2549,9 @@ const EMOJI_ICO = {
   '\u2705': 'check'
 };
 function uiIco(name, cls){
-  return '<svg class="' + (cls || 'ui-ico') + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + UI_SVG[name] + '</svg>';
+  const p = UI_SVG[name] || ICO_SVG[name];
+  if (!p) return '';
+  return '<svg class="' + (cls || 'ui-ico') + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + p + '</svg>';
 }
 const NAME_ICO = [
   [/silov|posilov|\u010dinka|fitko|tr\u00e9nink/i, 'dumbbell'],
@@ -2995,6 +3009,24 @@ function ckTopics(d){
   }
   return T;
 }
+const CK_HABIT = [
+  [/^other\.sw/, /plav/i],
+  [/^runs\./, /b\u011bh|beh|run/i],
+  [/^strength\./, /silov|tr\u00e9nink|posilov/i]
+];
+function ckAutoDone(path, val){
+  const t = String(val || '').trim();
+  if (!t || /^(nebyl|ne)$/i.test(t)) return;
+  let re = null;
+  for (const p of CK_HABIT){ if (p[0].test(path)){ re = p[1]; break; } }
+  if (!re) return;
+  const d = ckDay();
+  const key = dateKey(d);
+  const h = activeHabits().find(x => x.type === 'check' && re.test(x.name) && (isPeriodic(x) || isScheduled(x, d)));
+  if (!h || isDone(h, key)) return;
+  setVal(key, h.id, true);
+  toast(h.name + ' odškrtnuto v Dnes');
+}
 function ckTopicFilled(wk, t){
   return t.fields.some(f => ckGet(wk, f.p).trim());
 }
@@ -3023,7 +3055,6 @@ function renderCheckin(){
   if (ckStep >= T.length) ckStep = Math.max(0, T.length - 1);
 
   let html = '<div class="ck-tools">'
-    + '<a class="btn small" href="x-apple-health://" data-action="openLink" rel="noopener" aria-label="Otevřít Zdraví" title="Otevřít Zdraví">' + uiIco('heart') + '</a>'
     + '<a class="btn small" href="claude://" data-action="openLink" aria-label="Otevřít Claude" title="Otevřít Claude">' + uiIco('robot') + '</a>'
     + '<button class="btn small" data-action="exportCheckin" aria-label="Zkopírovat check-in" title="Zkopírovat check-in">' + uiIco('clipboard') + '</button></div>';
 
@@ -3053,13 +3084,11 @@ function renderCheckin(){
     + '<span class="ck-step-tt"><strong>' + esc(t.title) + '</strong>'
     + '<span>' + (ckStep + 1) + '. otázka ze ' + T.length + ' · ' + (t.sub ? esc(t.sub) : 'týden ' + range) + '</span></span></div>'
     + t.fields.map(f => ckField(wk, f)).join('')
-    + '<div class="ck-step-f"><span class="muted">Ukládá se průběžně</span>'
-    + (ckStep < T.length - 1
-        ? '<button class="btn primary" data-action="ckNext">Další otázka</button>'
-        : '<button class="btn primary" data-action="exportCheckin">' + uiIco('clipboard', 'ui-ico sm') + ' Zkopírovat</button>')
+    + '<div class="ck-step-f">'
+    + '<button class="btn ghost" data-action="ckPrevStep"' + (ckStep === 0 ? ' disabled' : '') + '>‹ Zpět</button>'
+    + '<span class="muted ck-save">Ukládá se průběžně</span>'
+    + '<button class="btn primary" data-action="ckNext"' + (ckStep >= T.length - 1 ? ' disabled' : '') + '>Další ›</button>'
     + '</div></div>';
-
-  if (ckStep > 0) html += '<div class="ck-prev"><button class="linklike" data-action="ckPrevStep">‹ Předchozí otázka</button></div>';
 
   const rest = [];
   for (let i = 0; i < 7; i++){
@@ -3615,7 +3644,9 @@ document.addEventListener('click', ev => {
     case 'ckGoDay': ckDate = parseKey(el.dataset.key); ckStep = 0; render(); break;
     case 'ckChip': {
       const cur = ckGet(el.dataset.w, el.dataset.path);
-      ckSet(el.dataset.w, el.dataset.path, cur === el.dataset.v ? '' : el.dataset.v);
+      const nv = cur === el.dataset.v ? '' : el.dataset.v;
+      ckSet(el.dataset.w, el.dataset.path, nv);
+      ckAutoDone(el.dataset.path, nv);
       renderCheckin();
       break;
     }
@@ -3981,6 +4012,7 @@ document.addEventListener('input', ev => {
   if (t.id === 'plan-ta'){ planDraft = t.value; return; }
   if (t.classList && t.classList.contains('ck-in')){
     ckSet(t.dataset.w, t.dataset.ck, t.value);
+    if (t.value.trim().length >= 2) ckAutoDone(t.dataset.ck, t.value);
     return;
   }
   if (t.id === 'shop-note'){
