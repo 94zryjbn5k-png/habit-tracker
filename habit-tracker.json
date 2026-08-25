@@ -357,12 +357,12 @@
    "type": "check",
    "goal": null,
    "unit": "",
-   "freq": {
-    "type": "daily"
-   },
    "archived": false,
    "order": 20,
    "createdAt": 1787615653446,
+   "freq": {
+    "type": "daily"
+   },
    "vacations": [],
    "timerMin": null,
    "link": "https://honzovyletenky.cz/"
