@@ -803,6 +803,43 @@ input,textarea,select,.meal-f,.ck-in{border-radius:13px;}
 .shop-acts-top{display:flex;justify-content:space-between;gap:12px;padding:8px 0 4px;font-size:13px;}
 .shop-add .btn.small{width:46px;height:46px;min-height:46px;border-radius:14px;display:inline-flex;align-items:center;justify-content:center;padding:0;}
 .shop-add .meal-f{height:46px;}
+
+/* ---- check-in průvodce ---- */
+.ck-daynav{display:flex;align-items:center;gap:6px;margin:-8px 0 14px;}
+.ck-dayname{font-size:14px;font-weight:700;}
+.ck-back{margin-left:6px;font-size:13px;}
+.ck-seg{margin-bottom:14px;}
+.ck-seg span{height:4px;border-radius:2px;background:var(--btn-bg);}
+.ck-seg span.on{background:var(--accent-ring);}
+.ck-seg span.cur{background:var(--accent);}
+.ck-step{padding:18px 16px 16px;}
+.ck-step-h{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+.ck-step-i{width:40px;height:40px;border-radius:13px;background:var(--field-bg);color:var(--accent);display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;}
+.ck-step-tt{display:flex;flex-direction:column;gap:1px;min-width:0;}
+.ck-step-tt strong{font-size:18px;font-weight:750;letter-spacing:-.01em;}
+.ck-step-tt span{font-size:12.5px;color:var(--muted);}
+.ck-q{margin-bottom:16px;}
+.ck-qlbl{font-size:14.5px;font-weight:600;margin-bottom:9px;}
+.ck-opts{display:flex;gap:10px;}
+.ck-opt{
+  flex:1;min-height:52px;border-radius:14px;border:1.5px solid var(--line);
+  font-size:16px;font-weight:600;color:var(--text);background:transparent;
+}
+.ck-opt.on{background:var(--accent);border-color:var(--accent);color:var(--accent-text);}
+.ck-area{width:100%;min-height:96px;resize:none;padding:13px 14px;line-height:1.4;}
+.ck-step .ck-in{width:100%;min-height:50px;font-size:16px;}
+.ck-step-f{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:18px;}
+.ck-step-f .muted{font-size:12.5px;}
+.ck-step-f .btn{padding:0 20px;min-height:46px;border-radius:14px;display:inline-flex;align-items:center;gap:7px;}
+.ck-prev{margin:10px 2px 0;}
+.rest-card{padding:2px 14px;}
+.rest-row{display:flex;align-items:center;gap:12px;width:100%;padding:14px 0;border-bottom:1px solid var(--line);text-align:left;}
+.rest-row:last-child{border-bottom:0;}
+.rest-i{color:var(--accent);display:inline-flex;}
+.rest-n{flex:1;font-size:15.5px;font-weight:600;}
+.rest-c{font-size:13px;color:var(--muted);}
+.stat-i{width:26px;height:26px;display:inline-block;vertical-align:-4px;}
+.mile-i{width:22px;height:22px;}
 </style>
 </head>
 <body>
@@ -1497,11 +1534,11 @@ function syncConnect(token){
       if (r.status === 200) return r.json().then(j => {
         setSyncRepo({ sha: j.sha });
         openModal(
-          '<div class="sheet-title">☁️ Nalezena existující záloha</div>'
+          '<div class="sheet-title">Nalezena existující záloha</div>'
           + '<p class="muted" style="margin:0 0 12px;font-size:14px">Ve větvi „data\u201c už záloha je. Co s ní?</p>'
           + '<div class="modal-actions" style="flex-direction:column;gap:8px">'
-          + '<button class="btn primary" data-action="syncPull">⬇️ Stáhnout zálohu do appky</button>'
-          + '<button class="btn" data-action="syncPushInit">⬆️ Přepsat ji daty z tohoto zařízení</button>'
+          + '<button class="btn primary" data-action="syncPull">Stáhnout zálohu do appky</button>'
+          + '<button class="btn" data-action="syncPushInit">Přepsat ji daty z tohoto zařízení</button>'
           + '</div>'
         );
         return null;
@@ -1884,7 +1921,7 @@ function parseShopText(txt){
 }
 function openShopPasteModal(){
   openModal(
-    '<div class="sheet-title">📋 Vložit seznam</div>'
+    '<div class="sheet-title">Vložit seznam</div>'
     + '<p class="muted" style="margin:0 0 10px;font-size:13.5px">Vlož text — odrážky (•, -, *) budou položky, řádky bez odrážek nadpisy kategorií.</p>'
     + '<textarea id="shop-paste" class="meal-f" rows="8" maxlength="8000" placeholder="Vejce a mléčné\n• vejce 30 ks\n• tvaroh 5× 250 g"></textarea>'
     + '<div class="modal-actions"><button class="btn" data-action="closeModal">Zrušit</button>'
@@ -2106,6 +2143,8 @@ const MILESTONES = [
   { id: 'hours100',  e: '⏱️', t: '100 hodin',            test: () => totalHours() >= 100 },
   { id: 'hours500',  e: '⏱️', t: '500 hodin',            test: () => totalHours() >= 500 }
 ];
+const MILE_ICO = { streak7: 'flame', streak30: 'flame', streak100: 'trophy', done100: 'check2', done500: 'check2',
+  done1000: 'target2', perfect10: 'star', perfect50: 'gem', hours100: 'clock', hours500: 'clock' };
 let msGuard = false;
 function checkMilestones(){
   if (msGuard || !data) return;
@@ -2435,6 +2474,18 @@ function habitRate(habit){
 
 /* ============ Render: Dnes ============ */
 const UI_SVG = {
+  flame: '<path d="M12 21c3.5 0 6-2.3 6-5.6 0-4.2-4.2-5.8-3.4-10.4-2.6.9-4.4 3.2-4.4 5.6 0 1-.6 1.7-1.3 1.7-.8 0-1.3-.7-1.2-1.8C6.6 12 6 13.6 6 15.4 6 18.7 8.5 21 12 21Z"/>',
+  trophy: '<path d="M8 4h8v5.5a4 4 0 0 1-8 0Z"/><path d="M8 5.5H5.5v1.8A3.2 3.2 0 0 0 8.7 10.5M16 5.5h2.5v1.8a3.2 3.2 0 0 1-3.2 3.2"/><path d="M12 13.5V17M9 20h6"/>',
+  target2: '<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4.4"/><circle cx="12" cy="12" r="1.2"/>',
+  star: '<path d="M12 3.6l2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8L3.5 9.8l5.9-.9Z"/>',
+  gem: '<path d="M6.5 4h11l3.5 5-9 11L3 9Z"/><path d="M3 9h18M9.2 4L7.5 9l4.5 11 4.5-11L14.8 4"/>',
+  clock: '<circle cx="12" cy="12" r="8.4"/><path d="M12 7.4V12l3.2 2"/>',
+  palette: '<path d="M12 20.5a8.5 8.5 0 1 1 8.5-8.5c0 2-1.7 2.6-3.2 2.6h-1.5a2 2 0 0 0-1.3 3.5c.5.6.2 2.4-2.5 2.4Z"/><circle cx="8" cy="10.5" r="1.1"/><circle cx="12" cy="7.8" r="1.1"/><circle cx="16" cy="10.5" r="1.1"/>',
+  cloud: '<path d="M7.5 18.5A4 4 0 0 1 7 10.6a5.4 5.4 0 0 1 10.3 1.4 3.6 3.6 0 0 1-.6 6.5Z"/>',
+  down: '<path d="M12 4v12"/><path d="M7.5 12L12 16.5 16.5 12"/><path d="M5 20h14"/>',
+  up: '<path d="M12 20V8"/><path d="M7.5 12L12 7.5 16.5 12"/><path d="M5 4h14"/>',
+  refresh: '<path d="M20 12a8 8 0 1 1-2.6-5.9"/><path d="M20 4v4.5h-4.5"/>',
+  medal: '<circle cx="12" cy="14.5" r="5"/><path d="M9 9.4L6.5 3.5h11L15 9.4"/><path d="M12 12.4l.9 1.8 2 .3-1.5 1.4.4 2-1.8-1-1.8 1 .4-2-1.5-1.4 2-.3Z"/>',
   check2: '<path d="M5 12.6l4.6 4.6L19 7.5"/>',
   beach: '<path d="M12.6 20.4L9.4 8.9"/><path d="M4 10.2c1.4-4.6 5.6-7.4 9.8-6.3s6.6 5.3 5.5 9.5Z"/><path d="M3.5 20.4c1.6-1.2 3.2-1.2 4.8 0s3.2 1.2 4.8 0 3.2-1.2 4.8 0"/>',
   pencil: '<path d="M4 20l4.5-1.2L20 7.3a2 2 0 0 0 0-2.8l-.5-.5a2 2 0 0 0-2.8 0L5.2 15.5Z"/><path d="M15.5 5.7l2.8 2.8"/>',
@@ -2907,70 +2958,124 @@ function ckChips(wk, path, values){
   return '<span class="ck-chips">' + values.map(v =>
     '<button class="day-chip' + (cur === v ? ' on' : '') + '" data-action="ckChip" data-w="' + wk + '" data-path="' + path + '" data-v="' + v + '">' + v + '</button>').join('') + '</span>';
 }
+let ckStep = 0;
+function ckTopics(d){
+  const wd = weekdayIdx(d);
+  const wk = dateKey(startOfWeek(d));
+  const T = [];
+  if (wd === 2 || wd === 4 || wd === 6){
+    const wp = wd === 2 ? 'weight.st' : wd === 4 ? 'weight.pa' : 'weight.ne';
+    T.push({ id: 'w', ico: 'target2', title: 'Váha', sub: 'nalačno, po záchodě a před jídlem',
+      fields: [{ kind: 'num', p: wp, q: 'Kolik kg?', ph: '82,5' }] });
+  }
+  if (wd === 0) T.push({ id: 'q', ico: 'run', title: 'Q-běh', fields: [
+    { kind: 'chips', p: 'runs.q.where', q: 'Kde jsi běžel?', vals: ['pás', 'venku'] },
+    { kind: 'text', p: 'runs.q.feel', q: 'Jak to šlo?', ph: 'např. rovinky svižné, nohy těžké' }] });
+  if (wd === 2) T.push({ id: 'e', ico: 'run', title: 'E-běh', fields: [
+    { kind: 'chips', p: 'runs.e.where', q: 'Kde jsi běžel?', vals: ['pás', 'venku'] },
+    { kind: 'text', p: 'runs.e.feel', q: 'Jak to šlo?', ph: 'jak se běželo' }] });
+  if (wd === 3) T.push({ id: 'z', ico: 'run', title: 'Klus Z1 · 25 min', fields: [
+    { kind: 'chips', p: 'runs.z.where', q: 'Kde jsi klusal?', vals: ['pás', 'venku'] },
+    { kind: 'text', p: 'runs.z.note', q: 'Jak to šlo?', ph: 'jak se klusalo' }] });
+  if (wd === 5) T.push({ id: 'lr', ico: 'run', title: 'Longrun', fields: [
+    { kind: 'chips', p: 'runs.lr.where', q: 'Kde jsi běžel?', vals: ['pás', 'venku'] },
+    { kind: 'text', p: 'runs.lr.feel', q: 'Jak to šlo?', ph: 'jak to šlo' }] });
+  if (wd === 1) T.push({ id: 'sw1', ico: 'waves', title: 'Plavání 1', fields: [
+    { kind: 'chips', p: 'other.sw1was', q: 'Byl jsi na tréninku?', vals: ['byl', 'nebyl'] },
+    { kind: 'text', p: 'other.sw1', q: 'Co šlo a co drhlo', ph: 'např. výdechy ok, splývání drhne' }] });
+  if (wd === 3) T.push({ id: 'sw2', ico: 'waves', title: 'Plavání 2', fields: [
+    { kind: 'chips', p: 'other.sw2was', q: 'Byl jsi na tréninku?', vals: ['byl', 'nebyl'] },
+    { kind: 'text', p: 'other.sw2', q: 'Co šlo a co drhlo', ph: 'např. kop drží tělo nahoře' }] });
+  const grp = wd === 0 ? ['ua', 'Upper A'] : wd === 2 ? ['la', 'Lower A'] : wd === 4 ? ['ub', 'Upper B'] : wd === 5 ? ['lb', 'Lower B'] : null;
+  if (grp) for (const ex of CK_EX[grp[0]]){
+    T.push({ id: 'ex-' + ex[0], ico: 'dumbbell', title: ex[1], sub: 'Síla · ' + grp[1], ex: ex, fields: [
+      { kind: 'num', p: 'strength.' + ex[0] + '.w', q: ex[2] ? 'Výška bedny (cm)' : 'Váha (kg)', ph: ex[2] ? '60' : '26' },
+      { kind: 'txt2', p: 'strength.' + ex[0] + '.r', q: 'Opakování sérií', ph: '10/9/8' },
+      { kind: 'num', p: 'strength.' + ex[0] + '.rir', q: 'RIR poslední série', ph: '2' }] });
+  }
+  return T;
+}
+function ckTopicFilled(wk, t){
+  return t.fields.some(f => ckGet(wk, f.p).trim());
+}
+function ckField(wk, f){
+  let ctrl;
+  if (f.kind === 'chips'){
+    const cur = ckGet(wk, f.p);
+    ctrl = '<div class="ck-opts">' + f.vals.map(v =>
+      '<button class="ck-opt' + (cur === v ? ' on' : '') + '" data-action="ckChip" data-w="' + wk + '" data-path="' + f.p + '" data-v="' + v + '">' + v + '</button>').join('') + '</div>';
+  } else if (f.kind === 'text'){
+    ctrl = '<textarea class="ck-in ck-area" data-ck="' + f.p + '" data-w="' + wk + '" rows="3" maxlength="300" placeholder="' + esc(f.ph || '') + '">' + esc(ckGet(wk, f.p)) + '</textarea>';
+  } else {
+    ctrl = ckInput(wk, f.p, { num: f.kind === 'num', max: f.kind === 'num' ? 8 : 24, ph: f.ph, lbl: f.q });
+  }
+  return '<div class="ck-q"><div class="ck-qlbl">' + esc(f.q) + '</div>' + ctrl + '</div>';
+}
 function renderCheckin(){
   const d = ckDay();
   const wk = ckWeekKey();
   const mon = parseKey(wk);
   const sun = addDays(mon, 6);
-  const wd = weekdayIdx(d);
   const isToday = sameDay(d, today());
   const no = ckWeekNo(wk);
+  const range = mon.getDate() + '. ' + (mon.getMonth() + 1) + '. – ' + sun.getDate() + '. ' + (sun.getMonth() + 1) + '.';
+  const T = ckTopics(d);
+  if (ckStep >= T.length) ckStep = Math.max(0, T.length - 1);
 
   let html = '<div class="ck-tools">'
     + '<a class="btn small" href="x-apple-health://" data-action="openLink" rel="noopener" aria-label="Otevřít Zdraví" title="Otevřít Zdraví">' + uiIco('heart') + '</a>'
     + '<a class="btn small" href="claude://" data-action="openLink" aria-label="Otevřít Claude" title="Otevřít Claude">' + uiIco('robot') + '</a>'
-    + '<button class="btn small' + (wd === 6 ? ' primary' : '') + '" data-action="exportCheckin" aria-label="Zkopírovat check-in" title="Zkopírovat check-in">' + uiIco('clipboard') + '</button></div>';
+    + '<button class="btn small" data-action="exportCheckin" aria-label="Zkopírovat check-in" title="Zkopírovat check-in">' + uiIco('clipboard') + '</button></div>';
 
-  html += '<div class="daynav">'
-    + '<button class="icon-btn" data-action="ckPrevDay" aria-label="Předchozí den">‹</button>'
-    + '<div class="daynav-mid"><div class="daynav-date">' + (isToday ? 'Dnes' : fmtDateFull(d)) + '</div>'
-    + '<div class="daynav-sub">' + (isToday ? '' : '<button class="linklike" data-action="ckToday">Zpět na dnešek</button> · ')
-    + 'týden ' + mon.getDate() + '. ' + (mon.getMonth() + 1) + '. – ' + sun.getDate() + '. ' + (sun.getMonth() + 1) + '.' + (no ? ' · č. ' + no : '') + '</div>'
-    + '</div>'
-    + '<button class="icon-btn" data-action="ckNextDay" aria-label="Další den"' + (d >= today() ? ' disabled' : '') + '>›</button>'
+  html += '<div class="view-head"><span class="view-title">Check-in</span>'
+    + '<span class="view-meta">' + (no ? 'týden č. ' + no : range) + '</span></div>';
+
+  html += '<div class="ck-daynav">'
+    + '<button class="mini-btn" data-action="ckPrevDay" aria-label="Předchozí den">‹</button>'
+    + '<span class="ck-dayname">' + (isToday ? 'Dnes' : fmtDateFull(d)) + '</span>'
+    + '<button class="mini-btn" data-action="ckNextDay" aria-label="Další den"' + (d >= today() ? ' disabled' : '') + '>›</button>'
+    + (isToday ? '' : '<button class="linklike ck-back" data-action="ckToday">Zpět na dnešek</button>')
     + '</div>';
 
-  const runCard = (title, r, ph) =>
-    '<div class="sec-title">🏃 ' + title + '</div>'
-    + '<div class="card ck-card"><div class="ck-flex"><span class="ck-lbl">kde</span>' + ckChips(wk, 'runs.' + r + '.where', ['pás', 'venku']) + '</div>'
-    + '<label class="ck-srow"><span>pocit — čísla si trenér vytáhne</span>' + ckInput(wk, 'runs.' + r + '.feel', { max: 200, ph, lbl: title + ' pocit', cls: 'grow' }) + '</label></div>';
-  const swimCard = (title, wasP, txtP) =>
-    '<div class="sec-title">🌊 ' + title + '</div>'
-    + '<div class="card ck-card"><div class="ck-flex"><span class="ck-lbl">byl?</span>' + ckChips(wk, wasP, ['byl', 'nebyl']) + '</div>'
-    + '<label class="ck-srow"><span>věta co šlo / co drhlo</span>' + ckInput(wk, txtP, { max: 200, ph: 'např. výdechy ok, splývání drhne', lbl: title, cls: 'grow' }) + '</label></div>';
-
-  if (wd === 2 || wd === 4 || wd === 6){
-    const wp = wd === 2 ? 'weight.st' : wd === 4 ? 'weight.pa' : 'weight.ne';
-    html += '<div class="sec-title">⚖️ Váha nalačno</div>'
-      + '<div class="card ck-card"><label class="ck-mini ck-solo"><span>kg</span>' + ckInput(wk, wp, { num: true, max: 6, ph: '82,5', lbl: 'Váha' }) + '</label>'
-      + '<p class="ck-hint">Po záchodě, před jídlem a pitím.</p></div>';
+  if (!T.length){
+    html += '<div class="card empty">Dnes se nic nezapisuje — užij si volno.</div>';
+    $('#view-checkin').innerHTML = html;
+    return;
   }
 
-  if (wd === 0){
-    html += runCard('Q-běh', 'q', 'např. rovinky svižné, nohy těžké');
-    html += '<div class="sec-title">🏋️ Síla · Upper A</div><div class="card ck-card">'
-      + ckStrengthRows(wk, CK_EX.ua) + '</div>';
-  }
-  if (wd === 1) html += swimCard('Plavání 1', 'other.sw1was', 'other.sw1');
-  if (wd === 2){
-    html += runCard('E-běh', 'e', 'jak se běželo');
-    html += '<div class="sec-title">🏋️ Síla · Lower A</div><div class="card ck-card">'
-      + ckStrengthRows(wk, CK_EX.la) + '</div>';
-  }
-  if (wd === 3){
-    html += runCard('Klus Z1 · 25 min', 'z', 'jak se klusalo');
-    html += swimCard('Plavání 2', 'other.sw2was', 'other.sw2');
-  }
-  if (wd === 4){
-    html += '<div class="sec-title">🏋️ Síla · Upper B</div><div class="card ck-card">'
-      + ckStrengthRows(wk, CK_EX.ub) + '</div>';
-  }
-  if (wd === 5){
-    html += runCard('Longrun', 'lr', 'jak to šlo');
-    html += '<div class="sec-title">🏋️ Síla · Lower B</div><div class="card ck-card">'
-      + ckStrengthRows(wk, CK_EX.lb) + '</div>';
-  }
+  let segs = '';
+  for (let i = 0; i < T.length; i++) segs += '<span class="' + (i === ckStep ? 'cur' : (ckTopicFilled(wk, T[i]) ? 'on' : '')) + '"></span>';
+  html += '<div class="segbar ck-seg">' + segs + '</div>';
 
+  const t = T[ckStep];
+  html += '<div class="card ck-step">'
+    + '<div class="ck-step-h"><span class="ck-step-i">' + uiIco(t.ico, 'ui-ico') + '</span>'
+    + '<span class="ck-step-tt"><strong>' + esc(t.title) + '</strong>'
+    + '<span>' + (ckStep + 1) + '. otázka ze ' + T.length + ' · ' + (t.sub ? esc(t.sub) : 'týden ' + range) + '</span></span></div>'
+    + t.fields.map(f => ckField(wk, f)).join('')
+    + '<div class="ck-step-f"><span class="muted">Ukládá se průběžně</span>'
+    + (ckStep < T.length - 1
+        ? '<button class="btn primary" data-action="ckNext">Další otázka</button>'
+        : '<button class="btn primary" data-action="exportCheckin">' + uiIco('clipboard', 'ui-ico sm') + ' Zkopírovat</button>')
+    + '</div></div>';
+
+  if (ckStep > 0) html += '<div class="ck-prev"><button class="linklike" data-action="ckPrevStep">‹ Předchozí otázka</button></div>';
+
+  const rest = [];
+  for (let i = 0; i < 7; i++){
+    const dd = addDays(mon, i);
+    if (sameDay(dd, d) || dd > today()) continue;
+    const tt = ckTopics(dd).filter(x => !ckTopicFilled(wk, x));
+    if (tt.length) rest.push({ d: dd, n: tt.length, ico: tt[0].ico });
+  }
+  if (rest.length){
+    html += '<div class="sec-title">Zbývá tento týden</div><div class="card rest-card">'
+      + rest.map(r => '<button class="rest-row" data-action="ckGoDay" data-key="' + dateKey(r.d) + '">'
+        + '<span class="rest-i">' + uiIco(r.ico, 'ui-ico sm') + '</span>'
+        + '<span class="rest-n">' + WDFULL[weekdayIdx(r.d)] + '</span>'
+        + '<span class="rest-c">' + r.n + ' ' + plural(r.n, 'otázka', 'otázky', 'otázek') + '</span></button>').join('')
+      + '</div>';
+  }
 
   $('#view-checkin').innerHTML = html;
 }
@@ -2988,7 +3093,7 @@ function renderStats(){
     + '<div class="stat-cards">'
     + '<div class="stat"><span class="stat-num">' + rateOverDays(7) + ' %</span><span class="stat-lbl">úspěšnost 7 dní</span></div>'
     + '<div class="stat"><span class="stat-num">' + rateOverDays(30) + ' %</span><span class="stat-lbl">úspěšnost 30 dní</span></div>'
-    + '<div class="stat"><span class="stat-num">🔥 ' + (best ? best.s : 0) + '</span><span class="stat-lbl">' + (best && best.s ? 'nejdelší streak — ' + esc(best.h.name) : 'nejdelší streak') + '</span></div>'
+    + '<div class="stat"><span class="stat-num">' + uiIco('flame', 'ui-ico stat-i') + ' ' + (best ? best.s : 0) + '</span><span class="stat-lbl">' + (best && best.s ? 'nejdelší streak — ' + esc(best.h.name) : 'nejdelší streak') + '</span></div>'
     + '<div class="stat"><span class="stat-num">' + daysLogged + '</span><span class="stat-lbl">' + plural(daysLogged, 'den se záznamem', 'dny se záznamem', 'dní se záznamem') + '</span></div>'
     + '</div>';
 
@@ -3002,43 +3107,43 @@ function renderStats(){
     html += '<div class="card table-card"><table class="stat-table"><thead><tr><th>Návyk</th><th>Teď</th><th>Max</th><th>Úspěšnost</th></tr></thead><tbody>'
       + hs.map(h => row(h, false)).join('') + arch.map(h => row(h, true)).join('')
       + '</tbody></table></div>'
-      + '<div class="sec-title">🏅 Milníky</div>'
+      + '<div class="sec-title">Milníky</div>'
       + '<div class="card"><div class="mile-grid">'
       + MILESTONES.map(m => {
           const got = data.milestones[m.id];
           return '<div class="mile' + (got ? ' got' : '') + '" title="' + (got ? 'Získáno ' + fmtKeyShort(got) : 'Zatím nezískáno') + '">'
-            + '<span class="mile-e">' + m.e + '</span><span class="mile-t">' + esc(m.t) + '</span>'
-            + (got ? '<span class="mile-d">' + fmtKeyShort(got) + '</span>' : '<span class="mile-d">🔒</span>')
+            + '<span class="mile-e">' + uiIco(MILE_ICO[m.id] || 'star', 'ui-ico mile-i') + '</span><span class="mile-t">' + esc(m.t) + '</span>'
+            + (got ? '<span class="mile-d">' + fmtKeyShort(got) + '</span>' : '<span class="mile-d">—</span>')
             + '</div>';
         }).join('')
       + '</div></div>'
       + '<p class="hint">Streak i úspěšnost respektují nastavenou frekvenci — u „vybraných dnů“ se počítají jen naplánované dny, u týdenních/měsíčních celé týdny či měsíce (úspěšnost z posledních 4 týdnů, resp. 3 měsíců).</p>';
   }
 
-  html += '<div class="sec-title">🎨 Vzhled</div>'
-    + '<div class="card"><div class="row-btns"><button class="btn" data-action="openTheme">🎨 Přizpůsobit vzhled</button></div>'
+  html += '<div class="sec-title">Vzhled</div>'
+    + '<div class="card"><div class="row-btns"><button class="btn" data-action="openTheme">' + uiIco('palette', 'ui-ico sm') + ' Přizpůsobit vzhled</button></div>'
     + '<p class="muted" style="margin:10px 0 0;font-size:13.5px">Pozadí, barva karet i textu. Změny se přenáší v záloze.</p></div>';
 
   const sm = syncMeta();
   let syncStatus;
   if (!syncConfigured()) syncStatus = '';
-  else if (sm.err === 'offline' || sm.err) syncStatus = '⚠️ Poslední pokus selhal' + (sm.err === 'offline' ? ' (offline)' : ' (chyba ' + sm.err + ')') + ' — zkusí se to znovu.';
-  else if (sm.pending) syncStatus = '⏳ Změny čekají na nahrání…';
-  else if (sm.lastAt) syncStatus = '✅ Zálohováno ' + new Date(sm.lastAt).toLocaleString('cs-CZ', { day: 'numeric', month: 'numeric', hour: '2-digit', minute: '2-digit' });
+  else if (sm.err === 'offline' || sm.err) syncStatus = 'Poslední pokus selhal' + (sm.err === 'offline' ? ' (offline)' : ' (chyba ' + sm.err + ')') + ' — zkusí se to znovu.';
+  else if (sm.pending) syncStatus = 'Změny čekají na nahrání…';
+  else if (sm.lastAt) syncStatus = 'Zálohováno ' + new Date(sm.lastAt).toLocaleString('cs-CZ', { day: 'numeric', month: 'numeric', hour: '2-digit', minute: '2-digit' });
   else syncStatus = '—';
-  html += '<div class="card"><div class="sec-title" style="margin-top:0">☁️ Synchronizace pro Clauda</div>'
+  html += '<div class="card"><div class="sec-title" style="margin-top:0">Synchronizace pro Clauda</div>'
     + (syncConfigured()
       ? '<p class="muted" style="margin:6px 0 12px">' + syncStatus + ' Data se po každé změně sama nahrají do větve \u201edata\u201c ve vašem repozitáři.</p>'
-        + '<div class="row-btns"><button class="btn" data-action="syncNow">🔄 Nahrát teď</button>'
-        + '<button class="btn" data-action="syncCopyLink">📋 Odkaz pro Clauda</button>'
+        + '<div class="row-btns"><button class="btn" data-action="syncNow">' + uiIco('refresh', 'ui-ico sm') + ' Nahrát teď</button>'
+        + '<button class="btn" data-action="syncCopyLink">' + uiIco('clipboard', 'ui-ico sm') + ' Odkaz</button>'
         + '<button class="btn" data-action="syncDisconnect">Odpojit</button></div>'
       : '<p class="muted" style="margin:6px 0 12px">Automatická záloha na GitHub — a odkaz, přes který se Claude kdykoli podívá na aktuální data.</p>'
-        + '<div class="row-btns"><button class="btn" data-action="syncSetup">☁️ Nastavit synchronizaci</button></div>')
+        + '<div class="row-btns"><button class="btn" data-action="syncSetup">' + uiIco('cloud', 'ui-ico sm') + ' Nastavit synchronizaci</button></div>')
     + '</div>';
   html += '<div class="card"><div class="sec-title" style="margin-top:0">Záloha a přenos dat</div>'
     + '<p class="muted" style="margin:6px 0 12px">Data se ukládají jen v tomto zařízení a prohlížeči (localStorage) — mezi Macem a iPhonem se nesynchronizují. Pro přenos vyexportujte JSON zálohu, uložte ji na iCloud Drive a na druhém zařízení ji importujte.</p>'
-    + '<div class="row-btns"><button class="btn" data-action="exportData">⬇️ Exportovat data</button>'
-    + '<button class="btn" data-action="importData">⬆️ Importovat data</button></div></div>';
+    + '<div class="row-btns"><button class="btn" data-action="exportData">' + uiIco('down', 'ui-ico sm') + ' Exportovat</button>'
+    + '<button class="btn" data-action="importData">' + uiIco('up', 'ui-ico sm') + ' Importovat</button></div></div>';
   $('#view-stats').innerHTML = html;
 }
 
@@ -3051,9 +3156,6 @@ function renderMeals(){
   let html = '<div class="view-head"><span class="view-title">N\u00e1kup</span>'
     + (shReal.length ? '<span class="view-meta">' + shDone + ' / ' + shReal.length + ' nakoupeno</span>' : '')
     + '</div>';
-  html += '<div class="card"><div class="meal-lbl">' + uiIco('soup', 'ui-ico sm') + ' Jídla na uvaření</div>'
-    + '<textarea id="shop-note" class="meal-f" rows="2" maxlength="2000" placeholder="např. čočkové kari, lasagne, poke bowl…" aria-label="Jídla na uvaření">' + esc(sh.note) + '</textarea></div>';
-  html += '<div class="sec-title">Nákupní seznam</div>';
   html += '<div class="card shop-main">'
     + '<div class="shop-acts-top"><button class="linklike" data-action="shopPaste">' + uiIco('paste', 'ui-ico sm') + ' Vložit seznam</button>'
     + (shDone ? '<button class="linklike" data-action="shopClearDone">Smazat nakoupené</button>' : '')
@@ -3285,7 +3387,7 @@ function themeSwRow(list, cur, action){
 function openThemeModal(){
   const t = normTheme(data.theme);
   openModal(
-    '<div class="sheet-title">🎨 Vzhled</div>'
+    '<div class="sheet-title">Vzhled</div>'
     + '<div class="field-lbl theme-lbl">Pozadí</div>' + themeSwRow(THEME_BG, t.bg, 'setThemeBg')
     + '<div class="field-lbl theme-lbl">Karty a řádky</div>' + themeSwRow(THEME_CARD, t.card, 'setThemeCard')
     + '<div class="field-lbl theme-lbl">Zvýraznění</div>' + themeSwRow(THEME_ACCENTS, t.accent, 'setThemeAccent')
@@ -3505,13 +3607,16 @@ document.addEventListener('click', ev => {
     }
     case 'cancelTimer': stopTimer(); toast('Časovač zrušen'); break;
     case 'openLink': break; // odkaz řeší prohlížeč, jen nesmí přepnout řádek
-    case 'ckPrevDay': ckDate = addDays(ckDay(), -1); render(); break;
-    case 'ckNextDay': if (ckDay() < today()){ ckDate = addDays(ckDay(), 1); render(); } break;
-    case 'ckToday': ckDate = null; render(); break;
+    case 'ckPrevDay': ckDate = addDays(ckDay(), -1); ckStep = 0; render(); break;
+    case 'ckNextDay': if (ckDay() < today()){ ckDate = addDays(ckDay(), 1); ckStep = 0; render(); } break;
+    case 'ckToday': ckDate = null; ckStep = 0; render(); break;
+    case 'ckNext': ckStep++; render(); window.scrollTo({ top: 0, behavior: 'smooth' }); break;
+    case 'ckPrevStep': if (ckStep > 0) ckStep--; render(); break;
+    case 'ckGoDay': ckDate = parseKey(el.dataset.key); ckStep = 0; render(); break;
     case 'ckChip': {
       const cur = ckGet(el.dataset.w, el.dataset.path);
       ckSet(el.dataset.w, el.dataset.path, cur === el.dataset.v ? '' : el.dataset.v);
-      render();
+      renderCheckin();
       break;
     }
     case 'exportCheckin': {
@@ -3810,7 +3915,7 @@ document.addEventListener('click', ev => {
 
     case 'syncSetup':
       openModal(
-        '<div class="sheet-title">☁️ Nastavit synchronizaci</div>'
+        '<div class="sheet-title">Nastavit synchronizaci</div>'
         + '<p class="muted" style="margin:0 0 10px;font-size:13.5px">Vložte GitHub token (fine-grained) s právem <strong>Contents: Read and write</strong> jen pro repozitář habit-tracker. Uloží se jen v tomto zařízení a nikdy neopouští appku jinam než na GitHub.</p>'
         + '<label class="field"><span class="field-lbl">GitHub token</span><input id="sync-token" type="password" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="ghp_…"></label>'
         + '<div class="modal-actions"><button class="btn" data-action="closeModal">Zrušit</button>'
