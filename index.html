@@ -194,8 +194,8 @@ input,textarea{-webkit-appearance:none;appearance:none;}
 .wk-head{flex-direction:column;gap:0;line-height:1.15;border-radius:10px;}
 .wk-head span:first-child{font-size:12px;font-weight:700;color:var(--muted);}
 .wk-dnum{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;}
-.wk-head.today{background:var(--green-soft);}
-.wk-head.today span{color:var(--green);}
+.wk-head.today{background:var(--accent-ring);}
+.wk-head.today span{color:var(--accent);}
 .wk-dot{
   width:100%;max-width:46px;height:44px;display:inline-flex;align-items:center;justify-content:center;
   border-radius:12px;font-size:15px;font-weight:700;color:transparent;
@@ -208,7 +208,7 @@ input,textarea{-webkit-appearance:none;appearance:none;}
   transition:background .15s ease,border-color .15s ease;
 }
 .wk-dot.on{color:#fff;}
-.wk-dot.on::after{background:var(--green);border-color:var(--green);}
+.wk-dot.on::after{background:var(--hc,var(--accent));border-color:var(--hc,var(--accent));border-radius:11px;}
 .wk-dot span,.wk-dot{z-index:0;}
 .wk-dot.on{z-index:0;}
 .wk-dot.on{font-size:14px;}
@@ -221,7 +221,7 @@ input,textarea{-webkit-appearance:none;appearance:none;}
   display:inline-flex;align-items:center;justify-content:center;padding:0 1px;
 }
 .wk-num.part{background:var(--btn-bg);color:var(--text);}
-.wk-num.on{background:var(--green);color:#fff;}
+.wk-num.on{background:var(--hc,var(--accent));color:#fff;}
 .wk-cell.sum{font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums;border-top:1px solid var(--line);min-height:38px;}
 .wk-cell.name.sum{font-weight:600;}
 
@@ -740,6 +740,37 @@ input,textarea,select,.meal-f,.ck-in{border-radius:13px;}
 .tbl-emoji .h-ico{width:18px;height:18px;}
 .vac-nm .h-emoji.ico,.wk-name .h-emoji.ico{width:auto;height:auto;background:none;}
 .vac-nm .h-ico,.wk-name .h-ico{width:17px;height:17px;}
+
+/* ---- barvy návyků ---- */
+.col-row{display:flex;flex-wrap:wrap;gap:9px;}
+.col-sw{width:34px;height:34px;border-radius:50%;border:2px solid transparent;flex:0 0 auto;}
+.col-sw.on{border-color:var(--text);box-shadow:0 0 0 2px var(--card) inset;}
+.col-sw.def{background:var(--field-bg);color:var(--muted);font-size:13px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;}
+.h-emoji.ico{color:var(--hc,var(--accent));}
+.habit-row::before{background:var(--bg);box-shadow:inset 0 0 0 2px var(--line);}
+.habit-row.done::before{background:var(--hc,var(--accent));box-shadow:inset 0 0 0 2px var(--hc,var(--accent));}
+.habit-row.done .checkbox{background:var(--hc,var(--accent));border-color:var(--hc,var(--accent));}
+.mini-bar span{background:var(--hc,var(--accent));}
+.tbl-emoji{color:var(--accent);}
+
+/* ---- ikonová tlačítka ---- */
+.ui-ico{width:19px;height:19px;display:block;}
+.ui-ico.sm{width:15px;height:15px;display:inline-block;vertical-align:-2px;}
+.toolbar .btn.small .ui-ico{margin:0 auto;}
+.ck-tools .btn.small .ui-ico,.ck-tools a .ui-ico{margin:0 auto;}
+.meals-tools .btn.small{display:inline-flex;align-items:center;gap:7px;width:auto;border-radius:13px;padding:0 14px;height:38px;}
+.vac-emo .ui-ico{width:20px;height:20px;color:var(--accent);}
+
+/* ---- check-in: řádek chipů ---- */
+.ck-flex{align-items:center;}
+.ck-flex .ck-lbl{align-self:center;}
+.ck-card .ck-flex:first-child{padding-bottom:2px;}
+.ck-lbl{font-size:12.5px;letter-spacing:.03em;text-transform:uppercase;color:var(--muted);}
+
+/* ---- kalendář ---- */
+.wk-cell.name .h-emoji{background:transparent;}
+.wk-hname{font-size:13px;font-weight:600;}
+.wk-dot.on{color:var(--accent-text);}
 </style>
 </head>
 <body>
@@ -1119,7 +1150,8 @@ function defaultData(){
       freq: d[5] ? { type: d[5] } : { type: 'daily' },
       vacations: [],
       timerMin: null,
-      link: null
+      link: null,
+      color: null
     })),
     entries: {},
     meals: {},
@@ -1157,6 +1189,7 @@ function validateData(obj){
     }
     if (h.timerMin != null && !(Number.isInteger(h.timerMin) && h.timerMin >= 1 && h.timerMin <= 600)) return 'Návyk „' + h.name + '“ má neplatný časovač.';
     if (h.link != null && safeLink(h.link) === null) return 'Návyk „' + h.name + '“ má neplatný odkaz.';
+    if (h.color != null && !(typeof h.color === 'string' && HEX_RE.test(h.color))) return 'Návyk „' + h.name + '“ má neplatnou barvu.';
     if (h.vacations != null){
       if (!Array.isArray(h.vacations)) return 'Návyk „' + h.name + '“ má neplatné prázdniny.';
       for (const v of h.vacations){
@@ -1239,7 +1272,8 @@ function normalizeData(obj){
       freq: normFreq(h.freq),
       vacations: normVacs(h.vacations),
       timerMin: (Number.isInteger(h.timerMin) && h.timerMin >= 1 && h.timerMin <= 600) ? h.timerMin : null,
-      link: safeLink(h.link)
+      link: safeLink(h.link),
+      color: (typeof h.color === 'string' && HEX_RE.test(h.color)) ? h.color.toLowerCase() : null
     };
     // jednorázová migrace: výchozí Práce (ano/ne denně) → 85 h měsíčně, součtově
     if (nh.name === 'Práce' && nh.type === 'check' && nh.freq.type === 'daily'){
@@ -1890,6 +1924,10 @@ function mealHistory(field){
 const THEME_BG = ['#f2f2f7','#ffffff','#f6f1e7','#eaf5ee','#e9f1fa','#efecf8','#f9edf0','#fbf0e6','#000000','#16171b','#1c1c1e','#101828','#14231c','#241726','#26180f','#1b2731'];
 const THEME_CARD = ['#ffffff','#f7f7fa','#fbf7ee','#eef7f1','#edf4fc','#f2effb','#fdf1f4','#fdf5ec','#1c1c1e','#222329','#17181d','#182236','#1e2b24','#2a1e2e','#2e2117','#223140'];
 const THEME_DEFAULT = { bg: '#f2f2f7', card: '#ffffff', accent: '#0a84ff', text: 'auto' };
+const HABIT_COLORS = ['#0a84ff', '#5ac8fa', '#34c759', '#ffd60a', '#ff9f0a', '#ff453a', '#ff375f', '#bf5af2'];
+function habitStyle(h){
+  return h.color ? ' style="--hc:' + h.color + '"' : '';
+}
 const THEME_ACCENTS = ['#0a84ff', '#5ac8fa', '#34c759', '#ff9f0a', '#ff453a', '#ff375f', '#bf5af2', '#ffd60a'];
 const LEGACY_BG_IDS = { default: '#f2f2f7', cream: '#f6f1e7', mint: '#eaf5ee', sky: '#e9f1fa', lavender: '#efecf8', rose: '#f9edf0', peach: '#fbf0e6' };
 const HEX_RE = /^#[0-9a-f]{6}$/i;
@@ -2364,6 +2402,21 @@ function habitRate(habit){
 }
 
 /* ============ Render: Dnes ============ */
+const UI_SVG = {
+  beach: '<path d="M12 20V9"/><path d="M4.6 9a7.4 7.4 0 0 1 14.8 0Z"/><path d="M9 20h8.5"/>',
+  pencil: '<path d="M4 20l4.5-1.2L20 7.3a2 2 0 0 0 0-2.8l-.5-.5a2 2 0 0 0-2.8 0L5.2 15.5Z"/><path d="M15.5 5.7l2.8 2.8"/>',
+  plus: '<path d="M12 5.5v13M5.5 12h13"/>',
+  heart: '<path d="M12 20s-7.2-4.5-7.2-9.4A3.9 3.9 0 0 1 12 8a3.9 3.9 0 0 1 7.2 2.6C19.2 15.5 12 20 12 20Z"/>',
+  robot: '<rect x="4" y="8" width="16" height="11" rx="3.5"/><path d="M12 4.5V8"/><circle cx="12" cy="3.6" r="1.1"/><circle cx="9" cy="13" r="1.2"/><circle cx="15" cy="13" r="1.2"/>',
+  clipboard: '<rect x="5.5" y="4.5" width="13" height="16" rx="3"/><path d="M9 4.5V3.6A1.6 1.6 0 0 1 10.6 2h2.8A1.6 1.6 0 0 1 15 3.6v.9Z"/><path d="M9 11h6M9 15h4"/>',
+  share: '<path d="M12 15.5V4.2"/><path d="M8.2 7.6L12 3.9l3.8 3.7"/><path d="M5.5 13v5.5a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2V13"/>',
+  cart: '<circle cx="10" cy="19.5" r="1.4"/><circle cx="17" cy="19.5" r="1.4"/><path d="M3 4h2.2l2.4 11.2h10.1L20 7.5H6.1"/>',
+  paste: '<rect x="5.5" y="5" width="13" height="15" rx="3"/><path d="M9 5V4a1.5 1.5 0 0 1 1.5-1.5h3A1.5 1.5 0 0 1 15 4v1Z"/><path d="M9 12h6M9 16h6"/>',
+  bowl: '<path d="M3.5 11h17a8.5 8.5 0 0 1-17 0Z"/><path d="M8 7.5c0-1 1-1.4 1-2.4M12 7c0-1.2 1-1.6 1-2.6"/>',
+  soup: '<path d="M4 10.5h16a8 8 0 0 1-16 0Z"/><path d="M12 19.5h0"/><path d="M9 6.6c0-1 1-1.3 1-2.2M13 6.6c0-1 1-1.3 1-2.2"/>',
+  plate: '<circle cx="12" cy="12" r="8.3"/><circle cx="12" cy="12" r="4.2"/>',
+  apple: '<path d="M12 7.6c-1.4-1.2-3-1.5-4.4-.6C5.6 8.2 5 11 6.3 14c1 2.4 2.6 4.4 4 4.4.7 0 1-.4 1.7-.4s1 .4 1.7.4c1.4 0 3-2 4-4.4 1.3-3 .7-5.8-1.3-7-1.4-.9-3-.6-4.4.6Z"/><path d="M12 7.6c.2-1.4 1.1-2.6 2.6-3.1"/>'
+};
 const ICO_SVG = {
   dumbbell: '<path d="M6.5 9v6M4 10.5v3M17.5 9v6M20 10.5v3M6.5 12h11"/>',
   waves: '<path d="M3 8.5c2-1.6 3.4-1.6 5.4 0s3.4 1.6 5.4 0 3.4-1.6 5.4 0"/><path d="M3 13c2-1.6 3.4-1.6 5.4 0s3.4 1.6 5.4 0 3.4-1.6 5.4 0"/><path d="M3 17.5c2-1.6 3.4-1.6 5.4 0s3.4 1.6 5.4 0 3.4-1.6 5.4 0"/>',
@@ -2376,7 +2429,7 @@ const ICO_SVG = {
   ban: '<circle cx="12" cy="12" r="8.5"/><path d="M6.2 6.2l11.6 11.6"/>',
   yoga: '<circle cx="12" cy="4.8" r="1.8"/><path d="M12 8v5M7 10.5l5 2.5 5-2.5"/><path d="M12 13l-3.5 6M12 13l3.5 6"/>',
   bed: '<path d="M3 19v-9M3 13h18v6"/><circle cx="7.5" cy="10" r="2"/><path d="M11 13v-2.2c0-.6.5-1.1 1.1-1.1H21"/>',
-  owl: '<path d="M5.5 9.5A6.5 6.5 0 0 1 12 3a6.5 6.5 0 0 1 6.5 6.5v3.8A6.3 6.3 0 0 1 12 20a6.3 6.3 0 0 1-6.5-6.7Z"/><circle cx="9.3" cy="10" r="1.4"/><circle cx="14.7" cy="10" r="1.4"/><path d="M12 12.6l-1 1.4h2Z"/>',
+  owl: '<path d="M4.5 5.2l2.6 1.7M19.5 5.2l-2.6 1.7"/><path d="M12 20.5c-3.9 0-6.6-2.7-6.6-6.6V10a6.6 6.6 0 1 1 13.2 0v3.9c0 3.9-2.7 6.6-6.6 6.6Z"/><circle cx="9.4" cy="10.4" r="1.5"/><circle cx="14.6" cy="10.4" r="1.5"/><path d="M12 13.2v1.6M10.6 16.6h2.8"/>',
   cap: '<path d="M3 9l9-4 9 4-9 4Z"/><path d="M7 11v4.2c0 1.3 2.2 2.3 5 2.3s5-1 5-2.3V11"/>',
   plane: '<path d="M10.5 20.5l1.6-5.6 7.2-1.9a1.7 1.7 0 0 0 0-3.3l-7.2-1.9-1.6-5.6a1 1 0 0 0-1.9 0L6.9 7.5 3.6 8.4a1.6 1.6 0 0 0 0 3.1l3.3.9 1.7 8.1a1 1 0 0 0 1.9 0Z"/>',
   check: '<circle cx="12" cy="12" r="8.5"/><path d="M8.4 12.4l2.5 2.5 4.7-5.3"/>'
@@ -2397,6 +2450,9 @@ const EMOJI_ICO = {
   '\ud83d\udee9\ufe0f': 'plane', '\ud83d\udee9': 'plane', '\u2708\ufe0f': 'plane', '\u2708': 'plane',
   '\u2705': 'check'
 };
+function uiIco(name, cls){
+  return '<svg class="' + (cls || 'ui-ico') + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + UI_SVG[name] + '</svg>';
+}
 function habitIcon(h){
   const k = EMOJI_ICO[h.emoji];
   if (!k) return null;
@@ -2412,7 +2468,10 @@ function streakBadge(h){
   const s = currentStreak(h);
   const f = habitFreq(h).type;
   const t = f === 'weekly' ? 'Série týdnů po sobě' : f === 'monthly' ? 'Série měsíců po sobě' : 'Série dní po sobě';
-  return '<span class="h-streak' + (s ? '' : ' zero') + '" title="' + t + '">🔥 ' + s + '</span>';
+  const unit = (f === 'weekly' || f === 'biweekly') ? plural(s, 'týden', 'týdny', 'týdnů')
+    : f === 'monthly' ? plural(s, 'měsíc', 'měsíce', 'měsíců')
+    : plural(s, 'den', 'dny', 'dní');
+  return '<span class="h-streak' + (s ? '' : ' zero') + '" title="' + t + '">' + (s ? s + ' ' + unit : 'nová') + '</span>';
 }
 function dayRow(h, key, isFuture){
   const done = isDone(h, key);
@@ -2421,7 +2480,7 @@ function dayRow(h, key, isFuture){
   const lnk = h.link ? '<a class="icon-btn lnk" href="' + esc(h.link) + '" data-action="openLink" rel="noopener" aria-label="Otevřít aplikaci">↗</a>' : '';
   if (h.type === 'check'){
     const tmr = (h.timerMin && !done) ? '<button class="icon-btn tmr" data-action="startTimer" data-id="' + esc(h.id) + '" data-key="' + key + '" aria-label="Spustit časovač ' + h.timerMin + ' min">⏱️</button>' : '';
-    return '<div class="habit-row check' + (done ? ' done' : '') + '" role="checkbox" aria-checked="' + done + '" tabindex="0" data-action="rowToggle" data-id="' + esc(h.id) + '" aria-label="' + esc(h.name) + '">'
+    return '<div class="habit-row check' + (done ? ' done' : '') + '"' + habitStyle(h) + ' role="checkbox" aria-checked="' + done + '" tabindex="0" data-action="rowToggle" data-id="' + esc(h.id) + '" aria-label="' + esc(h.name) + '">'
       + '<span class="pop-wrap' + (pop ? ' pop' : '') + '">' + habitBadge(h) + '</span>'
       + '<span class="h-main"><span class="h-name">' + esc(h.name) + noteDot + '</span></span>'
       + lnk
@@ -2433,7 +2492,7 @@ function dayRow(h, key, isFuture){
   const val = numVal(h, key);
   const goal = h.goal || 1;
   const pct = Math.max(0, Math.min(100, Math.round(val / goal * 100)));
-  return '<div class="habit-row num' + (done ? ' done' : '') + '" data-id="' + esc(h.id) + '">'
+  return '<div class="habit-row num' + (done ? ' done' : '') + '"' + habitStyle(h) + ' data-id="' + esc(h.id) + '">'
     + '<span class="pop-wrap' + (pop ? ' pop' : '') + '">' + habitBadge(h) + '</span>'
     + '<span class="h-main">'
     +   '<span class="h-name">' + esc(h.name) + noteDot + '</span>'
@@ -2469,7 +2528,7 @@ function periodicRow(h, key){
     const noteDot = getNote(key, h.id) ? ' <span class="note-dot" aria-label="Má poznámku">📝</span>' : '';
     const lnk = h.link ? '<a class="icon-btn lnk" href="' + esc(h.link) + '" data-action="openLink" rel="noopener" aria-label="Otevřít aplikaci">↗</a>' : '';
     const tmr = (h.timerMin && !doneToday) ? '<button class="icon-btn tmr" data-action="startTimer" data-id="' + esc(h.id) + '" data-key="' + key + '" aria-label="Spustit časovač ' + h.timerMin + ' min">⏱️</button>' : '';
-    return '<div class="habit-row check' + (done ? ' done' : '') + '" role="checkbox" aria-checked="' + doneToday + '" tabindex="0" data-action="rowToggle" data-id="' + esc(h.id) + '" aria-label="' + esc(h.name) + '">'
+    return '<div class="habit-row check' + (done ? ' done' : '') + '"' + habitStyle(h) + ' role="checkbox" aria-checked="' + doneToday + '" tabindex="0" data-action="rowToggle" data-id="' + esc(h.id) + '" aria-label="' + esc(h.name) + '">'
       + '<span class="pop-wrap' + (pop ? ' pop' : '') + '">' + habitBadge(h) + '</span>'
       + '<span class="h-main"><span class="h-name">' + esc(h.name) + noteDot + '</span>'
       +   '<span class="h-meta"><span class="h-goal">' + status + '</span></span></span>'
@@ -2493,7 +2552,7 @@ function periodicRow(h, key){
   const lnk = h.link ? '<a class="icon-btn lnk" href="' + esc(h.link) + '" data-action="openLink" rel="noopener" aria-label="Otevřít aplikaci">↗</a>' : '';
   if (h.type === 'check'){
     const tmr = (h.timerMin && !done) ? '<button class="icon-btn tmr" data-action="startTimer" data-id="' + esc(h.id) + '" data-key="' + key + '" aria-label="Spustit časovač ' + h.timerMin + ' min">⏱️</button>' : '';
-    return '<div class="habit-row check' + (done ? ' done' : '') + '" role="checkbox" aria-checked="' + done + '" tabindex="0" data-action="rowToggle" data-id="' + esc(h.id) + '" aria-label="' + esc(h.name) + '">'
+    return '<div class="habit-row check' + (done ? ' done' : '') + '"' + habitStyle(h) + ' role="checkbox" aria-checked="' + done + '" tabindex="0" data-action="rowToggle" data-id="' + esc(h.id) + '" aria-label="' + esc(h.name) + '">'
       + '<span class="pop-wrap' + (pop ? ' pop' : '') + '">' + habitBadge(h) + '</span>'
       + '<span class="h-main"><span class="h-name">' + esc(h.name) + noteDot + '</span>'
       +   '<span class="h-meta"><span class="h-goal">' + status + '</span></span></span>'
@@ -2585,9 +2644,9 @@ function renderDay(){
   }
 
   html += '<div class="toolbar">'
-    + '<button class="btn small" data-action="vacAll" aria-label="Hromadné prázdniny" title="Hromadné prázdniny">🏖️</button>'
-    + '<button class="btn small' + (editMode ? ' primary' : '') + '" data-action="toggleEdit" aria-label="' + (editMode ? 'Hotovo' : 'Upravit') + '" title="' + (editMode ? 'Hotovo' : 'Upravit') + '">' + (editMode ? '✓' : '✏️') + '</button>'
-    + '<button class="btn small" data-action="addHabit" aria-label="Přidat návyk" title="Přidat návyk">＋</button>'
+    + '<button class="btn small" data-action="vacAll" aria-label="Hromadné prázdniny" title="Hromadné prázdniny">' + uiIco('beach') + '</button>'
+    + '<button class="btn small' + (editMode ? ' primary' : '') + '" data-action="toggleEdit" aria-label="' + (editMode ? 'Hotovo' : 'Upravit') + '" title="' + (editMode ? 'Hotovo' : 'Upravit') + '">' + (editMode ? '✓' : uiIco('pencil')) + '</button>'
+    + '<button class="btn small" data-action="addHabit" aria-label="Přidat návyk" title="Přidat návyk">' + uiIco('plus') + '</button>'
     + '</div>';
 
   if (!hs.length){
@@ -2676,7 +2735,7 @@ function weekHtml(){
     const nameExtra = isPeriodic(h)
       ? '<span class="wk-hfreq">1×/' + (f.type === 'weekly' ? 'týd' : 'měs') + (wkOk ? ' <span class="wk-okwk">✓</span>' : '') + (paused ? ' 🏖️' : '') + '</span>'
       : '';
-    grid += '<div class="wk-cell name" title="' + esc(h.name) + ' — ' + esc(freqLabel(h)) + '">' + habitBadge(h) + '<span class="wk-hname">' + esc(h.name) + nameExtra + '</span></div>';
+    grid += '<div class="wk-cell name"' + habitStyle(h) + ' title="' + esc(h.name) + ' — ' + esc(freqLabel(h)) + '">' + habitBadge(h) + '<span class="wk-hname">' + esc(h.name) + nameExtra + '</span></div>';
     for (let i = 0; i < 7; i++){
       const d = addDays(mon, i);
       const key = dateKey(d);
@@ -2687,13 +2746,13 @@ function weekHtml(){
       const vt = vac ? ' title="Prázdniny 🏖️"' : (frz ? ' title="Zmrazeno 🧊 — streak pokračuje"' : '');
       if (h.type === 'check'){
         const on = isDone(h, key);
-        grid += '<button class="wk-cell" data-action="cellToggle" data-id="' + esc(h.id) + '" data-key="' + key + '"' + (future ? ' disabled' : '') + vt + ' aria-label="' + esc(h.name) + ' ' + d.getDate() + '.' + (d.getMonth() + 1) + '.">'
+        grid += '<button class="wk-cell"' + habitStyle(h) + ' data-action="cellToggle" data-id="' + esc(h.id) + '" data-key="' + key + '"' + (future ? ' disabled' : '') + vt + ' aria-label="' + esc(h.name) + ' ' + d.getDate() + '.' + (d.getMonth() + 1) + '.">'
           + '<span class="wk-dot' + (on ? ' on' : '') + (off && !on ? ' off' : '') + (frz && !on ? ' frz' : '') + '">' + (on ? '✓' : '') + '</span></button>';
       } else {
         const v = numVal(h, key);
         const on = isDone(h, key);
         const cls = (on ? ' on' : (v > 0 ? ' part' : '')) + (off && !on && v <= 0 ? ' wk-off' : '');
-        grid += '<button class="wk-cell" data-action="gotoDay" data-key="' + key + '"' + (future ? ' disabled' : '') + vt + '>'
+        grid += '<button class="wk-cell"' + habitStyle(h) + ' data-action="gotoDay" data-key="' + key + '"' + (future ? ' disabled' : '') + vt + '>'
           + '<span class="wk-num' + cls + (frz && v <= 0 ? ' frz' : '') + '">' + (v > 0 ? fmtNum(v) : (frz ? '•' : '·')) + '</span></button>';
       }
     }
@@ -2705,7 +2764,7 @@ function weekHtml(){
     grid += '<div class="wk-cell sum">' + (s ? s.done + '/' + s.total : '–') + '</div>';
   }
 
-  html += '<div class="card grid-card"><div class="wk-scroll"><div class="wk-grid" style="grid-template-columns:minmax(84px,1.3fr) repeat(7,minmax(34px,46px));">' + grid + '</div></div>'
+  html += '<div class="card grid-card"><div class="wk-scroll"><div class="wk-grid" style="grid-template-columns:minmax(112px,1.4fr) repeat(7,minmax(32px,42px));">' + grid + '</div></div>'
     + '<p class="hint">Ano/ne návyky odškrtnete klepnutím přímo v mřížce, číselné otevřou daný den. Čárkované dny = nenaplánováno nebo prázdniny.</p></div>';
   return html;
 }
@@ -2797,9 +2856,9 @@ function renderCheckin(){
   const no = ckWeekNo(wk);
 
   let html = '<div class="ck-tools">'
-    + '<a class="btn small" href="x-apple-health://" data-action="openLink" rel="noopener" aria-label="Otevřít Zdraví" title="Otevřít Zdraví">❤️</a>'
-    + '<a class="btn small" href="claude://" data-action="openLink" aria-label="Otevřít Claude" title="Otevřít Claude">🤖</a>'
-    + '<button class="btn small' + (wd === 6 ? ' primary' : '') + '" data-action="exportCheckin" aria-label="Zkopírovat check-in" title="Zkopírovat check-in">📋</button></div>';
+    + '<a class="btn small" href="x-apple-health://" data-action="openLink" rel="noopener" aria-label="Otevřít Zdraví" title="Otevřít Zdraví">' + uiIco('heart') + '</a>'
+    + '<a class="btn small" href="claude://" data-action="openLink" aria-label="Otevřít Claude" title="Otevřít Claude">' + uiIco('robot') + '</a>'
+    + '<button class="btn small' + (wd === 6 ? ' primary' : '') + '" data-action="exportCheckin" aria-label="Zkopírovat check-in" title="Zkopírovat check-in">' + uiIco('clipboard') + '</button></div>';
 
   html += '<div class="daynav">'
     + '<button class="icon-btn" data-action="ckPrevDay" aria-label="Předchozí den">‹</button>'
@@ -2932,7 +2991,7 @@ function renderMeals(){
   if (mealSnackUI.key !== key) mealSnackUI = { key, n: Math.max(1, m.sn.length) };
   else mealSnackUI.n = Math.max(mealSnackUI.n, m.sn.length, 1);
 
-  let html = '<div class="meals-tools"><button class="btn small" data-action="exportMealsWeek" aria-label="Exportovat týden" title="Exportovat tento týden">📤 Týden</button></div>'
+  let html = '<div class="meals-tools"><button class="btn small" data-action="exportMealsWeek" aria-label="Exportovat týden" title="Exportovat tento týden">' + uiIco('share') + '<span>Týden</span></button></div>'
     + '<div class="daynav">'
     + '<button class="icon-btn" data-action="prevDay" aria-label="Předchozí den">‹</button>'
     + '<div class="daynav-mid"><div class="daynav-date">' + (isToday ? 'Dnes' : fmtDateFull(selectedDate)) + '</div>'
@@ -2956,7 +3015,7 @@ function renderMeals(){
     + group('meal-b', '🥣', 'Snídaně', m.b, 'např. ovesná kaše s ovocem', 'b')
     + group('meal-l', '🍲', 'Oběd', m.l, 'např. kuře s rýží a zeleninou', 'l')
     + group('meal-d', '🍽️', 'Večeře', m.d, 'např. losos s bramborem', 'd')
-    + '<div class="meal-group"><div class="meal-lbl"><span>🍏 Svačiny</span>' + histBtn('sn') + '</div>' + snacks
+    + '<div class="meal-group"><div class="meal-lbl"><span>' + uiIco('apple', 'ui-ico sm') + ' Svačiny</span>' + histBtn('sn') + '</div>' + snacks
     + '<button class="btn ghost small add-snack" data-action="addSnack">＋ Přidat svačinu</button></div>'
     + (m.note ? '<div class="meal-group"><div class="meal-lbl">📝 Poznámka</div>'
         + '<textarea id="meal-note" class="meal-f" rows="2" maxlength="2000" aria-label="Poznámka">' + esc(m.note) + '</textarea></div>' : '')
@@ -2964,7 +3023,7 @@ function renderMeals(){
   const sh = data.shopping || { note: '', items: [] };
   const shReal = sh.items.filter(i => !i.h);
   const shDone = shReal.filter(i => i.done).length;
-  html += '<details class="vac-card shop-card"><summary><span class="vac-emo">🛒</span>'
+  html += '<details class="vac-card shop-card"><summary><span class="vac-emo">' + uiIco('cart') + '</span>'
     + '<span class="vac-sum"><strong>Nákup a plán jídel</strong><span>'
     + (shReal.length ? shDone + ' / ' + shReal.length + ' nakoupeno' : 'seznam + co uvařit')
     + '</span></span><span class="vac-chev">›</span></summary>'
@@ -2972,7 +3031,7 @@ function renderMeals(){
     + '<div class="meal-lbl"><span>🍳 Jídla na uvaření</span></div>'
     + '<textarea id="shop-note" class="meal-f" rows="2" maxlength="2000" placeholder="např. čočkové kari, lasagne, poke bowl…" aria-label="Jídla na uvaření">' + esc(sh.note) + '</textarea>'
     + '<div class="meal-lbl shop-lbl"><span>🛒 Nákupní seznam</span>'
-    + '<span class="shop-acts"><button class="linklike" data-action="shopPaste">📋 Vložit seznam</button>'
+    + '<span class="shop-acts"><button class="linklike" data-action="shopPaste">' + uiIco('paste', 'ui-ico sm') + ' Vložit seznam</button>'
     + (shDone ? ' · <button class="linklike" data-action="shopClearDone">Smazat nakoupené</button>' : '')
     + '</span></div>'
     + (sh.items.length
@@ -3123,6 +3182,10 @@ function openHabitModal(habit){
     + '<label class="field"><span class="field-lbl">Název</span><input id="f-name" maxlength="60" value="' + esc(h.name) + '" placeholder="např. Meditace"></label>'
     + '<label class="field"><span class="field-lbl">Emoji (volitelné)</span><input id="f-emoji" maxlength="8" value="' + esc(h.emoji || '') + '" placeholder="🙂"></label>'
     + '<div class="emoji-row">' + emojiBtns + '</div>'
+    + '<div class="field"><span class="field-lbl">Barva</span><div class="col-row">'
+    + '<button class="col-sw def' + (h.color ? '' : ' on') + '" data-action="pickColor" data-v="" aria-label="Výchozí barva">A</button>'
+    + HABIT_COLORS.map(c => '<button class="col-sw' + (h.color === c ? ' on' : '') + '" data-action="pickColor" data-v="' + c + '" style="background:' + c + '" aria-label="Barva ' + c + '"></button>').join('')
+    + '</div><input type="hidden" id="f-color" value="' + esc(h.color || '') + '"></div>'
     + '<div class="field"><span class="field-lbl">Typ návyku</span><div class="seg" id="type-seg">'
     + '<button class="seg-btn' + (h.type === 'check' ? ' on' : '') + '" data-action="setType" data-type="check">Ano / ne</button>'
     + '<button class="seg-btn' + (h.type === 'number' ? ' on' : '') + '" data-action="setType" data-type="number">Číselný s cílem</button>'
@@ -3674,6 +3737,12 @@ document.addEventListener('click', ev => {
       break;
     }
     case 'pickEmoji': { const f = $('#f-emoji'); if (f) f.value = el.dataset.emoji; break; }
+    case 'pickColor': {
+      const f = $('#f-color');
+      if (f) f.value = el.dataset.v || '';
+      document.querySelectorAll('.col-sw').forEach(b => b.classList.toggle('on', b === el));
+      break;
+    }
     case 'saveHabit': {
       const name = ($('#f-name') && $('#f-name').value || '').trim();
       if (!name){ toast('Zadejte název návyku', true); break; }
@@ -3705,12 +3774,14 @@ document.addEventListener('click', ev => {
       const tm = parseInt(tmRaw, 10);
       const timerMin = (tmRaw && isFinite(tm) && tm >= 1 && tm <= 600) ? tm : null;
       if (tmRaw && timerMin === null){ toast('Časovač: zadejte 1–600 minut, nebo nechte prázdné', true); break; }
+      const colRaw = ($('#f-color') && $('#f-color').value || '').trim().toLowerCase();
+      const color = HEX_RE.test(colRaw) ? colRaw : null;
       const lkRaw = ($('#f-link') && $('#f-link').value || '').trim();
       const link = safeLink(lkRaw);
       if (lkRaw && !link){ toast('Odkaz musí být adresa aplikace nebo webu, např. duolingo:// nebo https://…', true); break; }
       if (id){
         const h = habitById(id);
-        if (h){ h.name = name.slice(0, 60); h.emoji = emoji; h.type = type; h.goal = goal; h.unit = unit; h.freq = freq; h.timerMin = timerMin; h.link = link; }
+        if (h){ h.name = name.slice(0, 60); h.emoji = emoji; h.type = type; h.goal = goal; h.unit = unit; h.freq = freq; h.timerMin = timerMin; h.link = link; h.color = color; }
         toast('Návyk upraven');
       } else {
         data.habits.push({
@@ -3720,7 +3791,8 @@ document.addEventListener('click', ev => {
           createdAt: Date.now(),
           vacations: [],
           timerMin,
-          link
+          link,
+          color
         });
         toast('Návyk přidán');
       }
