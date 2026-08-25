@@ -203,7 +203,7 @@ input,textarea{-webkit-appearance:none;appearance:none;}
 .wk-dot::before{content:"";position:absolute;}
 .wk-dot{position:relative;}
 .wk-dot::after{
-  content:"";width:26px;height:26px;border-radius:50%;
+  content:"";width:28px;height:28px;border-radius:10px;
   border:2px solid var(--line);position:absolute;
   transition:background .15s ease,border-color .15s ease;
 }
@@ -222,7 +222,7 @@ input,textarea{-webkit-appearance:none;appearance:none;}
 }
 .wk-num.part{background:var(--btn-bg);color:var(--text);}
 .wk-num.on{background:var(--hc,var(--accent));color:#fff;}
-.wk-cell.sum{font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums;border-top:1px solid var(--line);min-height:38px;}
+.wk-cell.sum{font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums;min-height:40px;padding-top:10px;}
 .wk-cell.name.sum{font-weight:600;}
 
 /* ---------- měsíční heatmapa ---------- */
@@ -771,6 +771,38 @@ input,textarea,select,.meal-f,.ck-in{border-radius:13px;}
 .wk-cell.name .h-emoji{background:transparent;}
 .wk-hname{font-size:13px;font-weight:600;}
 .wk-dot.on{color:var(--accent-text);}
+
+/* ---- průběžná časová osa ---- */
+.day-track{position:relative;padding-left:26px;}
+.day-track::before{content:'';position:absolute;left:6px;top:18px;bottom:18px;width:2px;background:var(--line);border-radius:1px;}
+.day-track .habit-list{padding-left:0;}
+.day-track .habit-list::before{display:none;}
+.day-track .sec-title{margin-left:-26px;}
+
+/* ---- kompaktní nástroje ---- */
+.pc-tools{display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.pc-tools.solo{justify-content:flex-end;margin:-6px 0 14px;}
+.day-tools{display:inline-flex;gap:2px;}
+.mini-btn{width:34px;height:34px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:var(--muted);}
+.mini-btn.on{color:var(--accent);background:var(--accent-ring);}
+.mini-btn:active{background:var(--btn-bg);}
+.ui-ico.sm2{width:17px;height:17px;}
+
+/* ---- check-in: vše pod sebou ---- */
+.ck-card .ck-flex{flex-direction:column;align-items:stretch;gap:12px;}
+.ck-card .ck-flex .ck-lbl,.ck-lbl2{margin:0 0 -4px;align-self:flex-start;}
+.ck-chips{display:flex;gap:8px;}
+.ck-chips .day-chip{flex:1;min-width:0;min-height:44px;}
+.ck-mini{width:100%;}
+.ck-mini .ck-in{width:100%;}
+.ck-sgrid{grid-template-columns:1fr;gap:10px;}
+.ck-gap{margin-top:0;}
+
+/* ---- nákupní seznam ---- */
+.shop-main{padding:6px 14px 14px;}
+.shop-acts-top{display:flex;justify-content:space-between;gap:12px;padding:8px 0 4px;font-size:13px;}
+.shop-add .btn.small{width:46px;height:46px;min-height:46px;border-radius:14px;display:inline-flex;align-items:center;justify-content:center;padding:0;}
+.shop-add .meal-f{height:46px;}
 </style>
 </head>
 <body>
@@ -789,7 +821,7 @@ input,textarea,select,.meal-f,.ck-in{border-radius:13px;}
 <nav class="tabbar">
   <div class="tabbar-inner">
     <button class="tab-btn" data-action="tab" data-tab="cal"><span class="tab-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="3.5"/><path d="M8 3v4M16 3v4M3.5 10h17"/></svg></span><span class="tab-lbl">Kalendář</span></button>
-    <button class="tab-btn" data-action="tab" data-tab="meals"><span class="tab-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v7a2.5 2.5 0 0 0 5 0V3"/><path d="M8.5 10v11"/><path d="M18 3c-1.6 1.8-2.4 3.9-2.4 6.2 0 1.7.8 2.6 2.4 2.8V21"/></svg></span><span class="tab-lbl">Jídlo</span></button>
+    <button class="tab-btn" data-action="tab" data-tab="meals"><span class="tab-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="19.5" r="1.4"/><circle cx="17" cy="19.5" r="1.4"/><path d="M3 4h2.2l2.4 11.2h10.1L20 7.5H6.1"/></svg></span><span class="tab-lbl">Nákup</span></button>
     <button class="tab-btn on" data-action="tab" data-tab="day"><span class="tab-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="8.2"/><circle cx="12" cy="12" r="3.2"/></svg></span><span class="tab-lbl">Dnes</span></button>
     <button class="tab-btn" data-action="tab" data-tab="checkin"><span class="tab-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.6"/><path d="M8.4 12.3l2.6 2.6 4.6-5.2"/></svg></span><span class="tab-lbl">Check-in</span></button>
     <button class="tab-btn" data-action="tab" data-tab="stats"><span class="tab-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M5.5 20V11M12 20V4.5M18.5 20v-6"/></svg></span><span class="tab-lbl">Přehled</span></button>
@@ -2403,7 +2435,8 @@ function habitRate(habit){
 
 /* ============ Render: Dnes ============ */
 const UI_SVG = {
-  beach: '<path d="M12 20V9"/><path d="M4.6 9a7.4 7.4 0 0 1 14.8 0Z"/><path d="M9 20h8.5"/>',
+  check2: '<path d="M5 12.6l4.6 4.6L19 7.5"/>',
+  beach: '<path d="M12.6 20.4L9.4 8.9"/><path d="M4 10.2c1.4-4.6 5.6-7.4 9.8-6.3s6.6 5.3 5.5 9.5Z"/><path d="M3.5 20.4c1.6-1.2 3.2-1.2 4.8 0s3.2 1.2 4.8 0 3.2-1.2 4.8 0"/>',
   pencil: '<path d="M4 20l4.5-1.2L20 7.3a2 2 0 0 0 0-2.8l-.5-.5a2 2 0 0 0-2.8 0L5.2 15.5Z"/><path d="M15.5 5.7l2.8 2.8"/>',
   plus: '<path d="M12 5.5v13M5.5 12h13"/>',
   heart: '<path d="M12 20s-7.2-4.5-7.2-9.4A3.9 3.9 0 0 1 12 8a3.9 3.9 0 0 1 7.2 2.6C19.2 15.5 12 20 12 20Z"/>',
@@ -2422,16 +2455,18 @@ const ICO_SVG = {
   waves: '<path d="M3 8.5c2-1.6 3.4-1.6 5.4 0s3.4 1.6 5.4 0 3.4-1.6 5.4 0"/><path d="M3 13c2-1.6 3.4-1.6 5.4 0s3.4 1.6 5.4 0 3.4-1.6 5.4 0"/><path d="M3 17.5c2-1.6 3.4-1.6 5.4 0s3.4 1.6 5.4 0 3.4-1.6 5.4 0"/>',
   moon: '<path d="M20 14.5A8.2 8.2 0 0 1 9.5 4 8.4 8.4 0 1 0 20 14.5Z"/>',
   leaf: '<path d="M19.5 4.5c1 7.5-3 12.5-9.5 12.5-2.2 0-4-.6-4-.6"/><path d="M5.5 19c1.5-6 5-9.5 10.5-11.5"/>',
-  book: '<path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H19v14.5H6.5A2.5 2.5 0 0 0 4 20Z"/><path d="M4 5.5V20"/>',
+  pill: '<rect x="2.8" y="8.4" width="18.4" height="7.2" rx="3.6" transform="rotate(-40 12 12)"/><path d="M9.2 8.1l5.6 5.6"/>',
+  droplet: '<path d="M12 3.5c3.4 4 5.2 6.8 5.2 9.1a5.2 5.2 0 0 1-10.4 0c0-2.3 1.8-5.1 5.2-9.1Z"/>',
+  book: '<path d="M4 4.6h5.4A2.6 2.6 0 0 1 12 7.2v12a2.2 2.2 0 0 0-2.2-2.2H4Z"/><path d="M20 4.6h-5.4A2.6 2.6 0 0 0 12 7.2v12a2.2 2.2 0 0 1 2.2-2.2H20Z"/>',
   briefcase: '<rect x="3" y="7.5" width="18" height="12.5" rx="3"/><path d="M9 7.5V6a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v1.5M3 12.5h18"/>',
   walk: '<circle cx="13" cy="4.6" r="1.7"/><path d="M11 21l1.6-5.4-2.6-2.4.8-4.2 3 1.6 2.4 2.2"/><path d="M9.4 12.4L7 15.6M12.6 15.6L15 21"/>',
   run: '<circle cx="15" cy="4.6" r="1.7"/><path d="M8.5 21l2.6-5-2.8-3 1.4-4.6 3.4 2.2 3 .8"/><path d="M8.7 9.6L5.5 11M13.7 13l2.3 3.4 3.5 1.2"/>',
   ban: '<circle cx="12" cy="12" r="8.5"/><path d="M6.2 6.2l11.6 11.6"/>',
   yoga: '<circle cx="12" cy="4.8" r="1.8"/><path d="M12 8v5M7 10.5l5 2.5 5-2.5"/><path d="M12 13l-3.5 6M12 13l3.5 6"/>',
   bed: '<path d="M3 19v-9M3 13h18v6"/><circle cx="7.5" cy="10" r="2"/><path d="M11 13v-2.2c0-.6.5-1.1 1.1-1.1H21"/>',
-  owl: '<path d="M4.5 5.2l2.6 1.7M19.5 5.2l-2.6 1.7"/><path d="M12 20.5c-3.9 0-6.6-2.7-6.6-6.6V10a6.6 6.6 0 1 1 13.2 0v3.9c0 3.9-2.7 6.6-6.6 6.6Z"/><circle cx="9.4" cy="10.4" r="1.5"/><circle cx="14.6" cy="10.4" r="1.5"/><path d="M12 13.2v1.6M10.6 16.6h2.8"/>',
+  owl: '<path d="M6.2 4.2l2 2.4M17.8 4.2l-2 2.4"/><path d="M12 20.8c-3.6 0-6.2-2.6-6.2-6.4V10a6.2 6.2 0 0 1 12.4 0v4.4c0 3.8-2.6 6.4-6.2 6.4Z"/><path d="M9.4 9.2h.02M14.6 9.2h.02" stroke-width="2.6"/><path d="M12 11.4l-1 1.3h2Z"/>',
   cap: '<path d="M3 9l9-4 9 4-9 4Z"/><path d="M7 11v4.2c0 1.3 2.2 2.3 5 2.3s5-1 5-2.3V11"/>',
-  plane: '<path d="M10.5 20.5l1.6-5.6 7.2-1.9a1.7 1.7 0 0 0 0-3.3l-7.2-1.9-1.6-5.6a1 1 0 0 0-1.9 0L6.9 7.5 3.6 8.4a1.6 1.6 0 0 0 0 3.1l3.3.9 1.7 8.1a1 1 0 0 0 1.9 0Z"/>',
+  plane: '<path d="M3 13.2l18-7.4-4.6 13.8-4-4.6-3.4 3.1v-4.2Z"/><path d="M8.4 14.1l8-7.4"/>',
   check: '<circle cx="12" cy="12" r="8.5"/><path d="M8.4 12.4l2.5 2.5 4.7-5.3"/>'
 };
 const EMOJI_ICO = {
@@ -2453,8 +2488,28 @@ const EMOJI_ICO = {
 function uiIco(name, cls){
   return '<svg class="' + (cls || 'ui-ico') + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + UI_SVG[name] + '</svg>';
 }
+const NAME_ICO = [
+  [/silov|posilov|\u010dinka|fitko|tr\u00e9nink/i, 'dumbbell'],
+  [/b\u011bh|beh|run|klus|longrun/i, 'run'],
+  [/krok|ch\u016fz|proch\u00e1z|walk/i, 'walk'],
+  [/plav|baz\u00e9n|swim/i, 'waves'],
+  [/sp\u00e1nek|spanek|sleep/i, 'moon'],
+  [/kreatin|kolagen|omega|vitam|tableta|dopln\u011bk|pr\u00e1\u0161ek|magnesi|ho\u0159\u010d\u00edk/i, 'pill'],
+  [/pitn|napit|hydrat/i, 'droplet'],
+  [/duolingo|jazyk|angli|\u0161pan|n\u011bm\u010din/i, 'owl'],
+  [/u\u010den|\u0161kol|studi|zkou\u0161k/i, 'cap'],
+  [/pr\u00e1ce|prace|work|fakturac/i, 'briefcase'],
+  [/\u010dten|kniha|book|\u010d\u00edst/i, 'book'],
+  [/prota\u017e|prot\u00e1h|stre\u010d|j\u00f3ga|joga|mobiliz/i, 'yoga'],
+  [/postel|povle\u010d|pr\u00e1dl/i, 'bed'],
+  [/bez cukru|cukr|alkohol|nekou|z\u00e1kaz/i, 'ban'],
+  [/letenk|let\u011bt|dovolen|cestov/i, 'plane']
+];
 function habitIcon(h){
-  const k = EMOJI_ICO[h.emoji];
+  let k = null;
+  const n = String(h.name || '');
+  for (const p of NAME_ICO){ if (p[0].test(n)){ k = p[1]; break; } }
+  if (!k) k = EMOJI_ICO[h.emoji];
   if (!k) return null;
   return '<svg class="h-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + ICO_SVG[k] + '</svg>';
 }
@@ -2605,6 +2660,13 @@ function editRow(h, idx, count){
     + '</span>'
     + '</div>';
 }
+function dayTools(){
+  return '<span class="day-tools">'
+    + '<button class="mini-btn" data-action="vacAll" aria-label="Hromadné prázdniny" title="Hromadné prázdniny">' + uiIco('beach', 'ui-ico sm2') + '</button>'
+    + '<button class="mini-btn' + (editMode ? ' on' : '') + '" data-action="toggleEdit" aria-label="' + (editMode ? 'Hotovo' : 'Upravit') + '" title="' + (editMode ? 'Hotovo' : 'Upravit') + '">' + uiIco(editMode ? 'check2' : 'pencil', 'ui-ico sm2') + '</button>'
+    + '<button class="mini-btn" data-action="addHabit" aria-label="Přidat návyk" title="Přidat návyk">' + uiIco('plus', 'ui-ico sm2') + '</button>'
+    + '</span>';
+}
 function renderDay(){
   const key = dateKey(selectedDate);
   const isToday = sameDay(selectedDate, today());
@@ -2634,20 +2696,17 @@ function renderDay(){
   const shownMonth = hide ? monthHs.filter(h => !doneInMonth(h, firstOfMonth(selectedDate))) : monthHs;
   const hiddenCnt = (dayHs.length - shownDay.length) + (weekHs.length - shownWeek.length) + (biweekHs.length - shownBiweek.length) + (everyHs.length - shownEvery.length) + (monthHs.length - shownMonth.length);
 
+  if (!dayHs.length) html += '<div class="pc-tools solo">' + dayTools() + '</div>';
   if (dayHs.length){
     let segs = '';
     for (let i = 0; i < st.total; i++) segs += '<span' + (i < st.done ? ' class="on"' : '') + '></span>';
     html += '<div class="progress-card"><div class="progress-txt"><strong>' + st.done + ' z ' + st.total + ' hotovo</strong><span class="muted">' + st.pct + ' %</span></div>'
       + '<div class="segbar">' + segs + '</div>'
-      + '<div class="pc-tools"><button class="linklike" data-action="toggleHide">' + (hide ? '👁 Zobrazit i splněné' : '✓ Skrýt splněné') + '</button></div>'
+      + '<div class="pc-tools"><button class="linklike" data-action="toggleHide">' + (hide ? 'Zobrazit i splněné' : 'Skrýt splněné') + '</button>' + dayTools() + '</div>'
       + '</div>';
   }
 
-  html += '<div class="toolbar">'
-    + '<button class="btn small" data-action="vacAll" aria-label="Hromadné prázdniny" title="Hromadné prázdniny">' + uiIco('beach') + '</button>'
-    + '<button class="btn small' + (editMode ? ' primary' : '') + '" data-action="toggleEdit" aria-label="' + (editMode ? 'Hotovo' : 'Upravit') + '" title="' + (editMode ? 'Hotovo' : 'Upravit') + '">' + (editMode ? '✓' : uiIco('pencil')) + '</button>'
-    + '<button class="btn small" data-action="addHabit" aria-label="Přidat návyk" title="Přidat návyk">' + uiIco('plus') + '</button>'
-    + '</div>';
+
 
   if (!hs.length){
     html += '<div class="card empty">Zatím tu nejsou žádné návyky.<br>Začněte tlačítkem <strong>＋ Přidat návyk</strong>.</div>';
@@ -2655,6 +2714,7 @@ function renderDay(){
     html += '<div class="habit-list">' + hs.map((h, i) => editRow(h, i, hs.length)).join('') + '</div>'
       + '<p class="hint">Pořadí změníte přetažením (na počítači) nebo šipkami ↑ ↓. Ikonou 🏖️ nastavíte návyku prázdniny. Podržením prstu na návyku (mimo režim úprav) přidáte poznámku ke dni.</p>';
   } else {
+    html += '<div class="day-track">';
     const hasSections = weekHs.length || biweekHs.length || everyHs.length || monthHs.length;
     if (hide && !shownDay.length && !shownWeek.length && !shownBiweek.length && !shownEvery.length && !shownMonth.length && hiddenCnt){
       html += '<div class="card empty">🎉 Všechno hotovo — splněno ' + hiddenCnt + ' ' + plural(hiddenCnt, 'návyk', 'návyky', 'návyků') + '.</div>';
@@ -2681,8 +2741,9 @@ function renderDay(){
         html += '<p class="hint">Skryto ' + hiddenCnt + ' splněných.</p>';
       }
     }
+    html += '</div>';
     if (vacHs.length){
-      html += '<details class="vac-card"><summary><span class="vac-emo">🏖️</span>'
+      html += '<details class="vac-card"><summary><span class="vac-emo">' + uiIco('beach') + '</span>'
         + '<span class="vac-sum"><strong>Na prázdninách</strong><span>' + vacHs.length + ' ' + plural(vacHs.length, 'návyk', 'návyky', 'návyků') + '</span></span>'
         + '<span class="vac-chev">›</span></summary>'
         + '<ul class="vac-list">'
@@ -2984,56 +3045,19 @@ function renderStats(){
 /* ============ Render: Jídlo ============ */
 let mealSnackUI = { key: null, n: 1 };
 function renderMeals(){
-  const key = dateKey(selectedDate);
-  const isToday = sameDay(selectedDate, today());
-  const future = selectedDate > today();
-  const m = mealObj(key);
-  if (mealSnackUI.key !== key) mealSnackUI = { key, n: Math.max(1, m.sn.length) };
-  else mealSnackUI.n = Math.max(mealSnackUI.n, m.sn.length, 1);
-
-  let html = '<div class="meals-tools"><button class="btn small" data-action="exportMealsWeek" aria-label="Exportovat týden" title="Exportovat tento týden">' + uiIco('share') + '<span>Týden</span></button></div>'
-    + '<div class="daynav">'
-    + '<button class="icon-btn" data-action="prevDay" aria-label="Předchozí den">‹</button>'
-    + '<div class="daynav-mid"><div class="daynav-date">' + (isToday ? 'Dnes' : fmtDateFull(selectedDate)) + '</div>'
-    + (isToday ? '<div class="daynav-sub">' + fmtDateFull(selectedDate) + '</div>'
-               : '<div class="daynav-sub"><button class="linklike" data-action="goToday">Zpět na dnešek</button></div>')
-    + '</div>'
-    + '<button class="icon-btn" data-action="nextDay" aria-label="Další den">›</button>'
-    + '</div>';
-
-  const histBtn = f => '<button class="hist-btn" data-action="mealHist" data-f="' + f + '" aria-label="Dřívější jídla">🕘</button>';
-  const group = (id, emoji, label, value, ph, f) =>
-    '<div class="meal-group"><div class="meal-lbl"><span>' + emoji + ' ' + label + '</span>' + histBtn(f) + '</div>'
-    + '<textarea id="' + id + '" class="meal-f" rows="2" maxlength="2000" aria-label="' + label + '" placeholder="' + ph + '">' + esc(value) + '</textarea></div>';
-
-  let snacks = '';
-  for (let i = 0; i < mealSnackUI.n; i++){
-    snacks += '<input type="text" class="meal-f meal-sn" data-sn="' + i + '" maxlength="500" value="' + esc(m.sn[i] || '') + '" placeholder="Svačina ' + (i + 1) + '" aria-label="Svačina ' + (i + 1) + '">';
-  }
-
-  html += '<div class="card">'
-    + group('meal-b', '🥣', 'Snídaně', m.b, 'např. ovesná kaše s ovocem', 'b')
-    + group('meal-l', '🍲', 'Oběd', m.l, 'např. kuře s rýží a zeleninou', 'l')
-    + group('meal-d', '🍽️', 'Večeře', m.d, 'např. losos s bramborem', 'd')
-    + '<div class="meal-group"><div class="meal-lbl"><span>' + uiIco('apple', 'ui-ico sm') + ' Svačiny</span>' + histBtn('sn') + '</div>' + snacks
-    + '<button class="btn ghost small add-snack" data-action="addSnack">＋ Přidat svačinu</button></div>'
-    + (m.note ? '<div class="meal-group"><div class="meal-lbl">📝 Poznámka</div>'
-        + '<textarea id="meal-note" class="meal-f" rows="2" maxlength="2000" aria-label="Poznámka">' + esc(m.note) + '</textarea></div>' : '')
-    + '</div>';
   const sh = data.shopping || { note: '', items: [] };
   const shReal = sh.items.filter(i => !i.h);
   const shDone = shReal.filter(i => i.done).length;
-  html += '<details class="vac-card shop-card"><summary><span class="vac-emo">' + uiIco('cart') + '</span>'
-    + '<span class="vac-sum"><strong>Nákup a plán jídel</strong><span>'
-    + (shReal.length ? shDone + ' / ' + shReal.length + ' nakoupeno' : 'seznam + co uvařit')
-    + '</span></span><span class="vac-chev">›</span></summary>'
-    + '<div class="shop-body">'
-    + '<div class="meal-lbl"><span>🍳 Jídla na uvaření</span></div>'
-    + '<textarea id="shop-note" class="meal-f" rows="2" maxlength="2000" placeholder="např. čočkové kari, lasagne, poke bowl…" aria-label="Jídla na uvaření">' + esc(sh.note) + '</textarea>'
-    + '<div class="meal-lbl shop-lbl"><span>🛒 Nákupní seznam</span>'
-    + '<span class="shop-acts"><button class="linklike" data-action="shopPaste">' + uiIco('paste', 'ui-ico sm') + ' Vložit seznam</button>'
-    + (shDone ? ' · <button class="linklike" data-action="shopClearDone">Smazat nakoupené</button>' : '')
-    + '</span></div>'
+  let html = '<div class="view-head"><span class="view-title">N\u00e1kup</span>'
+    + (shReal.length ? '<span class="view-meta">' + shDone + ' / ' + shReal.length + ' nakoupeno</span>' : '')
+    + '</div>';
+  html += '<div class="card"><div class="meal-lbl">' + uiIco('soup', 'ui-ico sm') + ' Jídla na uvaření</div>'
+    + '<textarea id="shop-note" class="meal-f" rows="2" maxlength="2000" placeholder="např. čočkové kari, lasagne, poke bowl…" aria-label="Jídla na uvaření">' + esc(sh.note) + '</textarea></div>';
+  html += '<div class="sec-title">Nákupní seznam</div>';
+  html += '<div class="card shop-main">'
+    + '<div class="shop-acts-top"><button class="linklike" data-action="shopPaste">' + uiIco('paste', 'ui-ico sm') + ' Vložit seznam</button>'
+    + (shDone ? '<button class="linklike" data-action="shopClearDone">Smazat nakoupené</button>' : '')
+    + '</div>'
     + (sh.items.length
         ? '<ul class="shop-list">' + sh.items.map((it, i) =>
             it.h
@@ -3044,11 +3068,10 @@ function renderMeals(){
               + '<span class="shop-t" data-action="shopToggle" data-i="' + i + '">' + esc(it.t) + '</span>'
               + '<button class="icon-btn shop-del" data-action="shopDel" data-i="' + i + '" aria-label="Smazat ' + esc(it.t) + '">✕</button>'
               + '</li>').join('') + '</ul>'
-        : '<p class="muted shop-empty">Zatím prázdno — přidejte první položku.</p>')
+        : '<p class="muted shop-empty">Zatím prázdno — přidejte první položku nebo vložte celý seznam.</p>')
     + '<div class="shop-add"><input id="shop-new" class="meal-f" maxlength="120" placeholder="např. mléko" aria-label="Nová položka" enterkeyhint="done">'
-    + '<button class="btn small" data-action="shopAdd">＋</button></div>'
-    + '</div></details>';
-  html += '<p class="hint">' + (future ? 'Plánujete dopředu — uloží se k tomuto dni.' : 'Ukládá se automaticky, pro každý den zvlášť.') + ' Mezi dny listujete šipkami nahoře. Nákup a plán jídel jsou společné pro všechny dny.</p>';
+    + '<button class="btn small" data-action="shopAdd" aria-label="Přidat">' + uiIco('plus', 'ui-ico sm2') + '</button></div>'
+    + '</div>';
   $('#view-meals').innerHTML = html;
 }
 
@@ -3502,11 +3525,8 @@ document.addEventListener('click', ev => {
       if (data.shopping.items.length >= 100){ toast('Seznam je plný (max 100 položek)', true); break; }
       data.shopping.items.push({ t, done: false });
       save();
-      const det = document.querySelector('.shop-card');
-      const wasOpen = det ? det.open : true;
       render();
-      const d2 = document.querySelector('.shop-card');
-      if (d2 && wasOpen){ d2.open = true; const ni = $('#shop-new'); if (ni) ni.focus(); }
+      const ni = $('#shop-new'); if (ni) ni.focus();
       break;
     }
     case 'shopToggle': {
@@ -3514,21 +3534,13 @@ document.addEventListener('click', ev => {
       if (!it) break;
       it.done = !it.done;
       save();
-      const det = document.querySelector('.shop-card');
-      const wasOpen = det ? det.open : true;
       render();
-      const d2 = document.querySelector('.shop-card');
-      if (d2 && wasOpen) d2.open = true;
       break;
     }
     case 'shopDel': {
       data.shopping.items.splice(Number(el.dataset.i), 1);
       save();
-      const det = document.querySelector('.shop-card');
-      const wasOpen = det ? det.open : true;
       render();
-      const d2 = document.querySelector('.shop-card');
-      if (d2 && wasOpen) d2.open = true;
       break;
     }
     case 'shopPaste': openShopPasteModal(); break;
@@ -3539,8 +3551,6 @@ document.addEventListener('click', ev => {
       save();
       closeModal();
       render();
-      const d2 = document.querySelector('.shop-card');
-      if (d2) d2.open = true;
       const real = parsed.filter(i => !i.h).length;
       toast('Přidáno ' + real + ' ' + plural(real, 'položka', 'položky', 'položek'));
       break;
@@ -3549,8 +3559,6 @@ document.addEventListener('click', ev => {
       data.shopping.items = data.shopping.items.filter(i => !i.done);
       save();
       render();
-      const d2 = document.querySelector('.shop-card');
-      if (d2) d2.open = true;
       toast('Nakoupené smazáno');
       break;
     }
