@@ -846,6 +846,13 @@ input,textarea,select,.meal-f,.ck-in{border-radius:13px;}
 .ck-save{flex:1;text-align:center;font-size:12px;}
 .btn.ghost{background:transparent;color:var(--muted);padding:0 14px;min-height:46px;border-radius:14px;}
 .btn.ghost:disabled{opacity:.3;}
+
+.habit-row.done .checkbox svg{stroke:var(--hc-text,var(--accent-text));}
+.wk-dot.on{color:var(--hc-text,var(--accent-text));}
+.wk-num.on{color:var(--hc-text,#fff);}
+.col-row{gap:8px;}
+.col-sw{width:32px;height:32px;box-shadow:inset 0 0 0 1px rgba(128,128,128,.35);}
+.col-sw.on{border-color:var(--text);box-shadow:0 0 0 2px var(--card) inset,inset 0 0 0 3px currentColor;}
 </style>
 </head>
 <body>
@@ -2005,9 +2012,14 @@ function mealHistory(field){
 const THEME_BG = ['#f2f2f7','#ffffff','#f6f1e7','#eaf5ee','#e9f1fa','#efecf8','#f9edf0','#fbf0e6','#000000','#16171b','#1c1c1e','#101828','#14231c','#241726','#26180f','#1b2731'];
 const THEME_CARD = ['#ffffff','#f7f7fa','#fbf7ee','#eef7f1','#edf4fc','#f2effb','#fdf1f4','#fdf5ec','#1c1c1e','#222329','#17181d','#182236','#1e2b24','#2a1e2e','#2e2117','#223140'];
 const THEME_DEFAULT = { bg: '#f2f2f7', card: '#ffffff', accent: '#0a84ff', text: 'auto' };
-const HABIT_COLORS = ['#0a84ff', '#5ac8fa', '#34c759', '#ffd60a', '#ff9f0a', '#ff453a', '#ff375f', '#bf5af2'];
+const HABIT_COLORS = [
+  '#0a84ff', '#5ac8fa', '#34c759', '#ffd60a', '#ff9f0a', '#ff453a', '#ff375f', '#bf5af2',
+  '#ffffff', '#a8d8ff', '#a8e6cf', '#c9f0c0', '#fff3b0', '#ffd6a5', '#ffb3ba', '#f4c2e0',
+  '#d7c4f5', '#b5ead7', '#c7ceea', '#e2d5c3'
+];
 function habitStyle(h){
-  return h.color ? ' style="--hc:' + h.color + '"' : '';
+  if (!h.color) return '';
+  return ' style="--hc:' + h.color + ';--hc-text:' + (lum(h.color) > 0.62 ? '#1c1c1e' : '#ffffff') + '"';
 }
 const THEME_ACCENTS = ['#0a84ff', '#5ac8fa', '#34c759', '#ff9f0a', '#ff453a', '#ff375f', '#bf5af2', '#ffd60a'];
 const LEGACY_BG_IDS = { default: '#f2f2f7', cream: '#f6f1e7', mint: '#eaf5ee', sky: '#e9f1fa', lavender: '#efecf8', rose: '#f9edf0', peach: '#fbf0e6' };
