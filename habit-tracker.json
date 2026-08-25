@@ -21,7 +21,8 @@
     }
    ],
    "timerMin": null,
-   "link": "x-apple-health://browse/sleep"
+   "link": "x-apple-health://browse/sleep",
+   "color": null
   },
   {
    "id": "3ddddf2c-6f07-4245-8543-48d941ec2d54",
@@ -43,7 +44,8 @@
     }
    ],
    "timerMin": null,
-   "link": null
+   "link": null,
+   "color": null
   },
   {
    "id": "81cceb09-bbfb-4d13-aa67-078b8f6c3491",
@@ -75,7 +77,8 @@
     }
    ],
    "timerMin": null,
-   "link": "claude://"
+   "link": "claude://",
+   "color": null
   },
   {
    "id": "b4688e59-ac69-45a2-9b81-683ffd8cfa4b",
@@ -97,7 +100,8 @@
     }
    ],
    "timerMin": null,
-   "link": null
+   "link": null,
+   "color": null
   },
   {
    "id": "18db1387-1ae9-4fda-b271-250d80ec1e60",
@@ -119,7 +123,8 @@
     }
    ],
    "timerMin": null,
-   "link": "duolingo://"
+   "link": "duolingo://",
+   "color": null
   },
   {
    "id": "b6679887-e191-40c3-af4b-0c55862a3a5b",
@@ -145,7 +150,8 @@
     }
    ],
    "timerMin": null,
-   "link": null
+   "link": null,
+   "color": null
   },
   {
    "id": "05438702-6033-4e10-a86a-3337629d6f7d",
@@ -167,7 +173,8 @@
     }
    ],
    "timerMin": null,
-   "link": null
+   "link": null,
+   "color": null
   },
   {
    "id": "508fa5d2-cd59-44d6-bb61-35b98eae9db3",
@@ -189,7 +196,8 @@
     }
    ],
    "timerMin": null,
-   "link": "x-apple-health://"
+   "link": "x-apple-health://",
+   "color": null
   },
   {
    "id": "f810ac47-3054-4680-a4e5-c80b868d1c14",
@@ -211,7 +219,8 @@
     }
    ],
    "timerMin": null,
-   "link": null
+   "link": null,
+   "color": null
   },
   {
    "id": "64178208-875f-49e8-a372-bb9fdb622f0d",
@@ -243,7 +252,8 @@
     }
    ],
    "timerMin": null,
-   "link": null
+   "link": null,
+   "color": null
   },
   {
    "id": "0455bc0d-f85c-484f-a5d4-81620f019785",
@@ -265,7 +275,8 @@
     }
    ],
    "timerMin": null,
-   "link": null
+   "link": null,
+   "color": null
   },
   {
    "id": "1b56c16a-59af-4de5-b599-fca89b20a170",
@@ -288,7 +299,8 @@
     }
    ],
    "timerMin": null,
-   "link": null
+   "link": null,
+   "color": null
   },
   {
    "id": "2a30f0fb-3c90-400e-901d-36ff1cdea84c",
@@ -314,7 +326,8 @@
     }
    ],
    "timerMin": null,
-   "link": null
+   "link": null,
+   "color": "#ffd60a"
   },
   {
    "id": "07a85881-5898-4fa2-a1f7-9c97583d5365",
@@ -331,7 +344,8 @@
    },
    "vacations": [],
    "timerMin": null,
-   "link": "shortcuts://run-shortcut?name=protazeni"
+   "link": "shortcuts://run-shortcut?name=protazeni",
+   "color": null
   },
   {
    "id": "38cc6cfa-f73b-47e3-a276-f441f141d58e",
@@ -348,7 +362,8 @@
    },
    "vacations": [],
    "timerMin": null,
-   "link": null
+   "link": null,
+   "color": null
   },
   {
    "id": "5af8d2f5-bb31-43da-a993-9641293918e6",
@@ -365,7 +380,8 @@
    },
    "vacations": [],
    "timerMin": null,
-   "link": "https://honzovyletenky.cz/"
+   "link": "https://honzovyletenky.cz/",
+   "color": null
   }
  ],
  "entries": {
