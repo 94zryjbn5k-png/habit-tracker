@@ -45,7 +45,7 @@
    ],
    "timerMin": null,
    "link": null,
-   "color": null
+   "color": "#e2d5c3"
   },
   {
    "id": "81cceb09-bbfb-4d13-aa67-078b8f6c3491",
@@ -151,7 +151,7 @@
    ],
    "timerMin": null,
    "link": null,
-   "color": null
+   "color": "#ffffff"
   },
   {
    "id": "05438702-6033-4e10-a86a-3337629d6f7d",
@@ -174,7 +174,7 @@
    ],
    "timerMin": null,
    "link": null,
-   "color": null
+   "color": "#e2d5c3"
   },
   {
    "id": "508fa5d2-cd59-44d6-bb61-35b98eae9db3",
@@ -197,7 +197,7 @@
    ],
    "timerMin": null,
    "link": "x-apple-health://",
-   "color": null
+   "color": "#ffffff"
   },
   {
    "id": "f810ac47-3054-4680-a4e5-c80b868d1c14",
@@ -945,9 +945,6 @@
      "r": "15/15",
      "rir": "2"
     }
-   },
-   "other": {
-    "sw1was": ""
    }
   }
  },
