@@ -611,6 +611,135 @@ input.meal-sn{min-height:46px;resize:none;margin-bottom:8px;}
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important;}
 }
+
+/* ================= design v2 ================= */
+body{font-size:16px;letter-spacing:-.01em;}
+.app-top{display:none;}
+#app{padding-top:14px;}
+
+/* velký titulek + modrý meta text vpravo */
+.daynav{align-items:baseline;gap:8px;margin:2px 0 18px;}
+.daynav-mid{order:1;flex:1;display:flex;align-items:baseline;justify-content:space-between;gap:12px;min-width:0;text-align:left;}
+.daynav .icon-btn{order:2;width:34px;height:34px;min-width:34px;min-height:34px;border-radius:50%;background:transparent;box-shadow:none;color:var(--muted);font-size:21px;}
+.daynav .icon-btn:active{background:var(--btn-bg);}
+.daynav-date{font-size:32px;font-weight:800;letter-spacing:-.035em;line-height:1.08;}
+.daynav-sub{font-size:13.5px;font-weight:600;color:var(--accent);white-space:nowrap;}
+.daynav-sub .linklike{color:var(--accent);font-weight:600;}
+
+/* progres pod titulkem */
+.progress-card{margin:-8px 0 18px;}
+.progress-txt{display:flex;align-items:baseline;justify-content:space-between;font-size:14.5px;margin-bottom:9px;}
+.progress-txt strong{font-weight:700;}
+.progress-txt .muted{font-size:13.5px;}
+.segbar{display:flex;gap:4px;}
+.segbar span{flex:1;height:4px;border-radius:2px;background:var(--btn-bg);transition:background .2s;}
+.segbar span.on{background:var(--accent);}
+.pc-tools{margin-top:11px;display:flex;justify-content:flex-end;}
+
+/* sekce s linkou */
+.sec-title{display:flex;align-items:center;gap:10px;font-size:12.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin:24px 2px 10px;}
+.sec-title::after{content:'';flex:1;height:1px;background:var(--line);}
+.sec-title.ck-sec::after{display:none;}
+
+/* karty */
+.card{border-radius:18px;padding:15px 16px;box-shadow:none;background:var(--card);margin-bottom:12px;}
+
+/* seznam návyků jako časová osa */
+.habit-list{position:relative;padding-left:26px;gap:10px;}
+.habit-list::before{content:'';position:absolute;left:6px;top:16px;bottom:16px;width:2px;background:var(--line);border-radius:1px;}
+.habit-row{position:relative;border-radius:18px;padding:13px 14px;gap:12px;box-shadow:none;}
+.habit-row::before{content:'';position:absolute;left:-25.5px;top:50%;transform:translateY(-50%);width:13px;height:13px;border-radius:50%;background:var(--bg);box-shadow:inset 0 0 0 2px var(--line);}
+.habit-row.done::before{background:var(--accent);box-shadow:inset 0 0 0 2px var(--accent);}
+.habit-row.done{background:transparent;}
+.h-emoji{width:38px;height:38px;border-radius:12px;background:var(--field-bg);display:inline-flex;align-items:center;justify-content:center;font-size:19px;flex:0 0 auto;}
+.habit-row.done .h-emoji{background:transparent;}
+.h-name{font-size:16px;font-weight:650;}
+.h-meta{gap:8px;}
+.h-goal{font-size:13px;color:var(--muted);}
+.h-streak{background:transparent;padding:0;font-size:13px;font-weight:600;color:var(--muted);}
+.h-streak.zero{opacity:.45;}
+.checkbox{width:27px;height:27px;border-radius:50%;border:2px solid var(--line);}
+.habit-row.done .checkbox{background:var(--accent);border-color:var(--accent);}
+.mini-bar{height:3px;border-radius:2px;margin-top:7px;}
+
+/* nástrojová řádka */
+.toolbar{gap:8px;margin:2px 0 6px;}
+.toolbar .btn.small{width:38px;height:38px;min-height:38px;border-radius:50%;background:var(--btn-bg);box-shadow:none;font-size:16px;padding:0;}
+
+/* spodní lišta s linkovými ikonami */
+.tabbar-inner{gap:0;}
+.tab-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:9px 0 5px;min-height:52px;color:var(--muted);transform:none;}
+.tab-btn.on{color:var(--accent);}
+.tab-ico{width:24px;height:24px;display:block;font-size:0;}
+.tab-ico svg{width:24px;height:24px;display:block;}
+.tab-lbl{font-size:10.5px;font-weight:600;letter-spacing:0;opacity:1;}
+.tab-btn.on .tab-lbl{font-weight:700;}
+.tab-day{display:none;}
+
+/* pole a tlačítka */
+.btn{border-radius:13px;box-shadow:none;font-weight:600;}
+input,textarea,select,.meal-f,.ck-in{border-radius:13px;}
+
+/* ---- hlavičky pohledů ---- */
+.view-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin:2px 2px 18px;}
+.view-title{font-size:32px;font-weight:800;letter-spacing:-.035em;margin:0;line-height:1.08;}
+.view-meta{font-size:13.5px;font-weight:600;color:var(--accent);white-space:nowrap;}
+
+/* ---- statistické karty ---- */
+.stat-cards{gap:11px;margin-bottom:16px;}
+.stat{border-radius:18px;padding:17px 16px;box-shadow:none;background:var(--card);gap:2px;}
+.stat-num{font-size:33px;font-weight:800;letter-spacing:-.03em;line-height:1.1;}
+.stat-lbl{font-size:12.5px;color:var(--muted);line-height:1.3;}
+.stat-cards .stat:nth-child(3){background:var(--accent);}
+.stat-cards .stat:nth-child(3) .stat-num,.stat-cards .stat:nth-child(3) .stat-lbl{color:var(--accent-text);}
+.stat-cards .stat:nth-child(3) .stat-lbl{opacity:.85;}
+
+/* ---- tabulka návyků ---- */
+.table-card{padding:6px 14px;}
+.stat-table{font-size:14.5px;}
+.stat-table th{font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:700;padding:12px 8px;border-bottom:1px solid var(--line);}
+.stat-table td{padding:13px 8px;}
+.tbl-emoji{width:26px;display:inline-block;}
+.dimnum{color:var(--muted);}
+.rate{display:inline-flex;align-items:center;gap:9px;justify-content:flex-end;}
+.rate-bar{width:52px;height:4px;border-radius:2px;background:var(--btn-bg);overflow:hidden;flex:0 0 auto;}
+.rate-bar i{display:block;height:100%;border-radius:2px;background:var(--accent);}
+.rate-n{min-width:42px;text-align:right;}
+
+/* ---- segmentovaný přepínač ---- */
+.cal-seg{max-width:100%;margin:0 0 16px;}
+.cal-seg .seg{padding:4px;border-radius:14px;background:var(--field-bg);}
+.cal-seg .seg-btn{padding:9px 0;border-radius:11px;font-size:14.5px;font-weight:600;}
+.cal-seg .seg-btn.on{background:var(--accent);color:var(--accent-text);box-shadow:none;}
+
+/* ---- kalendář ---- */
+.wk-cell{border-radius:9px;}
+.hm-grid{gap:6px;}
+.hm{border-radius:10px;font-weight:600;}
+.hm-foot,.hm-legend{font-size:12px;color:var(--muted);}
+
+/* ---- jídlo ---- */
+.meal-lbl{font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:7px;}
+.meal-f{font-size:15.5px;padding:13px 14px;background:var(--field-bg);border:0;}
+.meals-tools{margin-bottom:10px;}
+
+/* ---- check-in ---- */
+.ck-card{border-radius:18px;}
+.ck-tools{gap:8px;}
+.ck-tools .btn.small{width:40px;height:40px;min-height:40px;border-radius:50%;padding:0;font-size:17px;background:var(--btn-bg);}
+.ck-in{background:var(--field-bg);border:0;font-size:15.5px;}
+.ck-run-t{font-size:14px;font-weight:700;}
+.ck-mini span{font-size:11px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;}
+.day-chip{border-radius:11px;font-weight:600;}
+
+/* ---- linkové ikony návyků ---- */
+.h-emoji.ico{color:var(--accent);}
+.h-ico{width:21px;height:21px;display:block;}
+.habit-row.done .h-emoji.ico{color:var(--muted);opacity:.85;}
+.tbl-emoji{width:26px;display:inline-flex;align-items:center;justify-content:flex-start;vertical-align:-4px;color:var(--accent);}
+.tbl-emoji .h-ico{width:18px;height:18px;}
+.vac-nm .h-emoji.ico,.wk-name .h-emoji.ico{width:auto;height:auto;background:none;}
+.vac-nm .h-ico,.wk-name .h-ico{width:17px;height:17px;}
 </style>
 </head>
 <body>
@@ -628,11 +757,11 @@ input.meal-sn{min-height:46px;resize:none;margin-bottom:8px;}
 </div>
 <nav class="tabbar">
   <div class="tabbar-inner">
-    <button class="tab-btn" data-action="tab" data-tab="cal"><span class="tab-ico">📅</span><span class="tab-lbl">Kalendář</span></button>
-    <button class="tab-btn" data-action="tab" data-tab="meals"><span class="tab-ico">🍽️</span><span class="tab-lbl">Jídlo</span></button>
-    <button class="tab-btn tab-center on" data-action="tab" data-tab="day"><span class="tab-day">✓</span><span class="tab-lbl">Dnes</span></button>
-    <button class="tab-btn" data-action="tab" data-tab="checkin"><span class="tab-ico">📝</span><span class="tab-lbl">Check-in</span></button>
-    <button class="tab-btn" data-action="tab" data-tab="stats"><span class="tab-ico">📊</span><span class="tab-lbl">Přehled</span></button>
+    <button class="tab-btn" data-action="tab" data-tab="cal"><span class="tab-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="3.5"/><path d="M8 3v4M16 3v4M3.5 10h17"/></svg></span><span class="tab-lbl">Kalendář</span></button>
+    <button class="tab-btn" data-action="tab" data-tab="meals"><span class="tab-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v7a2.5 2.5 0 0 0 5 0V3"/><path d="M8.5 10v11"/><path d="M18 3c-1.6 1.8-2.4 3.9-2.4 6.2 0 1.7.8 2.6 2.4 2.8V21"/></svg></span><span class="tab-lbl">Jídlo</span></button>
+    <button class="tab-btn on" data-action="tab" data-tab="day"><span class="tab-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="8.2"/><circle cx="12" cy="12" r="3.2"/></svg></span><span class="tab-lbl">Dnes</span></button>
+    <button class="tab-btn" data-action="tab" data-tab="checkin"><span class="tab-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.6"/><path d="M8.4 12.3l2.6 2.6 4.6-5.2"/></svg></span><span class="tab-lbl">Check-in</span></button>
+    <button class="tab-btn" data-action="tab" data-tab="stats"><span class="tab-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M5.5 20V11M12 20V4.5M18.5 20v-6"/></svg></span><span class="tab-lbl">Přehled</span></button>
   </div>
 </nav>
 <div id="toast" role="status"></div>
@@ -2235,7 +2364,47 @@ function habitRate(habit){
 }
 
 /* ============ Render: Dnes ============ */
+const ICO_SVG = {
+  dumbbell: '<path d="M6.5 9v6M4 10.5v3M17.5 9v6M20 10.5v3M6.5 12h11"/>',
+  waves: '<path d="M3 8.5c2-1.6 3.4-1.6 5.4 0s3.4 1.6 5.4 0 3.4-1.6 5.4 0"/><path d="M3 13c2-1.6 3.4-1.6 5.4 0s3.4 1.6 5.4 0 3.4-1.6 5.4 0"/><path d="M3 17.5c2-1.6 3.4-1.6 5.4 0s3.4 1.6 5.4 0 3.4-1.6 5.4 0"/>',
+  moon: '<path d="M20 14.5A8.2 8.2 0 0 1 9.5 4 8.4 8.4 0 1 0 20 14.5Z"/>',
+  leaf: '<path d="M19.5 4.5c1 7.5-3 12.5-9.5 12.5-2.2 0-4-.6-4-.6"/><path d="M5.5 19c1.5-6 5-9.5 10.5-11.5"/>',
+  book: '<path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H19v14.5H6.5A2.5 2.5 0 0 0 4 20Z"/><path d="M4 5.5V20"/>',
+  briefcase: '<rect x="3" y="7.5" width="18" height="12.5" rx="3"/><path d="M9 7.5V6a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v1.5M3 12.5h18"/>',
+  walk: '<circle cx="13" cy="4.6" r="1.7"/><path d="M11 21l1.6-5.4-2.6-2.4.8-4.2 3 1.6 2.4 2.2"/><path d="M9.4 12.4L7 15.6M12.6 15.6L15 21"/>',
+  run: '<circle cx="15" cy="4.6" r="1.7"/><path d="M8.5 21l2.6-5-2.8-3 1.4-4.6 3.4 2.2 3 .8"/><path d="M8.7 9.6L5.5 11M13.7 13l2.3 3.4 3.5 1.2"/>',
+  ban: '<circle cx="12" cy="12" r="8.5"/><path d="M6.2 6.2l11.6 11.6"/>',
+  yoga: '<circle cx="12" cy="4.8" r="1.8"/><path d="M12 8v5M7 10.5l5 2.5 5-2.5"/><path d="M12 13l-3.5 6M12 13l3.5 6"/>',
+  bed: '<path d="M3 19v-9M3 13h18v6"/><circle cx="7.5" cy="10" r="2"/><path d="M11 13v-2.2c0-.6.5-1.1 1.1-1.1H21"/>',
+  owl: '<path d="M5.5 9.5A6.5 6.5 0 0 1 12 3a6.5 6.5 0 0 1 6.5 6.5v3.8A6.3 6.3 0 0 1 12 20a6.3 6.3 0 0 1-6.5-6.7Z"/><circle cx="9.3" cy="10" r="1.4"/><circle cx="14.7" cy="10" r="1.4"/><path d="M12 12.6l-1 1.4h2Z"/>',
+  cap: '<path d="M3 9l9-4 9 4-9 4Z"/><path d="M7 11v4.2c0 1.3 2.2 2.3 5 2.3s5-1 5-2.3V11"/>',
+  plane: '<path d="M10.5 20.5l1.6-5.6 7.2-1.9a1.7 1.7 0 0 0 0-3.3l-7.2-1.9-1.6-5.6a1 1 0 0 0-1.9 0L6.9 7.5 3.6 8.4a1.6 1.6 0 0 0 0 3.1l3.3.9 1.7 8.1a1 1 0 0 0 1.9 0Z"/>',
+  check: '<circle cx="12" cy="12" r="8.5"/><path d="M8.4 12.4l2.5 2.5 4.7-5.3"/>'
+};
+const EMOJI_ICO = {
+  '\ud83d\udcaa': 'dumbbell', '\ud83c\udfcb\ufe0f': 'dumbbell', '\ud83c\udfcb': 'dumbbell',
+  '\ud83c\udfc3': 'run', '\ud83d\udeb6': 'walk',
+  '\ud83c\udfca': 'waves', '\ud83c\udf0a': 'waves',
+  '\ud83d\ude34': 'moon', '\ud83c\udf19': 'moon',
+  '\ud83d\udc8a': 'leaf', '\ud83c\udf3f': 'leaf', '\ud83e\udd57': 'leaf', '\ud83c\udf4e': 'leaf', '\ud83d\udca7': 'leaf',
+  '\ud83d\udcd6': 'book', '\ud83d\udcda': 'book', '\ud83d\udcd3': 'book', '\u270d\ufe0f': 'book',
+  '\ud83d\udcbc': 'briefcase',
+  '\ud83d\udeab': 'ban',
+  '\ud83e\uddd8': 'yoga',
+  '\ud83d\udecc': 'bed', '\ud83d\udecf\ufe0f': 'bed', '\ud83d\udecf': 'bed',
+  '\ud83e\udd89': 'owl',
+  '\ud83c\udf93': 'cap', '\ud83e\udde0': 'cap',
+  '\ud83d\udee9\ufe0f': 'plane', '\ud83d\udee9': 'plane', '\u2708\ufe0f': 'plane', '\u2708': 'plane',
+  '\u2705': 'check'
+};
+function habitIcon(h){
+  const k = EMOJI_ICO[h.emoji];
+  if (!k) return null;
+  return '<svg class="h-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + ICO_SVG[k] + '</svg>';
+}
 function habitBadge(h){
+  const ico = habitIcon(h);
+  if (ico) return '<span class="h-emoji ico">' + ico + '</span>';
   if (h.emoji) return '<span class="h-emoji">' + esc(h.emoji) + '</span>';
   return '<span class="h-emoji letter">' + esc(h.name.charAt(0).toUpperCase()) + '</span>';
 }
@@ -2407,8 +2576,10 @@ function renderDay(){
   const hiddenCnt = (dayHs.length - shownDay.length) + (weekHs.length - shownWeek.length) + (biweekHs.length - shownBiweek.length) + (everyHs.length - shownEvery.length) + (monthHs.length - shownMonth.length);
 
   if (dayHs.length){
-    html += '<div class="card progress-card"><div class="progress-txt"><strong>Splněno ' + st.done + ' z ' + st.total + '</strong><span class="muted">' + st.pct + ' %</span></div>'
-      + '<div class="bar"><div class="bar-fill" style="width:' + st.pct + '%"></div></div>'
+    let segs = '';
+    for (let i = 0; i < st.total; i++) segs += '<span' + (i < st.done ? ' class="on"' : '') + '></span>';
+    html += '<div class="progress-card"><div class="progress-txt"><strong>' + st.done + ' z ' + st.total + ' hotovo</strong><span class="muted">' + st.pct + ' %</span></div>'
+      + '<div class="segbar">' + segs + '</div>'
       + '<div class="pc-tools"><button class="linklike" data-action="toggleHide">' + (hide ? '👁 Zobrazit i splněné' : '✓ Skrýt splněné') + '</button></div>'
       + '</div>';
   }
@@ -2591,7 +2762,8 @@ function renderCal(){
     + '<button class="seg-btn' + (calView === 'week' ? ' on' : '') + '" data-action="calWeek">Týden</button>'
     + '<button class="seg-btn' + (calView === 'month' ? ' on' : '') + '" data-action="calMonth">Měsíc</button>'
     + '</div></div>';
-  $('#view-cal').innerHTML = seg + (calView === 'week' ? weekHtml() : monthHtml());
+  const head = '<div class="view-head"><span class="view-title">Kalendář</span></div>';
+  $('#view-cal').innerHTML = head + seg + (calView === 'week' ? weekHtml() : monthHtml());
 }
 
 /* ============ Render: Přehled ============ */
@@ -2692,7 +2864,7 @@ function renderStats(){
     if (!best || s > best.s) best = { h, s };
   }
   const daysLogged = Object.keys(data.entries).length;
-  let html = '<div class="view-title">Přehled</div>'
+  let html = '<div class="view-head"><span class="view-title">Přehled</span><span class="view-meta">posledních 30 dní</span></div>'
     + '<div class="stat-cards">'
     + '<div class="stat"><span class="stat-num">' + rateOverDays(7) + ' %</span><span class="stat-lbl">úspěšnost 7 dní</span></div>'
     + '<div class="stat"><span class="stat-num">' + rateOverDays(30) + ' %</span><span class="stat-lbl">úspěšnost 30 dní</span></div>'
@@ -2703,10 +2875,11 @@ function renderStats(){
   if (hs.length || arch.length){
     const row = (h, dim) => {
       const fl = habitFreq(h).type !== 'daily' ? ' <span class="muted" style="font-size:12px;font-weight:400">(' + esc(freqLabel(h)) + ')</span>' : '';
-      return '<tr' + (dim ? ' class="dim"' : '') + '><td><span class="tbl-emoji">' + (h.emoji ? esc(h.emoji) : '•') + '</span>' + esc(h.name) + fl + (dim ? ' <span class="muted">(archiv)</span>' : '') + '</td>'
-        + '<td>' + currentStreak(h) + '</td><td>' + longestStreak(h) + '</td><td>' + habitRate(h) + ' %</td></tr>';
+      return '<tr' + (dim ? ' class="dim"' : '') + '><td><span class="tbl-emoji">' + (habitIcon(h) || (h.emoji ? esc(h.emoji) : '•')) + '</span>' + esc(h.name) + fl + (dim ? ' <span class="muted">(archiv)</span>' : '') + '</td>'
+        + '<td>' + currentStreak(h) + '</td><td class="dimnum">' + longestStreak(h) + '</td>'
+        + '<td><span class="rate"><span class="rate-bar"><i style="width:' + habitRate(h) + '%"></i></span><span class="rate-n">' + habitRate(h) + ' %</span></span></td></tr>';
     };
-    html += '<div class="card table-card"><table class="stat-table"><thead><tr><th>Návyk</th><th>🔥 Teď</th><th>Max</th><th>Úspěšnost</th></tr></thead><tbody>'
+    html += '<div class="card table-card"><table class="stat-table"><thead><tr><th>Návyk</th><th>Teď</th><th>Max</th><th>Úspěšnost</th></tr></thead><tbody>'
       + hs.map(h => row(h, false)).join('') + arch.map(h => row(h, true)).join('')
       + '</tbody></table></div>'
       + '<div class="sec-title">🏅 Milníky</div>'
