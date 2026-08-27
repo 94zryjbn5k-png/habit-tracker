@@ -751,7 +751,8 @@
   "2026-08-27": {
    "05438702-6033-4e10-a86a-3337629d6f7d": 5,
    "449beb16-d8cf-48e1-9a9a-df5eb8e71c6c": 7,
-   "64178208-875f-49e8-a372-bb9fdb622f0d": true
+   "64178208-875f-49e8-a372-bb9fdb622f0d": true,
+   "2a30f0fb-3c90-400e-901d-36ff1cdea84c": true
   }
  },
  "meals": {
@@ -952,7 +953,9 @@
     }
    },
    "other": {
-    "sw1was": "nebyl"
+    "sw1was": "nebyl",
+    "sw2was": "byl",
+    "sw2": "pohoda"
    },
    "strength": {
     "ia": {
