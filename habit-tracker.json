@@ -1033,7 +1033,145 @@
  },
  "shopping": {
   "note": "hv b",
-  "items": []
+  "items": [
+   {
+    "t": "vejce 12 (snídaně so + ne)",
+    "done": false
+   },
+   {
+    "t": "tvaroh 3× 250 g (svačiny + smoothie)",
+    "done": false
+   },
+   {
+    "t": "skyr 2×",
+    "done": false
+   },
+   {
+    "t": "mléko 3 l (kaše, smoothie, sklo na noc)",
+    "done": false
+   },
+   {
+    "t": "sýr 200 g",
+    "done": false
+   },
+   {
+    "t": "bílý jogurt 1 (do burrito bowl)",
+    "done": false
+   },
+   {
+    "t": "Suché a pečivo:",
+    "done": false,
+    "h": true
+   },
+   {
+    "t": "rýže 350 g",
+    "done": false
+   },
+   {
+    "t": "toastový chléb 1×",
+    "done": false
+   },
+   {
+    "t": "ovesné vločky 500 g (kaše + smoothie)",
+    "done": false
+   },
+   {
+    "t": "protein (zkontroluj zásobu)",
+    "done": false
+   },
+   {
+    "t": "Konzervy:",
+    "done": false,
+    "h": true
+   },
+   {
+    "t": "červené fazole 2×",
+    "done": false
+   },
+   {
+    "t": "kukuřice 1×",
+    "done": false
+   },
+   {
+    "t": "salsa 1× (nebo passata + chilli)",
+    "done": false
+   },
+   {
+    "t": "Zelenina a ovoce:",
+    "done": false,
+    "h": true
+   },
+   {
+    "t": "brambory 1,2 kg",
+    "done": false
+   },
+   {
+    "t": "cuketa nebo paprika 2 ks",
+    "done": false
+   },
+   {
+    "t": "cibule 3",
+    "done": false
+   },
+   {
+    "t": "česnek 1",
+    "done": false
+   },
+   {
+    "t": "avokádo 2 (snídaně)",
+    "done": false
+   },
+   {
+    "t": "cherry rajčata 1 balení",
+    "done": false
+   },
+   {
+    "t": "banány 6 (snídaně, svačiny, smoothie)",
+    "done": false
+   },
+   {
+    "t": "ovoce k tvarohu/skyru",
+    "done": false
+   },
+   {
+    "t": "ořechy 200 g",
+    "done": false
+   },
+   {
+    "t": "Na smoothie:",
+    "done": false,
+    "h": true
+   },
+   {
+    "t": "arašídové máslo",
+    "done": false
+   },
+   {
+    "t": "mražené ovoce (jahody/lesní směs)",
+    "done": false
+   },
+   {
+    "t": "(banány už v seznamu — pár nech dozrát a do mrazáku nakrájené)",
+    "done": false
+   },
+   {
+    "t": "Ostatní (zkontroluj doma):",
+    "done": false,
+    "h": true
+   },
+   {
+    "t": "med",
+    "done": false
+   },
+   {
+    "t": "olej",
+    "done": false
+   },
+   {
+    "t": "mletá paprika, kmín",
+    "done": false
+   }
+  ]
  },
  "hideDone": false,
  "theme": {
