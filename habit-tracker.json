@@ -376,7 +376,14 @@
    "order": 20,
    "createdAt": 1787615653446,
    "freq": {
-    "type": "daily"
+    "type": "days",
+    "days": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ]
    },
    "vacations": [],
    "timerMin": null,
