@@ -771,7 +771,10 @@
    "5af8d2f5-bb31-43da-a993-9641293918e6": true
   },
   "2026-08-29": {
-   "449beb16-d8cf-48e1-9a9a-df5eb8e71c6c": 8
+   "449beb16-d8cf-48e1-9a9a-df5eb8e71c6c": 8,
+   "64178208-875f-49e8-a372-bb9fdb622f0d": true,
+   "b4688e59-ac69-45a2-9b81-683ffd8cfa4b": true,
+   "508fa5d2-cd59-44d6-bb61-35b98eae9db3": true
   }
  },
  "meals": {
@@ -970,6 +973,10 @@
     },
     "z": {
      "where": "venku"
+    },
+    "lr": {
+     "where": "venku",
+     "feel": "docela dobry"
     }
    },
    "other": {
