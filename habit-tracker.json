@@ -758,7 +758,6 @@
   "2026-08-27": {
    "05438702-6033-4e10-a86a-3337629d6f7d": 5,
    "449beb16-d8cf-48e1-9a9a-df5eb8e71c6c": 7,
-   "64178208-875f-49e8-a372-bb9fdb622f0d": true,
    "2a30f0fb-3c90-400e-901d-36ff1cdea84c": true,
    "508fa5d2-cd59-44d6-bb61-35b98eae9db3": true,
    "38cc6cfa-f73b-47e3-a276-f441f141d58e": true,
@@ -766,7 +765,8 @@
    "0455bc0d-f85c-484f-a5d4-81620f019785": true,
    "18db1387-1ae9-4fda-b271-250d80ec1e60": true,
    "07a85881-5898-4fa2-a1f7-9c97583d5365": true,
-   "5af8d2f5-bb31-43da-a993-9641293918e6": true
+   "5af8d2f5-bb31-43da-a993-9641293918e6": true,
+   "64178208-875f-49e8-a372-bb9fdb622f0d": true
   },
   "2026-08-28": {
    "449beb16-d8cf-48e1-9a9a-df5eb8e71c6c": 8,
@@ -1080,50 +1080,7 @@
  },
  "shopping": {
   "note": "hv b",
-  "items": [
-   {
-    "t": "sýr 200 g",
-    "done": false
-   },
-   {
-    "t": "Suché a pečivo:",
-    "done": false,
-    "h": true
-   },
-   {
-    "t": "Konzervy:",
-    "done": false,
-    "h": true
-   },
-   {
-    "t": "salsa 1× (nebo passata + chilli)",
-    "done": false
-   },
-   {
-    "t": "Zelenina a ovoce:",
-    "done": false,
-    "h": true
-   },
-   {
-    "t": "Na smoothie:",
-    "done": false,
-    "h": true
-   },
-   {
-    "t": "mražené ovoce (jahody/lesní směs)",
-    "done": false
-   },
-   {
-    "t": "Ostatní (zkontroluj doma):",
-    "done": false,
-    "h": true
-   },
-   {
-    "t": "Maso:",
-    "done": false,
-    "h": true
-   }
-  ]
+  "items": []
  },
  "hideDone": false,
  "theme": {
