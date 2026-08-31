@@ -800,7 +800,8 @@
    "64178208-875f-49e8-a372-bb9fdb622f0d": true,
    "449beb16-d8cf-48e1-9a9a-df5eb8e71c6c": 8,
    "b4688e59-ac69-45a2-9b81-683ffd8cfa4b": true,
-   "38cc6cfa-f73b-47e3-a276-f441f141d58e": true
+   "38cc6cfa-f73b-47e3-a276-f441f141d58e": true,
+   "81cceb09-bbfb-4d13-aa67-078b8f6c3491": true
   }
  },
  "meals": {
@@ -1099,6 +1100,13 @@
     "q": {
      "where": "pás",
      "feel": "uběhl jsem 9,22km, docela lehke a to jsme bezel na maximu toho rozpeti"
+    }
+   },
+   "strength": {
+    "ia": {
+     "w": "30",
+     "r": "10",
+     "rir": "2"
     }
    }
   }
