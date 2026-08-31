@@ -795,6 +795,10 @@
    "18db1387-1ae9-4fda-b271-250d80ec1e60": true,
    "f810ac47-3054-4680-a4e5-c80b868d1c14": true,
    "07a85881-5898-4fa2-a1f7-9c97583d5365": true
+  },
+  "2026-08-31": {
+   "64178208-875f-49e8-a372-bb9fdb622f0d": true,
+   "449beb16-d8cf-48e1-9a9a-df5eb8e71c6c": 8
   }
  },
  "meals": {
@@ -1085,6 +1089,14 @@
      "w": "1,25",
      "r": "12/12",
      "rir": "2"
+    }
+   }
+  },
+  "2026-08-31": {
+   "runs": {
+    "q": {
+     "where": "pás",
+     "feel": "uběhl jsem 9,22km, docela lehke a to jsme bezel na maximu toho rozpeti"
     }
    }
   }
