@@ -1826,10 +1826,14 @@ function normMeal(v){
 /* ============ Trenérský check-in ============ */
 const CK_START = '2026-08-03'; // pondělí týdne č. 1
 const CK_EX = {
-  ua: [['ia', 'Incline DB press'], ['row', 'Row'], ['flat', 'Flat DB press'], ['latA', 'Lateral raise'], ['face', 'Face pull']],
-  la: [['sq', 'Dřep'], ['rdla', 'Hamstringy (nordic/RDL/curl)'], ['calf', 'Výpony ve stoje'], ['box', 'Box jump', 'výška bedny (cm)']],
-  ub: [['pull', 'Shyby'], ['ohp', 'OHP'], ['latB', 'Lateral raise'], ['sap', 'Straight-arm pulldown'], ['rpd', 'Reverse pec deck'], ['bic', 'Biceps'], ['tri', 'Triceps'], ['ypr', 'Prone Y']],
-  lb: [['rdlb', 'Trap bar'], ['bulg', 'Bulharský dřep'], ['lpress', 'Výpony leg press']]
+  ua: [['ia', 'Incline DB press'], ['row', 'Chest-supported row'], ['ohp', 'OHP ve stoje'],
+       ['latA', 'Lateral raise (kladka, 1 ruka)'], ['face', 'Face pull'], ['bic', 'Biceps'], ['tri', 'Triceps']],
+  la: [['box', 'Box jump', 'výška bedny (cm)'], ['broad', 'Broad jump', 'vzdálenost (cm)'],
+       ['sq', 'Dřep'], ['nordic', 'Nordic curl'], ['calf', 'Výpony ve stoje']],
+  ub: [['pull', 'Shyby s přítěží'], ['flat', 'Flat DB press'], ['dips', 'Dipy'],
+       ['sap', 'Straight-arm pulldown'], ['rpd', 'Reverse pec deck'],
+       ['latB', 'Lateral raise (kladka, 1 ruka)'], ['ypr', 'Prone Y'], ['crunch', 'Cable crunch']],
+  lb: [['rdlb', 'Trap bar'], ['rdl', 'RDL'], ['bulg', 'Bulharský dřep'], ['calfsit', 'Výpony v sedu']]
 };
 const CK_PATHS = (() => {
   const p = ['weight.st', 'weight.pa', 'weight.ne',
@@ -1897,31 +1901,36 @@ function checkinText(wk){
   const g = p => ckGet(wk, p).trim();
   const no = ckWeekNo(wk);
   const run = (lbl, r) => lbl + ': ' + (g('runs.' + r + '.where') || 'pás/venku') + ' \u00b7 ' + (g('runs.' + r + '.feel') || '__') + '\n';
-  const block = (title, grp) => title + '\n' + CK_EX[grp].map(ex => '- ' + ckExLabel(ex) + ': ' + ckStrengthLine(wk, ex[0]) + '\n').join('');
-  let out = 'T\u00ddDEN \u010c.: ' + (no || '') + '\n';
+  const block = (title, grp) => '\n' + title + '\n' + CK_EX[grp].map(ex => '- ' + ckExLabel(ex) + ': ' + ckStrengthLine(wk, ex[0]) + '\n').join('');
+  let out = 'T\u00ddDEN \u010c.: ' + (no || '') + '\n\n';
   out += '\u2500\u2500 V\u00c1HA \u2500\u2500\n';
-  out += 'St: ' + (g('weight.st') || '__') + '   P\u00e1: ' + (g('weight.pa') || '__') + '   Ne: ' + (g('weight.ne') || '__') + '\n';
+  out += 'St: ' + (g('weight.st') || '__') + '   P\u00e1: ' + (g('weight.pa') || '__') + '   Ne: ' + (g('weight.ne') || '__') + '\n\n';
+  out += '\u2500\u2500 BOLESTI (cokoliv; nic \u2192 \u201enic\u201c) \u2500\u2500\n';
+  out += 'Co + 0\u201310 + kdy: ' + (g('pain.note') || 'nic') + '\n\n';
   out += '\u2500\u2500 S\u00cdLA (v\u00e1ha: opakov\u00e1n\u00ed + RIR) \u2500\u2500\n';
-  out += block('UPPER A pond\u011bl\u00ed', 'ua');
-  out += block('LOWER A st\u0159eda', 'la');
-  out += block('UPPER B p\u00e1tek', 'ub');
-  out += block('LOWER B sobota', 'lb');
-  out += '\u2500\u2500 PLAV\u00c1N\u00cd \u2500\u2500\n';
-  out += '1: ' + (g('other.sw1was') || 'byl/nebyl') + ' \u00b7 v\u011bta: ' + (g('other.sw1') || '__') + '\n';
-  out += '2: ' + (g('other.sw2was') || 'byl/nebyl') + ' \u00b7 v\u011bta: ' + (g('other.sw2') || '__') + '\n';
+  out += block('UPPER A (po)', 'ua');
+  out += block('LOWER A (st)', 'la');
+  out += block('UPPER B (p\u00e1)', 'ub');
+  out += block('LOWER B (so)', 'lb');
+  out += '\n\u2500\u2500 PLAV\u00c1N\u00cd \u2500\u2500\n';
+  out += '\u00dat: ' + (g('other.sw1was') || 'byl/nebyl') + ' \u00b7 v\u011bta: ' + (g('other.sw1') || '__') + '\n';
+  out += '\u010ct: ' + (g('other.sw2was') || 'byl/nebyl') + ' \u00b7 v\u011bta: ' + (g('other.sw2') || '__') + '\n\n';
   out += '\u2500\u2500 B\u011aHY (jen kde + pocit \u2014 \u010d\u00edsla si vyt\u00e1hnu) \u2500\u2500\n';
   out += run('Po Q', 'q');
   out += run('St E', 'e');
   out += run('\u010ct klus', 'z');
   out += run('So LR', 'lr');
-  return out.replace(/\n$/, '');
+  out += '\n\u2500\u2500 COKOLIV DAL\u0160\u00cdHO (nic \u2192 \u201enic\u201c) \u2500\u2500\n';
+  out += (g('extra.note') || 'nic');
+  return out;
 }
 function ckExLabel(ex){
-  return ({ ia: 'incline DB press', row: 'row', flat: 'flat DB press', latA: 'lateral raise', face: 'face pull',
-    sq: 'd\u0159ep', rdla: 'hamstringy (nordic/RDL/curl)', calf: 'v\u00fdpony ve stoje', box: 'box jump (v\u00fd\u0161ka bedny)',
-    pull: 'shyby', ohp: 'OHP', latB: 'lateral raise', sap: 'straight-arm pulldown', rpd: 'reverse pec deck',
-    bic: 'biceps', tri: 'triceps', ypr: 'prone Y',
-    rdlb: 'trap bar', bulg: 'bulharsk\u00fd d\u0159ep', lpress: 'v\u00fdpony leg press' })[ex[0]] || ex[1];
+  return ({ ia: 'incline DB press', row: 'chest-supported row', ohp: 'OHP ve stoje',
+    latA: 'lateral raise (kladka, 1 ruka)', face: 'face pull', bic: 'biceps', tri: 'triceps',
+    box: 'box jump (výška bedny)', broad: 'broad jump (vzdálenost)', sq: 'dřep', nordic: 'nordic curl', calf: 'výpony ve stoje',
+    pull: 'shyby s přítěží', flat: 'flat DB press', dips: 'dipy', sap: 'straight-arm pulldown',
+    rpd: 'reverse pec deck', latB: 'lateral raise (kladka, 1 ruka)', ypr: 'prone Y', crunch: 'cable crunch',
+    rdlb: 'trap bar', rdl: 'RDL', bulg: 'bulharský dřep', calfsit: 'výpony v sedu' })[ex[0]] || ex[1];
 }
 function parseShopText(txt){
   const lines = String(txt || '').split(/\r?\n/);
@@ -3006,12 +3015,18 @@ function ckTopics(d){
   if (wd === 5) T.push({ id: 'lr', ico: 'run', title: 'Longrun', fields: [
     { kind: 'chips', p: 'runs.lr.where', q: 'Kde jsi běžel?', vals: ['pás', 'venku'] },
     { kind: 'text', p: 'runs.lr.feel', q: 'Jak to šlo?', ph: 'jak to šlo' }] });
-  if (wd === 1) T.push({ id: 'sw1', ico: 'waves', title: 'Plavání 1', fields: [
+  if (wd === 1) T.push({ id: 'sw1', ico: 'waves', title: 'Plavání (Út)', fields: [
     { kind: 'chips', p: 'other.sw1was', q: 'Byl jsi na tréninku?', vals: ['byl', 'nebyl'] },
     { kind: 'text', p: 'other.sw1', q: 'Co šlo a co drhlo', ph: 'např. výdechy ok, splývání drhne' }] });
-  if (wd === 3) T.push({ id: 'sw2', ico: 'waves', title: 'Plavání 2', fields: [
+  if (wd === 3) T.push({ id: 'sw2', ico: 'waves', title: 'Plavání (Čt)', fields: [
     { kind: 'chips', p: 'other.sw2was', q: 'Byl jsi na tréninku?', vals: ['byl', 'nebyl'] },
     { kind: 'text', p: 'other.sw2', q: 'Co šlo a co drhlo', ph: 'např. kop drží tělo nahoře' }] });
+  if (wd === 6){
+    T.push({ id: 'pain', ico: 'heart', title: 'Bolesti', sub: 'nic → nech prázdné', fields: [
+      { kind: 'text', p: 'pain.note', q: 'Co bolí, jak moc (0–10) a kdy?', ph: 'např. rameno 3/10 při OHP' }] });
+    T.push({ id: 'extra', ico: 'clipboard', title: 'Cokoliv dalšího', sub: 'nic → nech prázdné', fields: [
+      { kind: 'text', p: 'extra.note', q: 'Co by měl trenér vědět?', ph: 'např. hodně práce, málo spánku' }] });
+  }
   const grp = wd === 0 ? ['ua', 'Upper A'] : wd === 2 ? ['la', 'Lower A'] : wd === 4 ? ['ub', 'Upper B'] : wd === 5 ? ['lb', 'Lower B'] : null;
   if (grp) for (const ex of CK_EX[grp[0]]){
     T.push({ id: 'ex-' + ex[0], ico: 'dumbbell', title: ex[1], sub: 'Síla · ' + grp[1], ex: ex, fields: [
