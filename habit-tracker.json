@@ -818,7 +818,8 @@
    "0455bc0d-f85c-484f-a5d4-81620f019785": true
   },
   "2026-09-02": {
-   "449beb16-d8cf-48e1-9a9a-df5eb8e71c6c": 8
+   "449beb16-d8cf-48e1-9a9a-df5eb8e71c6c": 8,
+   "64178208-875f-49e8-a372-bb9fdb622f0d": true
   }
  },
  "meals": {
@@ -1107,6 +1108,10 @@
     "q": {
      "where": "pás",
      "feel": "uběhl jsem 9,22km, docela lehke a to jsme bezel na maximu toho rozpeti"
+    },
+    "e": {
+     "where": "pás",
+     "feel": "8.75km, bolely me zase holene, ale mozna to bylo tim, ze jsem vcera byl na tenise"
     }
    },
    "strength": {
