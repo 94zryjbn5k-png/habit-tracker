@@ -1836,7 +1836,7 @@ const CK_EX = {
   lb: [['rdlb', 'Trap bar'], ['rdl', 'RDL'], ['bulg', 'Bulharský dřep'], ['calfsit', 'Výpony v sedu']]
 };
 const CK_PATHS = (() => {
-  const p = ['weight.st', 'weight.pa', 'weight.ne',
+  const p = ['weight.st', 'weight.pa', 'weight.ne', 'pain.note', 'extra.note',
     'runs.q.where', 'runs.q.feel', 'runs.e.where', 'runs.e.feel',
     'runs.z.where', 'runs.z.feel', 'runs.lr.where', 'runs.lr.feel',
     'other.sw1', 'other.sw1was', 'other.sw2', 'other.sw2was'];
@@ -3011,7 +3011,7 @@ function ckTopics(d){
     { kind: 'text', p: 'runs.e.feel', q: 'Jak to šlo?', ph: 'jak se běželo' }] });
   if (wd === 3) T.push({ id: 'z', ico: 'run', title: 'Klus Z1 · 25 min', fields: [
     { kind: 'chips', p: 'runs.z.where', q: 'Kde jsi klusal?', vals: ['pás', 'venku'] },
-    { kind: 'text', p: 'runs.z.note', q: 'Jak to šlo?', ph: 'jak se klusalo' }] });
+    { kind: 'text', p: 'runs.z.feel', q: 'Jak to šlo?', ph: 'jak se klusalo' }] });
   if (wd === 5) T.push({ id: 'lr', ico: 'run', title: 'Longrun', fields: [
     { kind: 'chips', p: 'runs.lr.where', q: 'Kde jsi běžel?', vals: ['pás', 'venku'] },
     { kind: 'text', p: 'runs.lr.feel', q: 'Jak to šlo?', ph: 'jak to šlo' }] });
