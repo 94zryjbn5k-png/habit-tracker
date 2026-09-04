@@ -1252,14 +1252,6 @@
   "note": "hv b",
   "items": [
    {
-    "t": "kuřecí prsa 1,3 kg (600 g carbonara + 700 g souvlaki)",
-    "done": false
-   },
-   {
-    "t": "vepřová panenka 600 g",
-    "done": false
-   },
-   {
     "t": "slanina nebo pancetta 150 g (do carbonary)",
     "done": false
    },
@@ -1282,14 +1274,6 @@
     "h": true
    },
    {
-    "t": "vejce 14 ks (4 do carbonary, zbytek snídaně)",
-    "done": false
-   },
-   {
-    "t": "mléko plnotučné 3 l",
-    "done": false
-   },
-   {
     "t": "tvaroh polotučný 3× 250 g",
     "done": false
    },
@@ -1298,26 +1282,8 @@
     "done": false
    },
    {
-    "t": "bílý jogurt řecký nebo klasický, velký 400 g (tzatziki)",
-    "done": false
-   },
-   {
     "t": "máslo 250 g (bramborová kaše)",
     "done": false
-   },
-   {
-    "t": "Suché a pečivo:",
-    "done": false,
-    "h": true
-   },
-   {
-    "t": "špagety 400 g",
-    "done": false
-   },
-   {
-    "t": "Zelenina a ovoce:",
-    "done": false,
-    "h": true
    },
    {
     "t": "Koření a ostatní (zkontroluj doma):",
@@ -1325,27 +1291,11 @@
     "h": true
    },
    {
-    "t": "olivový olej",
-    "done": false
-   },
-   {
     "t": "sušené oregano",
     "done": false
    },
    {
-    "t": "hořčice plnotučná (máš ze stroganovu)",
-    "done": false
-   },
-   {
     "t": "pepř mletý",
-    "done": false
-   },
-   {
-    "t": "med",
-    "done": false
-   },
-   {
-    "t": "arašídové máslo",
     "done": false
    }
   ]
