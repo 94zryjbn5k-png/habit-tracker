@@ -1250,7 +1250,169 @@
  },
  "shopping": {
   "note": "hv b",
-  "items": []
+  "items": [
+   {
+    "t": "kuřecí prsa 1,3 kg (600 g carbonara + 700 g souvlaki)",
+    "done": false
+   },
+   {
+    "t": "vepřová panenka 600 g",
+    "done": false
+   },
+   {
+    "t": "slanina nebo pancetta 150 g (do carbonary)",
+    "done": false
+   },
+   {
+    "t": "Sýry:",
+    "done": false,
+    "h": true
+   },
+   {
+    "t": "parmezán nebo Grana Padano, blok 100 g (carbonara — strouhat čerstvě)",
+    "done": false
+   },
+   {
+    "t": "eidam nebo gouda, blok 150 g (omelety, toasty)",
+    "done": false
+   },
+   {
+    "t": "Mléčné a vejce:",
+    "done": false,
+    "h": true
+   },
+   {
+    "t": "vejce 14 ks (4 do carbonary, zbytek snídaně)",
+    "done": false
+   },
+   {
+    "t": "mléko plnotučné 3 l",
+    "done": false
+   },
+   {
+    "t": "tvaroh polotučný 3× 250 g",
+    "done": false
+   },
+   {
+    "t": "smetana na vaření 31 % 2× (panenka)",
+    "done": false
+   },
+   {
+    "t": "bílý jogurt řecký nebo klasický, velký 400 g (tzatziki)",
+    "done": false
+   },
+   {
+    "t": "máslo 250 g (bramborová kaše)",
+    "done": false
+   },
+   {
+    "t": "Suché a pečivo:",
+    "done": false,
+    "h": true
+   },
+   {
+    "t": "špagety 400 g",
+    "done": false
+   },
+   {
+    "t": "pita chleby 4–6 ks",
+    "done": false
+   },
+   {
+    "t": "toastový chléb 1×",
+    "done": false
+   },
+   {
+    "t": "ovesné vločky (zkontroluj zásobu)",
+    "done": false
+   },
+   {
+    "t": "protein (zkontroluj zásobu)",
+    "done": false
+   },
+   {
+    "t": "Zelenina a ovoce:",
+    "done": false,
+    "h": true
+   },
+   {
+    "t": "brambory varný typ B 1 kg (kaše)",
+    "done": false
+   },
+   {
+    "t": "okurka salátová 1 ks (tzatziki)",
+    "done": false
+   },
+   {
+    "t": "rajčata 3 ks (do pity)",
+    "done": false
+   },
+   {
+    "t": "cherry rajčata 1 balení (snídaně)",
+    "done": false
+   },
+   {
+    "t": "červená cibule 1 ks (do pity)",
+    "done": false
+   },
+   {
+    "t": "cibule žlutá 3 ks",
+    "done": false
+   },
+   {
+    "t": "česnek 1 palice",
+    "done": false
+   },
+   {
+    "t": "citrony 2 ks (marináda + tzatziki)",
+    "done": false
+   },
+   {
+    "t": "ledový salát 1 (do pity)",
+    "done": false
+   },
+   {
+    "t": "avokádo 2 ks",
+    "done": false
+   },
+   {
+    "t": "banány 6 ks",
+    "done": false
+   },
+   {
+    "t": "mražené ovoce 1 balení (zkontroluj — na smoothie)",
+    "done": false
+   },
+   {
+    "t": "Koření a ostatní (zkontroluj doma):",
+    "done": false,
+    "h": true
+   },
+   {
+    "t": "olivový olej",
+    "done": false
+   },
+   {
+    "t": "sušené oregano",
+    "done": false
+   },
+   {
+    "t": "hořčice plnotučná (máš ze stroganovu)",
+    "done": false
+   },
+   {
+    "t": "pepř mletý",
+    "done": false
+   },
+   {
+    "t": "med",
+    "done": false
+   },
+   {
+    "t": "arašídové máslo",
+    "done": false
+   }
+  ]
  },
  "hideDone": false,
  "theme": {
