@@ -1250,21 +1250,7 @@
  },
  "shopping": {
   "note": "hv b",
-  "items": [
-   {
-    "t": "Koření a ostatní (zkontroluj doma):",
-    "done": false,
-    "h": true
-   },
-   {
-    "t": "sušené oregano",
-    "done": false
-   },
-   {
-    "t": "pepř mletý",
-    "done": false
-   }
-  ]
+  "items": []
  },
  "hideDone": false,
  "theme": {
