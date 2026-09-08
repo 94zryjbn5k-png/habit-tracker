@@ -880,7 +880,8 @@
    "07a85881-5898-4fa2-a1f7-9c97583d5365": true
   },
   "2026-09-08": {
-   "449beb16-d8cf-48e1-9a9a-df5eb8e71c6c": 8
+   "449beb16-d8cf-48e1-9a9a-df5eb8e71c6c": 8,
+   "2a30f0fb-3c90-400e-901d-36ff1cdea84c": true
   }
  },
  "meals": {
@@ -1351,6 +1352,10 @@
      "r": "11/11",
      "rir": "2"
     }
+   },
+   "other": {
+    "sw1was": "nebyl",
+    "sw1": "daroval jsem krev, takze nemuzu"
    }
   }
  },
@@ -1360,10 +1365,6 @@
    {
     "t": "mleté hovězí 600 g",
     "done": false
-   },
-   {
-    "t": "strouhanka",
-    "done": true
    }
   ]
  },
