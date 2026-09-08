@@ -1358,10 +1358,6 @@
   "note": "hv b",
   "items": [
    {
-    "t": "vepřová panenka 600 g",
-    "done": false
-   },
-   {
     "t": "mleté hovězí 600 g",
     "done": false
    },
@@ -1386,19 +1382,11 @@
     "done": false
    },
    {
-    "t": "eidam nebo gouda blok 150 g (snídaně)",
-    "done": false
-   },
-   {
     "t": "rýže 400 g",
     "done": false
    },
    {
     "t": "strouhanka",
-    "done": false
-   },
-   {
-    "t": "sójová omáčka",
     "done": false
    },
    {
