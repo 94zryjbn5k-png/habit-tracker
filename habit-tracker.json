@@ -1356,7 +1356,176 @@
  },
  "shopping": {
   "note": "hv b",
-  "items": []
+  "items": [
+   {
+    "t": "Maso a ryby:**",
+    "done": false
+   },
+   {
+    "t": "losos filety 2 ks (400–500 g)",
+    "done": false
+   },
+   {
+    "t": "kuřecí prsa 700 g",
+    "done": false
+   },
+   {
+    "t": "vepřová panenka 600 g",
+    "done": false
+   },
+   {
+    "t": "mleté hovězí 600 g",
+    "done": false
+   },
+   {
+    "t": "Mléčné a vejce:**",
+    "done": false
+   },
+   {
+    "t": "vejce 12 ks (trojobal + snídaně)",
+    "done": false
+   },
+   {
+    "t": "mléko plnotučné 3 l",
+    "done": false
+   },
+   {
+    "t": "tvaroh polotučný 3× 250 g",
+    "done": false
+   },
+   {
+    "t": "smetana na vaření 31 % 1×",
+    "done": false
+   },
+   {
+    "t": "máslo 250 g (kaše)",
+    "done": false
+   },
+   {
+    "t": "bílý jogurt 1× (dresink na burger bowl)",
+    "done": false
+   },
+   {
+    "t": "eidam nebo gouda blok 150 g (snídaně)",
+    "done": false
+   },
+   {
+    "t": "Suché a pečivo:**",
+    "done": false
+   },
+   {
+    "t": "rýže 400 g",
+    "done": false
+   },
+   {
+    "t": "strouhanka",
+    "done": false
+   },
+   {
+    "t": "hladká mouka",
+    "done": false
+   },
+   {
+    "t": "sezam",
+    "done": false
+   },
+   {
+    "t": "ovesné vločky (zkontroluj)",
+    "done": false
+   },
+   {
+    "t": "toastový chléb 1×",
+    "done": false
+   },
+   {
+    "t": "protein (zkontroluj)",
+    "done": false
+   },
+   {
+    "t": "Omáčky a koření:**",
+    "done": false
+   },
+   {
+    "t": "sójová omáčka",
+    "done": false
+   },
+   {
+    "t": "med",
+    "done": false
+   },
+   {
+    "t": "hořčice plnotučná",
+    "done": false
+   },
+   {
+    "t": "pepř hrubě drcený nebo celý",
+    "done": false
+   },
+   {
+    "t": "olej na smažení",
+    "done": false
+   },
+   {
+    "t": "Zelenina a ovoce:**",
+    "done": false
+   },
+   {
+    "t": "brambory 2,5 kg (kaše 1 kg + čtvrtky 800 g + burger bowl 700 g)",
+    "done": false
+   },
+   {
+    "t": "okurky salátové 2",
+    "done": false
+   },
+   {
+    "t": "avokádo 2",
+    "done": false
+   },
+   {
+    "t": "rajčata 4",
+    "done": false
+   },
+   {
+    "t": "červená cibule 2",
+    "done": false
+   },
+   {
+    "t": "ledový salát 1",
+    "done": false
+   },
+   {
+    "t": "hrášek mražený nebo edamame 1 balení",
+    "done": false
+   },
+   {
+    "t": "cibule žlutá 2",
+    "done": false
+   },
+   {
+    "t": "šalotka 3",
+    "done": false
+   },
+   {
+    "t": "česnek 1",
+    "done": false
+   },
+   {
+    "t": "zázvor čerstvý malý kus",
+    "done": false
+   },
+   {
+    "t": "citron 1",
+    "done": false
+   },
+   {
+    "t": "banány 6",
+    "done": false
+   },
+   {
+    "t": "mražené ovoce (zkontroluj — smoothie)",
+    "done": false
+   }
+  ]
  },
  "hideDone": false,
  "theme": {
