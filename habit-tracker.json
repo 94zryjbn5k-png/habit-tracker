@@ -892,7 +892,8 @@
    "05438702-6033-4e10-a86a-3337629d6f7d": 17,
    "b4688e59-ac69-45a2-9b81-683ffd8cfa4b": true,
    "449beb16-d8cf-48e1-9a9a-df5eb8e71c6c": 6,
-   "508fa5d2-cd59-44d6-bb61-35b98eae9db3": true
+   "508fa5d2-cd59-44d6-bb61-35b98eae9db3": true,
+   "81cceb09-bbfb-4d13-aa67-078b8f6c3491": true
   }
  },
  "meals": {
@@ -1370,7 +1371,31 @@
      "w": "27,5",
      "r": "11/11",
      "rir": "2"
+    },
+    "box": {
+     "r": "nedelal jsem"
+    },
+    "broad": {
+     "r": "nedelal jsem"
+    },
+    "sq": {
+     "w": "85",
+     "r": "6/6/6/6",
+     "rir": "1"
+    },
+    "nordic": {
+     "w": "0",
+     "r": "5/5/5",
+     "rir": "2"
+    },
+    "calf": {
+     "w": "80",
+     "r": "15",
+     "rir": "2"
     }
+   },
+   "weight": {
+    "st": ""
    }
   }
  },
