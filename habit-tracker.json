@@ -886,6 +886,9 @@
    "18db1387-1ae9-4fda-b271-250d80ec1e60": true,
    "508fa5d2-cd59-44d6-bb61-35b98eae9db3": true,
    "5af8d2f5-bb31-43da-a993-9641293918e6": true
+  },
+  "2026-09-09": {
+   "64178208-875f-49e8-a372-bb9fdb622f0d": true
   }
  },
  "meals": {
@@ -1318,7 +1321,15 @@
     "q": {
      "where": "pás",
      "feel": "10.9, hezky se mi bezelo, necitil jsem, ze by se to stezovalo, ale docela me bolely spodni pulky nohou"
+    },
+    "e": {
+     "where": "pás",
+     "feel": "9.17km, vyssi tepy asi kvuli tomu darovani"
     }
+   },
+   "other": {
+    "sw1": "daroval jsem krev, takze nemuzu",
+    "sw1was": "nebyl"
    },
    "strength": {
     "ia": {
@@ -1356,10 +1367,6 @@
      "r": "11/11",
      "rir": "2"
     }
-   },
-   "other": {
-    "sw1was": "nebyl",
-    "sw1": "daroval jsem krev, takze nemuzu"
    }
   }
  },
