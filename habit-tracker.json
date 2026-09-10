@@ -893,10 +893,14 @@
    "b4688e59-ac69-45a2-9b81-683ffd8cfa4b": true,
    "449beb16-d8cf-48e1-9a9a-df5eb8e71c6c": 6,
    "508fa5d2-cd59-44d6-bb61-35b98eae9db3": true,
-   "81cceb09-bbfb-4d13-aa67-078b8f6c3491": true
+   "81cceb09-bbfb-4d13-aa67-078b8f6c3491": true,
+   "0455bc0d-f85c-484f-a5d4-81620f019785": true,
+   "07a85881-5898-4fa2-a1f7-9c97583d5365": true,
+   "18db1387-1ae9-4fda-b271-250d80ec1e60": true
   },
   "2026-09-10": {
-   "64178208-875f-49e8-a372-bb9fdb622f0d": true
+   "64178208-875f-49e8-a372-bb9fdb622f0d": true,
+   "449beb16-d8cf-48e1-9a9a-df5eb8e71c6c": 7
   }
  },
  "meals": {
@@ -1325,6 +1329,9 @@
    }
   },
   "2026-09-07": {
+   "weight": {
+    "st": "82,3"
+   },
    "runs": {
     "q": {
      "where": "pás",
@@ -1400,9 +1407,6 @@
      "r": "15",
      "rir": "2"
     }
-   },
-   "weight": {
-    "st": "82,3"
    }
   }
  },
