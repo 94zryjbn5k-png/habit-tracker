@@ -1355,8 +1355,8 @@
    "other": {
     "sw1": "daroval jsem krev, takze nemuzu",
     "sw1was": "nebyl",
-    "sw2was": "nebyl",
-    "sw2": "moc zima uz"
+    "sw2": "moc zima uz",
+    "sw2was": "nebyl"
    },
    "strength": {
     "ia": {
@@ -1412,7 +1412,7 @@
     },
     "calf": {
      "w": "80",
-     "r": "15",
+     "r": "15/15/15",
      "rir": "2"
     }
    }
