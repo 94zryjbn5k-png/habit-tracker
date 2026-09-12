@@ -1485,12 +1485,7 @@
  },
  "shopping": {
   "note": "hv b",
-  "items": [
-   {
-    "t": "mleté hovězí 600 g",
-    "done": false
-   }
-  ]
+  "items": []
  },
  "hideDone": false,
  "theme": {
