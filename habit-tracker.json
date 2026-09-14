@@ -927,6 +927,9 @@
   "2026-09-13": {
    "449beb16-d8cf-48e1-9a9a-df5eb8e71c6c": 6,
    "b4688e59-ac69-45a2-9b81-683ffd8cfa4b": true
+  },
+  "2026-09-14": {
+   "64178208-875f-49e8-a372-bb9fdb622f0d": true
   }
  },
  "meals": {
@@ -1499,6 +1502,14 @@
      "w": "40",
      "r": "12/12/12",
      "rir": "2"
+    }
+   }
+  },
+  "2026-09-14": {
+   "runs": {
+    "q": {
+     "where": "pás",
+     "feel": "10.9km, docela narocny, jakoze dal jsem tu full, ale na zacatku jsme se citil trochu vyzvyklej, ale pak uz to slo"
     }
    }
   }
