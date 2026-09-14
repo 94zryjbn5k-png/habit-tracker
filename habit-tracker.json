@@ -932,7 +932,8 @@
    "64178208-875f-49e8-a372-bb9fdb622f0d": true,
    "449beb16-d8cf-48e1-9a9a-df5eb8e71c6c": 7,
    "b4688e59-ac69-45a2-9b81-683ffd8cfa4b": true,
-   "1b56c16a-59af-4de5-b599-fca89b20a170": true
+   "1b56c16a-59af-4de5-b599-fca89b20a170": true,
+   "81cceb09-bbfb-4d13-aa67-078b8f6c3491": true
   }
  },
  "meals": {
@@ -1513,6 +1514,13 @@
     "q": {
      "where": "pás",
      "feel": "10.9km, docela narocny, jakoze dal jsem tu full, ale na zacatku jsme se citil trochu vyzvyklej, ale pak uz to slo"
+    }
+   },
+   "strength": {
+    "ia": {
+     "w": "30",
+     "r": "10",
+     "rir": "2"
     }
    }
   }
