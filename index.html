@@ -867,6 +867,16 @@ input,textarea,select,.meal-f,.ck-in{border-radius:13px;}
 .ck-set .ck-in{width:100%;text-align:center;font-size:17px;padding:10px 6px;}
 
 .ck-fill{display:block;margin-top:8px;font-size:13px;font-weight:700;color:var(--accent);}
+
+.rem-list{margin:2px 0 12px;}
+.rem-row{display:flex;align-items:center;gap:11px;padding:10px 0;border-bottom:1px solid var(--line);}
+.rem-row:last-child{border-bottom:0;}
+.rem-row.off{opacity:.45;}
+.rem-tog{color:var(--accent);font-size:15px;width:24px;flex:0 0 auto;}
+.rem-t{font-size:16px;font-weight:700;font-variant-numeric:tabular-nums;min-width:52px;}
+.rem-n{flex:1;display:flex;flex-direction:column;gap:1px;font-size:14.5px;min-width:0;}
+.rem-d{font-size:12px;color:var(--muted);}
+.rem-del{min-width:34px;min-height:34px;font-size:13px;color:var(--muted);background:transparent;box-shadow:none;}
 </style>
 </head>
 <body>
@@ -907,7 +917,83 @@ function touch(kind, key){
     data.mods[kind][key] = now;
   }
 }
-const APP_VERSION = 'v51';
+const VAPID_PUBLIC = 'BANao4KGasP1Dn-eKOPazE-n6NM0ZsWBGn6x3PYZ5MhhzAIHn3nOeyaSEkZHMqii_2bCcaBRap1lKN65HwLFxUE';
+const PUSH_FILE = 'push-subscriptions.json';
+const DEFAULT_REMINDERS = [
+  { id: 'weigh', time: '08:00', days: [2, 4, 6], kind: 'weight', text: 'Vážení nalačno', on: true },
+  { id: 'left', time: '20:00', days: [0, 1, 2, 3, 4, 5, 6], kind: 'remaining', text: 'Co ještě zbývá', on: true }
+];
+function pushLocal(){
+  try { return JSON.parse(localStorage.getItem('ht-push')) || {}; } catch (e) { return {}; }
+}
+function setPushLocal(patch){
+  const o = Object.assign(pushLocal(), patch);
+  try { localStorage.setItem('ht-push', JSON.stringify(o)); } catch (e) {}
+  return o;
+}
+function reminders(){
+  const r = pushLocal().reminders;
+  return Array.isArray(r) && r.length ? r : DEFAULT_REMINDERS.map(x => Object.assign({}, x));
+}
+function pushSupported(){
+  return typeof Notification !== 'undefined' && 'serviceWorker' in navigator && 'PushManager' in window;
+}
+function b64ToU8(b64){
+  const pad = '='.repeat((4 - b64.length % 4) % 4);
+  const raw = atob((b64 + pad).replace(/-/g, '+').replace(/_/g, '/'));
+  const out = new Uint8Array(raw.length);
+  for (let i = 0; i < raw.length; i++) out[i] = raw.charCodeAt(i);
+  return out;
+}
+function pushEnable(){
+  if (!pushSupported()){ toast('Tento prohlížeč oznámení neumí — appku musíš mít na ploše', true); return; }
+  if (!syncConfigured()){ toast('Nejdřív nastav synchronizaci — oznámení jedou přes ni', true); return; }
+  Notification.requestPermission().then(p => {
+    if (p !== 'granted'){ toast('Oznámení nepovolena', true); return; }
+    return navigator.serviceWorker.ready
+      .then(reg => reg.pushManager.getSubscription().then(sub => sub || reg.pushManager.subscribe({
+        userVisibleOnly: true, applicationServerKey: b64ToU8(VAPID_PUBLIC)
+      })))
+      .then(sub => {
+        setPushLocal({ sub: sub.toJSON(), on: true, reminders: reminders() });
+        return pushSaveRemote();
+      })
+      .then(() => { render(); toast('Oznámení zapnuta'); });
+  }).catch(() => toast('Oznámení se nepodařilo zapnout', true));
+}
+function pushDisable(){
+  const o = pushLocal();
+  setPushLocal({ on: false });
+  pushSaveRemote().then(() => { render(); toast('Oznámení vypnuta'); });
+  if (navigator.serviceWorker && navigator.serviceWorker.ready){
+    navigator.serviceWorker.ready.then(reg => reg.pushManager.getSubscription()).then(s => { if (s) s.unsubscribe(); }).catch(() => {});
+  }
+}
+function pushSaveRemote(){
+  if (!syncConfigured() || typeof fetch === 'undefined') return Promise.resolve();
+  const me = pushLocal();
+  const ep = me.sub && me.sub.endpoint;
+  return fetch(ghApi('/contents/' + PUSH_FILE + '?ref=' + SYNC_BRANCH), { headers: ghHeaders() })
+    .then(r => r.ok ? r.json() : null)
+    .then(j => {
+      let cur = { devices: [] };
+      let sha = null;
+      if (j){
+        sha = j.sha;
+        try { cur = JSON.parse(b64decode(j.content)) || cur; } catch (e) {}
+      }
+      if (!Array.isArray(cur.devices)) cur.devices = [];
+      cur.devices = cur.devices.filter(d => d && d.sub && d.sub.endpoint !== ep);
+      if (me.on && me.sub) cur.devices.push({ sub: me.sub, reminders: reminders(), tz: 'Europe/Prague', name: navigator.platform || 'zařízení' });
+      cur.updatedAt = Date.now();
+      const body = { message: 'push nastaveni', branch: SYNC_BRANCH,
+        content: b64encode(JSON.stringify(cur, null, 1)) };
+      if (sha) body.sha = sha;
+      return fetch(ghApi('/contents/' + PUSH_FILE), { method: 'PUT', headers: ghHeaders(), body: JSON.stringify(body) });
+    })
+    .catch(() => {});
+}
+const APP_VERSION = 'v52';
 const STORAGE_KEY = 'habit-tracker-data-v1';
 const WD = ['Po','Út','St','Čt','Pá','So','Ne'];
 const EMOJI_PICKS = ['✅','💪','🏃','🚶','🧘','😴','📖','✍️','📓','💧','🥗','🍎','🚫','💊','🦉','🎓','💼','🎸','🧹','🧠'];
@@ -3493,6 +3579,26 @@ function renderStats(){
     + '<div class="card"><div class="row-btns"><button class="btn" data-action="openTheme">' + uiIco('palette', 'ui-ico sm') + ' Přizpůsobit vzhled</button></div>'
     + '<p class="muted" style="margin:10px 0 0;font-size:13.5px">Pozadí, barva karet i textu. Změny se přenáší v záloze.</p></div>';
 
+  const po = pushLocal();
+  const pon = !!po.on;
+  const WDS2 = ['Po', 'Út', 'St', 'Čt', 'Pá', 'So', 'Ne'];
+  const remHtml = reminders().map(r =>
+    '<div class="rem-row' + (r.on === false ? ' off' : '') + '">'
+    + '<button class="rem-tog" data-action="remToggle" data-id="' + esc(r.id) + '" aria-label="Zapnout/vypnout">' + (r.on === false ? '○' : '●') + '</button>'
+    + '<span class="rem-t">' + esc(r.time) + '</span>'
+    + '<span class="rem-n">' + esc(r.text || (r.kind === 'weight' ? 'Vážení' : r.kind === 'remaining' ? 'Co zbývá' : 'Připomínka'))
+    + '<span class="rem-d">' + (r.days && r.days.length === 7 ? 'každý den' : (r.days || []).map(d => WDS2[d]).join(' · ')) + '</span></span>'
+    + '<button class="icon-btn rem-del" data-action="remDel" data-id="' + esc(r.id) + '" aria-label="Smazat">✕</button>'
+    + '</div>').join('');
+  html += '<div class="card"><div class="sec-title" style="margin-top:0">Oznámení</div>'
+    + (pon
+      ? '<p class="muted" style="margin:6px 0 10px">Chodí i když je appka zavřená. Vypnout je můžeš kdykoli.</p>'
+        + '<div class="rem-list">' + remHtml + '</div>'
+        + '<div class="row-btns"><button class="btn" data-action="remAdd">' + uiIco('plus', 'ui-ico sm') + ' Přidat</button>'
+        + '<button class="btn" data-action="pushOff">Vypnout vše</button></div>'
+      : '<p class="muted" style="margin:6px 0 12px">Ranní připomínka vážení (St, Pá, Ne v 8:00) a večerní přehled toho, co ještě zbývá.</p>'
+        + '<div class="row-btns"><button class="btn primary" data-action="pushOn">Zapnout oznámení</button></div>')
+    + '</div>';
   const sm = syncMeta();
   let syncStatus;
   if (!syncConfigured()) syncStatus = '';
@@ -4340,6 +4446,47 @@ document.addEventListener('click', ev => {
     case 'syncPushInit': closeModal(); syncNow().then(() => toast('Data z tohoto zařízení nahrána')); break;
     case 'syncNow': toast('Nahrávám…'); syncNow(); break;
     case 'syncPullNow': syncPullMerge(true); break;
+    case 'pushOn': pushEnable(); break;
+    case 'pushOff': pushDisable(); break;
+    case 'remToggle': {
+      const rs = reminders().map(r => r.id === el.dataset.id ? Object.assign({}, r, { on: r.on === false }) : r);
+      setPushLocal({ reminders: rs });
+      pushSaveRemote().then(() => render());
+      render();
+      break;
+    }
+    case 'remDel': {
+      const rs = reminders().filter(r => r.id !== el.dataset.id);
+      setPushLocal({ reminders: rs });
+      pushSaveRemote().then(() => render());
+      render();
+      break;
+    }
+    case 'remAdd':
+      openModal(
+        '<div class="sheet-title">Nová připomínka</div>'
+        + '<label class="field"><span class="field-lbl">Čas</span><input id="rem-time" type="time" value="19:00"></label>'
+        + '<label class="field"><span class="field-lbl">Text</span><input id="rem-text" maxlength="80" placeholder="např. Protáhnout se"></label>'
+        + '<div class="field"><span class="field-lbl">Dny</span><div class="day-picker" id="rem-days">'
+        + ['Po','Út','St','Čt','Pá','So','Ne'].map((d, i) => '<button class="day-chip on" data-action="toggleDay" data-day="' + i + '">' + d + '</button>').join('')
+        + '</div></div>'
+        + '<div class="modal-actions"><button class="btn" data-action="closeModal">Zrušit</button>'
+        + '<button class="btn primary" data-action="remSave">Přidat</button></div>'
+      );
+      break;
+    case 'remSave': {
+      const t = ($('#rem-time') && $('#rem-time').value) || '';
+      const tx = (($('#rem-text') && $('#rem-text').value) || '').trim();
+      const days = [...document.querySelectorAll('#rem-days .day-chip.on')].map(b => Number(b.dataset.day));
+      if (!/^\d{2}:\d{2}$/.test(t) || !days.length){ toast('Vyplň čas a alespoň jeden den', true); break; }
+      const rs = reminders().concat([{ id: 'r' + Date.now(), time: t, days, kind: 'custom', text: tx || 'Připomínka', on: true }]);
+      setPushLocal({ reminders: rs });
+      closeModal();
+      pushSaveRemote().then(() => render());
+      render();
+      toast('Připomínka přidána');
+      break;
+    }
     case 'syncCopyLink': copyPlainText(syncRawUrl(), 'odkaz.txt', 'Odkaz zkopírován — pošli ho Claudovi'); break;
     case 'syncDisconnect': if (window.confirm('Odpojit synchronizaci? Záloha na GitHubu zůstane, jen se přestane obnovovat.')) syncDisconnect(); break;
     case 'exportData': exportData(); break;
