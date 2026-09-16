@@ -1527,6 +1527,9 @@
      "feel": "10.9km, docela narocny, jakoze dal jsem tu full, ale na zacatku jsme se citil trochu vyzvyklej, ale pak uz to slo"
     }
    },
+   "other": {
+    "sw1was": "nebyl"
+   },
    "strength": {
     "ia": {
      "w": "32,5",
@@ -1563,22 +1566,14 @@
      "r": "12",
      "rir": "2"
     }
-   },
-   "other": {
-    "sw1was": "nebyl"
    }
   }
  },
  "shopping": {
   "note": "hv b",
-  "items": [
-   {
-    "t": "lol",
-    "done": false
-   }
-  ]
+  "items": []
  },
- "updatedAt": 1789562435618,
+ "updatedAt": 1789562447384,
  "mods": {
   "entries": {
    "2026-09-16": 1789562278320
@@ -1592,7 +1587,7 @@
   },
   "notes": {},
   "habits": 0,
-  "shopping": 1789562314911
+  "shopping": 1789562447384
  },
  "hideDone": false,
  "theme": {
