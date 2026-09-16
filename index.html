@@ -895,7 +895,7 @@ function touch(kind, key){
     data.mods[kind][key] = now;
   }
 }
-const APP_VERSION = 'v42';
+const APP_VERSION = 'v43';
 const STORAGE_KEY = 'habit-tracker-data-v1';
 const WD = ['Po','Út','St','Čt','Pá','So','Ne'];
 const EMOJI_PICKS = ['✅','💪','🏃','🚶','🧘','😴','📖','✍️','📓','💧','🥗','🍎','🚫','💊','🦉','🎓','💼','🎸','🧹','🧠'];
@@ -1686,6 +1686,17 @@ function typingNow(){
   const a = document.activeElement;
   return !!(a && (a.tagName === 'INPUT' || a.tagName === 'TEXTAREA' || a.isContentEditable));
 }
+let lastTouchPull = 0;
+function syncPullOnTouch(){
+  // iOS zpomaluje časovače kvůli baterii — když se appky dotkneš, zeptáme se hned
+  if (!syncConfigured() || document.hidden || typingNow() || syncBusy || modalOpen()) return;
+  const now = Date.now();
+  if (now - lastTouchPull < 1500) return;
+  lastTouchPull = now;
+  syncPullMerge(false);
+}
+document.addEventListener('pointerdown', syncPullOnTouch, { passive: true });
+document.addEventListener('scroll', syncPullOnTouch, { passive: true });
 function syncPollStart(){
   if (syncPollTimer || typeof setInterval === 'undefined') return;
   syncPollTimer = setInterval(() => {
