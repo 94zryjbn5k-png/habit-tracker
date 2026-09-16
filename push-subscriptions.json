@@ -36,11 +36,21 @@
      "kind": "remaining",
      "text": "Co ještě zbývá",
      "on": true
+    },
+    {
+     "id": "r1789598655539",
+     "time": "00:46",
+     "days": [
+      3
+     ],
+     "kind": "custom",
+     "text": "Připomínka",
+     "on": true
     }
    ],
    "tz": "Europe/Prague",
    "name": "iPhone"
   }
  ],
- "updatedAt": 1789598642222
+ "updatedAt": 1789598906521
 }
