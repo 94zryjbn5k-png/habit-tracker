@@ -99,7 +99,7 @@ function message(rem, data, t){
     const head = 'Zbývá ' + left.length + ' ' + (left.length === 1 ? 'návyk' : left.length < 5 ? 'návyky' : 'návyků');
     return { title: head, body: left.slice(0, 6).join(', ') + (left.length > 6 ? '…' : '') };
   }
-  return { title: 'Habit Tracker', body: rem.text || 'Připomínka' };
+  return { title: rem.text || 'Připomínka', body: '' }; // vlastní text rovnou jako nadpis, ať se název appky neopakuje
 }
 
 /* ---------- hlavní běh ---------- */
