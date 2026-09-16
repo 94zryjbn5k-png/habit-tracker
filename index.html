@@ -971,7 +971,7 @@ function pushDisable(){
     navigator.serviceWorker.ready.then(reg => reg.pushManager.getSubscription()).then(s => { if (s) s.unsubscribe(); }).catch(() => {});
   }
 }
-function pushSaveRemote(){
+function pushSaveRemote(retry){
   if (!syncConfigured() || typeof fetch === 'undefined') return Promise.resolve();
   const me = pushLocal();
   const ep = me.sub && me.sub.endpoint;
@@ -987,6 +987,14 @@ function pushSaveRemote(){
       if (!Array.isArray(cur.devices)) cur.devices = [];
       cur.devices = cur.devices.filter(d => d && d.sub && d.sub.endpoint !== ep);
       if (me.on && me.sub) cur.devices.push({ sub: me.sub, reminders: reminders(), tz: 'Europe/Prague', name: navigator.platform || 'zařízení' });
+      const sameAsRemote = j && (function(){
+        try {
+          const a = JSON.parse(b64decode(j.content));
+          const strip = o => JSON.stringify({ devices: (o.devices || []) });
+          return strip(a) === strip(cur);
+        } catch (e) { return false; }
+      })();
+      if (sameAsRemote){ setPushLocal({ savedAt: Date.now(), err: null }); return true; } // nic nového → žádný zápis
       cur.updatedAt = Date.now();
       const body = { message: 'push nastaveni', branch: SYNC_BRANCH,
         content: b64encode(JSON.stringify(cur, null, 1)) };
@@ -995,6 +1003,10 @@ function pushSaveRemote(){
         .then(r => {
           if (r.ok){ setPushLocal({ savedAt: Date.now(), err: null }); return true; }
           if (r.status === 409 || r.status === 422) return pushSaveRemote(); // někdo zapsal mezitím → zkusit znovu
+          if (r.status === 403 && !retry){
+            toast('GitHub chvilku odmítá zápisy, zkusím to za 30 s');
+            return new Promise(res => setTimeout(() => res(pushSaveRemote(true)), 30000));
+          }
           setPushLocal({ err: 'HTTP ' + r.status });
           toast('Nastavení oznámení se neuložilo (' + r.status + ')', true);
           return false;
@@ -1006,7 +1018,7 @@ function pushSaveRemote(){
       return false;
     });
 }
-const APP_VERSION = 'v54';
+const APP_VERSION = 'v55';
 const STORAGE_KEY = 'habit-tracker-data-v1';
 const WD = ['Po','Út','St','Čt','Pá','So','Ne'];
 const EMOJI_PICKS = ['✅','💪','🏃','🚶','🧘','😴','📖','✍️','📓','💧','🥗','🍎','🚫','💊','🦉','🎓','💼','🎸','🧹','🧠'];
