@@ -1451,7 +1451,9 @@ const SYNC_M = 'ht-sync-meta';
 const SYNC_FILE = 'habit-tracker.json';
 const SYNC_BRANCH = 'data';
 let syncTimer = null;
-let SYNC_DEBOUNCE = 4000; // krátký klid po poslední změně, ať z každého písmene není commit
+let SYNC_DEBOUNCE = 3000;   // psaní: krátký klid, ať z každého písmene není commit
+const SYNC_FAST = 600;      // ťuknutí (odškrtnutí, volba): odeslat prakticky hned
+let nextSyncFast = false;
 let syncBusy = false;
 function ghRepoDefault(){
   let owner = '94zryjbn5k-png', repo = 'habit-tracker';
@@ -1537,8 +1539,10 @@ function b64decode(b64){
 }
 function scheduleSync(){
   setSyncMeta({ pending: true });
+  const delay = nextSyncFast ? SYNC_FAST : SYNC_DEBOUNCE;
+  nextSyncFast = false;
   if (syncTimer) clearTimeout(syncTimer);
-  syncTimer = setTimeout(() => { syncNow(); }, SYNC_DEBOUNCE);
+  syncTimer = setTimeout(() => { syncNow(); }, delay);
 }
 function syncPut(retry){
   if (!data.updatedAt){
@@ -1573,7 +1577,11 @@ function syncNow(){
   syncBusy = true;
   return syncPut(false)
     .catch(() => { setSyncMeta({ err: 'offline', pending: true }); })
-    .then(() => { syncBusy = false; if (tab === 'stats') render(); });
+    .then(() => {
+      syncBusy = false;
+      if (tab === 'stats') render();
+      if (!syncMeta().pending) setTimeout(() => syncPullMerge(false), 400);
+    });
 }
 function syncFetchRemote(){
   const h = ghHeaders();
@@ -1598,7 +1606,7 @@ function syncFetchRemote(){
 }
 let syncPulling = false;
 let syncPollTimer = null;
-const SYNC_POLL = 10000;
+const SYNC_POLL = 4000;
 function typingNow(){
   const a = document.activeElement;
   return !!(a && (a.tagName === 'INPUT' || a.tagName === 'TEXTAREA' || a.isContentEditable));
@@ -1737,6 +1745,7 @@ function getVal(key, habitId){
   return day ? day[habitId] : undefined;
 }
 function setVal(key, habitId, value){
+  nextSyncFast = true; // odškrtnutí / změna čísla = okamžité odeslání
   const isTodayKey = key === dateKey(today());
   const before = isTodayKey ? dayStats(key).pct : -1;
   let day = data.entries[key];
@@ -3296,7 +3305,7 @@ function renderStats(){
   else syncStatus = '—';
   html += '<div class="card"><div class="sec-title" style="margin-top:0">Synchronizace pro Clauda</div>'
     + (syncConfigured()
-      ? '<p class="muted" style="margin:6px 0 12px">' + syncStatus + ' Změny se nahrají do pár vteřin a appka si každých 10 s sama stahuje novinky z druhého zařízení.</p>'
+      ? '<p class="muted" style="margin:6px 0 12px">' + syncStatus + ' Změny se nahrají do pár vteřin a appka si každé 4 s sama stahuje novinky z druhého zařízení.</p>'
         + '<div class="row-btns"><button class="btn" data-action="syncPullNow">' + uiIco('down', 'ui-ico sm') + ' Načíst z cloudu</button>'
         + '<button class="btn" data-action="syncNow">' + uiIco('refresh', 'ui-ico sm') + ' Nahrát teď</button>'
         + '<button class="btn" data-action="syncCopyLink">' + uiIco('clipboard', 'ui-ico sm') + ' Odkaz</button>'
@@ -3780,6 +3789,7 @@ document.addEventListener('click', ev => {
     case 'ckChip': {
       const cur = ckGet(el.dataset.w, el.dataset.path);
       const nv = cur === el.dataset.v ? '' : el.dataset.v;
+      nextSyncFast = true;
       ckSet(el.dataset.w, el.dataset.path, nv);
       ckAutoDone(el.dataset.path, nv);
       renderCheckin();
