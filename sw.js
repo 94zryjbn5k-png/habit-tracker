@@ -1,5 +1,5 @@
 'use strict';
-const CACHE = 'habit-tracker-v51';
+const CACHE = 'habit-tracker-v52';
 const ASSETS = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
 
 self.addEventListener('install', e => {
@@ -41,4 +41,24 @@ self.addEventListener('fetch', e => {
       return resp;
     }))
   );
+});
+
+self.addEventListener('push', e => {
+  let d = { title: 'Habit Tracker', body: '' };
+  try { if (e.data) d = Object.assign(d, e.data.json()); } catch (err) { if (e.data) d.body = e.data.text(); }
+  e.waitUntil(self.registration.showNotification(d.title, {
+    body: d.body,
+    icon: './icon-192.png',
+    badge: './icon-192.png',
+    tag: d.tag || 'ht',
+    data: { url: d.url || './' }
+  }));
+});
+self.addEventListener('notificationclick', e => {
+  e.notification.close();
+  const url = (e.notification.data && e.notification.data.url) || './';
+  e.waitUntil(self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(list => {
+    for (const c of list){ if ('focus' in c) return c.focus(); }
+    if (self.clients.openWindow) return self.clients.openWindow(url);
+  }));
 });
