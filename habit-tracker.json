@@ -394,6 +394,222 @@
    "timerMin": null,
    "link": "https://honzovyletenky.cz/",
    "color": null
+  },
+  {
+   "id": "f914e0d9-fc41-4a9a-b703-8220c5cd19fa",
+   "name": "Spánek",
+   "emoji": "😴",
+   "type": "number",
+   "goal": 8,
+   "unit": "h",
+   "archived": false,
+   "order": 0,
+   "createdAt": 1789563441196,
+   "freq": {
+    "type": "daily"
+   },
+   "vacations": [],
+   "timerMin": null,
+   "link": null,
+   "color": null
+  },
+  {
+   "id": "742b174c-7ac0-4987-ab39-1f51d34bdea0",
+   "name": "Čtení",
+   "emoji": "📖",
+   "type": "number",
+   "goal": 20,
+   "unit": "stránek",
+   "archived": false,
+   "order": 1,
+   "createdAt": 1789563441196,
+   "freq": {
+    "type": "daily"
+   },
+   "vacations": [],
+   "timerMin": null,
+   "link": null,
+   "color": null
+  },
+  {
+   "id": "d1ee775b-57c8-4cba-b0bd-d9df89effa81",
+   "name": "Cvičení",
+   "emoji": "💪",
+   "type": "check",
+   "goal": null,
+   "unit": "",
+   "archived": false,
+   "order": 2,
+   "createdAt": 1789563441196,
+   "freq": {
+    "type": "daily"
+   },
+   "vacations": [],
+   "timerMin": null,
+   "link": null,
+   "color": null
+  },
+  {
+   "id": "1175d216-034a-4694-ba88-b36fcd529151",
+   "name": "Kreatin",
+   "emoji": "💊",
+   "type": "check",
+   "goal": null,
+   "unit": "",
+   "archived": false,
+   "order": 3,
+   "createdAt": 1789563441196,
+   "freq": {
+    "type": "daily"
+   },
+   "vacations": [],
+   "timerMin": null,
+   "link": null,
+   "color": null
+  },
+  {
+   "id": "e9ba72de-09fc-4644-a210-4b4a73a87be1",
+   "name": "Duolingo",
+   "emoji": "🦉",
+   "type": "check",
+   "goal": null,
+   "unit": "",
+   "archived": false,
+   "order": 4,
+   "createdAt": 1789563441196,
+   "freq": {
+    "type": "daily"
+   },
+   "vacations": [],
+   "timerMin": null,
+   "link": null,
+   "color": null
+  },
+  {
+   "id": "8b52cd2e-2212-4ebd-8c32-360d95f11573",
+   "name": "Učení se",
+   "emoji": "🎓",
+   "type": "check",
+   "goal": null,
+   "unit": "",
+   "archived": false,
+   "order": 5,
+   "createdAt": 1789563441196,
+   "freq": {
+    "type": "daily"
+   },
+   "vacations": [],
+   "timerMin": null,
+   "link": null,
+   "color": null
+  },
+  {
+   "id": "e599ea17-d001-45e4-934e-828b403b2f24",
+   "name": "Práce",
+   "emoji": "💼",
+   "type": "number",
+   "goal": 85,
+   "unit": "h",
+   "archived": false,
+   "order": 6,
+   "createdAt": 1789563441196,
+   "freq": {
+    "type": "monthly"
+   },
+   "vacations": [],
+   "timerMin": null,
+   "link": null,
+   "color": null
+  },
+  {
+   "id": "df4f386e-a79d-440e-87da-054bad6c9865",
+   "name": "Pití vody",
+   "emoji": "💧",
+   "type": "number",
+   "goal": 8,
+   "unit": "sklenic",
+   "archived": false,
+   "order": 7,
+   "createdAt": 1789563441196,
+   "freq": {
+    "type": "daily"
+   },
+   "vacations": [],
+   "timerMin": null,
+   "link": null,
+   "color": null
+  },
+  {
+   "id": "acba5ec7-546e-4fa2-adf7-ddada74abf44",
+   "name": "Procházka",
+   "emoji": "🚶",
+   "type": "check",
+   "goal": null,
+   "unit": "",
+   "archived": false,
+   "order": 8,
+   "createdAt": 1789563441196,
+   "freq": {
+    "type": "daily"
+   },
+   "vacations": [],
+   "timerMin": null,
+   "link": null,
+   "color": null
+  },
+  {
+   "id": "af82e1e7-e9ef-4cd9-8127-ba1a99b00f5f",
+   "name": "Protahování",
+   "emoji": "🧘",
+   "type": "check",
+   "goal": null,
+   "unit": "",
+   "archived": false,
+   "order": 9,
+   "createdAt": 1789563441196,
+   "freq": {
+    "type": "daily"
+   },
+   "vacations": [],
+   "timerMin": null,
+   "link": null,
+   "color": null
+  },
+  {
+   "id": "b3abb82c-f402-41af-b694-0667473cb22e",
+   "name": "Deník",
+   "emoji": "📓",
+   "type": "check",
+   "goal": null,
+   "unit": "",
+   "archived": false,
+   "order": 10,
+   "createdAt": 1789563441196,
+   "freq": {
+    "type": "daily"
+   },
+   "vacations": [],
+   "timerMin": null,
+   "link": null,
+   "color": null
+  },
+  {
+   "id": "262d45c9-060a-4ce2-815d-7fab19191a5f",
+   "name": "Bez cukru",
+   "emoji": "🚫",
+   "type": "check",
+   "goal": null,
+   "unit": "",
+   "archived": false,
+   "order": 11,
+   "createdAt": 1789563441196,
+   "freq": {
+    "type": "daily"
+   },
+   "vacations": [],
+   "timerMin": null,
+   "link": null,
+   "color": null
   }
  ],
  "entries": {
