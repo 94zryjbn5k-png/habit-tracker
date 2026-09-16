@@ -414,24 +414,6 @@
    "color": null
   },
   {
-   "id": "af82e1e7-e9ef-4cd9-8127-ba1a99b00f5f",
-   "name": "Protahování",
-   "emoji": "🧘",
-   "type": "check",
-   "goal": null,
-   "unit": "",
-   "archived": false,
-   "order": 9,
-   "createdAt": 1789563441196,
-   "freq": {
-    "type": "daily"
-   },
-   "vacations": [],
-   "timerMin": null,
-   "link": null,
-   "color": null
-  },
-  {
    "id": "262d45c9-060a-4ce2-815d-7fab19191a5f",
    "name": "Bez cukru",
    "emoji": "🚫",
@@ -1627,7 +1609,7 @@
   "note": "hv b",
   "items": []
  },
- "updatedAt": 1789563636259,
+ "updatedAt": 1789563650931,
  "mods": {
   "entries": {
    "2026-09-16": 1789562698659
@@ -1640,7 +1622,7 @@
    "2026-09-14|other.sw1was": 1789562435618
   },
   "notes": {},
-  "habits": 1789563636258,
+  "habits": 1789563650931,
   "shopping": 1789562761798
  },
  "hideDone": false,
