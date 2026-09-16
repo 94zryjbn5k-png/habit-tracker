@@ -895,7 +895,7 @@ function touch(kind, key){
     data.mods[kind][key] = now;
   }
 }
-const APP_VERSION = 'v41';
+const APP_VERSION = 'v42';
 const STORAGE_KEY = 'habit-tracker-data-v1';
 const WD = ['Po','Út','St','Čt','Pá','So','Ne'];
 const EMOJI_PICKS = ['✅','💪','🏃','🚶','🧘','😴','📖','✍️','📓','💧','🥗','🍎','🚫','💊','🦉','🎓','💼','🎸','🧹','🧠'];
@@ -4379,7 +4379,19 @@ window.addEventListener('focus', () => {
 
 /* PWA: offline režim přes service worker (jen na webu, lokální soubor nezmění) */
 if ('serviceWorker' in navigator && location.protocol === 'https:'){
-  navigator.serviceWorker.register('sw.js').catch(function(){});
+  var hadController = !!navigator.serviceWorker.controller;
+  var swReloading = false;
+  navigator.serviceWorker.addEventListener('controllerchange', function(){
+    // nová verze převzala řízení — jednou obnovit, ať ji vidíš hned
+    if (swReloading || !hadController) return;
+    swReloading = true;
+    location.reload();
+  });
+  navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).then(function(reg){
+    reg.update();
+    setInterval(function(){ reg.update(); }, 60000);
+    document.addEventListener('visibilitychange', function(){ if (!document.hidden) reg.update(); });
+  }).catch(function(){});
 }
 </script>
 </body>
