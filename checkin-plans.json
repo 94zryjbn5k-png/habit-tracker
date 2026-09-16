@@ -2,13 +2,14 @@
  "plans": [
   {
    "from": "2026-08-03",
-   "name": "Plán od 3. 8. 2026",
+   "name": "Plán od 3. 8. 2026 (se zadáním a sériemi)",
    "topics": [
     {
      "id": "q",
      "day": 0,
      "icon": "run",
      "title": "Q-běh",
+     "pre": "Rozklusání 10', pak 6× rovinka 20\" a 4× sprint do kopce 8\", vyklusání 10'.",
      "fields": [
       {
        "p": "runs.q.where",
@@ -33,6 +34,7 @@
      "icon": "dumbbell",
      "title": "Incline DB press",
      "sub": "Síla · Upper A",
+     "pre": "3 série po 8–10 opakováních · RIR 2 · tempo 3-1-1-0",
      "fields": [
       {
        "p": "strength.ia.w",
@@ -41,10 +43,11 @@
        "ph": "26"
       },
       {
-       "p": "strength.ia.r",
-       "q": "Opakování sérií",
-       "kind": "txt",
-       "ph": "10/9/8"
+       "p": "strength.ia",
+       "q": "Opakování jednotlivých sérií",
+       "kind": "sets",
+       "sets": 3,
+       "ph": "8"
       },
       {
        "p": "strength.ia.rir",
@@ -60,6 +63,7 @@
      "icon": "dumbbell",
      "title": "Chest-supported row",
      "sub": "Síla · Upper A",
+     "pre": "4 série po 10–12 opakováních · RIR 2",
      "fields": [
       {
        "p": "strength.row.w",
@@ -68,10 +72,11 @@
        "ph": "26"
       },
       {
-       "p": "strength.row.r",
-       "q": "Opakování sérií",
-       "kind": "txt",
-       "ph": "10/9/8"
+       "p": "strength.row",
+       "q": "Opakování jednotlivých sérií",
+       "kind": "sets",
+       "sets": 4,
+       "ph": "8"
       },
       {
        "p": "strength.row.rir",
@@ -87,6 +92,7 @@
      "icon": "dumbbell",
      "title": "OHP ve stoje",
      "sub": "Síla · Upper A",
+     "pre": "3 série po 8 opakováních · RIR 2",
      "fields": [
       {
        "p": "strength.ohp.w",
@@ -95,10 +101,11 @@
        "ph": "26"
       },
       {
-       "p": "strength.ohp.r",
-       "q": "Opakování sérií",
-       "kind": "txt",
-       "ph": "10/9/8"
+       "p": "strength.ohp",
+       "q": "Opakování jednotlivých sérií",
+       "kind": "sets",
+       "sets": 3,
+       "ph": "8"
       },
       {
        "p": "strength.ohp.rir",
@@ -114,6 +121,7 @@
      "icon": "dumbbell",
      "title": "Lateral raise (kladka, 1 ruka)",
      "sub": "Síla · Upper A",
+     "pre": "4 série po 12–15 na každou ruku",
      "fields": [
       {
        "p": "strength.latA.w",
@@ -122,10 +130,11 @@
        "ph": "26"
       },
       {
-       "p": "strength.latA.r",
-       "q": "Opakování sérií",
-       "kind": "txt",
-       "ph": "10/9/8"
+       "p": "strength.latA",
+       "q": "Opakování jednotlivých sérií",
+       "kind": "sets",
+       "sets": 4,
+       "ph": "8"
       },
       {
        "p": "strength.latA.rir",
@@ -141,6 +150,7 @@
      "icon": "dumbbell",
      "title": "Face pull",
      "sub": "Síla · Upper A",
+     "pre": "3 série po 15–20 · lehká váha, tah k obličeji",
      "fields": [
       {
        "p": "strength.face.w",
@@ -149,10 +159,11 @@
        "ph": "26"
       },
       {
-       "p": "strength.face.r",
-       "q": "Opakování sérií",
-       "kind": "txt",
-       "ph": "10/9/8"
+       "p": "strength.face",
+       "q": "Opakování jednotlivých sérií",
+       "kind": "sets",
+       "sets": 3,
+       "ph": "8"
       },
       {
        "p": "strength.face.rir",
@@ -168,6 +179,7 @@
      "icon": "dumbbell",
      "title": "Biceps",
      "sub": "Síla · Upper A",
+     "pre": "3 série po 10–12",
      "fields": [
       {
        "p": "strength.bic.w",
@@ -176,10 +188,11 @@
        "ph": "26"
       },
       {
-       "p": "strength.bic.r",
-       "q": "Opakování sérií",
-       "kind": "txt",
-       "ph": "10/9/8"
+       "p": "strength.bic",
+       "q": "Opakování jednotlivých sérií",
+       "kind": "sets",
+       "sets": 3,
+       "ph": "8"
       },
       {
        "p": "strength.bic.rir",
@@ -195,6 +208,7 @@
      "icon": "dumbbell",
      "title": "Triceps",
      "sub": "Síla · Upper A",
+     "pre": "3 série po 10–12",
      "fields": [
       {
        "p": "strength.tri.w",
@@ -203,10 +217,11 @@
        "ph": "26"
       },
       {
-       "p": "strength.tri.r",
-       "q": "Opakování sérií",
-       "kind": "txt",
-       "ph": "10/9/8"
+       "p": "strength.tri",
+       "q": "Opakování jednotlivých sérií",
+       "kind": "sets",
+       "sets": 3,
+       "ph": "8"
       },
       {
        "p": "strength.tri.rir",
@@ -221,6 +236,7 @@
      "day": 1,
      "icon": "waves",
      "title": "Plavání (Út)",
+     "pre": "15–20' v klidné vodě: výdechy, splývání, kop, záběry ve stoje.",
      "fields": [
       {
        "p": "other.sw1was",
@@ -245,6 +261,7 @@
      "icon": "target2",
      "title": "Váha",
      "sub": "nalačno, po záchodě a před jídlem",
+     "pre": "Zvaž se hned po probuzení, před jídlem a pitím.",
      "fields": [
       {
        "p": "weight.st",
@@ -259,6 +276,7 @@
      "day": 2,
      "icon": "run",
      "title": "E-běh",
+     "pre": "40' v klidném tempu 5:45–6:20/km, tep do 152, konverzačně.",
      "fields": [
       {
        "p": "runs.e.where",
@@ -283,6 +301,7 @@
      "icon": "dumbbell",
      "title": "Box jump",
      "sub": "Síla · Lower A",
+     "pre": "3 série po 3 skocích · zapiš výšku bedny",
      "fields": [
       {
        "p": "strength.box.w",
@@ -291,10 +310,11 @@
        "ph": "60"
       },
       {
-       "p": "strength.box.r",
-       "q": "Opakování sérií",
-       "kind": "txt",
-       "ph": "10/9/8"
+       "p": "strength.box",
+       "q": "Opakování jednotlivých sérií",
+       "kind": "sets",
+       "sets": 3,
+       "ph": "8"
       },
       {
        "p": "strength.box.rir",
@@ -310,6 +330,7 @@
      "icon": "dumbbell",
      "title": "Broad jump",
      "sub": "Síla · Lower A",
+     "pre": "3 série po 3 skocích · zapiš nejdelší skok",
      "fields": [
       {
        "p": "strength.broad.w",
@@ -318,10 +339,11 @@
        "ph": "60"
       },
       {
-       "p": "strength.broad.r",
-       "q": "Opakování sérií",
-       "kind": "txt",
-       "ph": "10/9/8"
+       "p": "strength.broad",
+       "q": "Opakování jednotlivých sérií",
+       "kind": "sets",
+       "sets": 3,
+       "ph": "8"
       },
       {
        "p": "strength.broad.rir",
@@ -337,6 +359,7 @@
      "icon": "dumbbell",
      "title": "Dřep",
      "sub": "Síla · Lower A",
+     "pre": "4 série po 5–8 opakováních · RIR 2",
      "fields": [
       {
        "p": "strength.sq.w",
@@ -345,10 +368,11 @@
        "ph": "26"
       },
       {
-       "p": "strength.sq.r",
-       "q": "Opakování sérií",
-       "kind": "txt",
-       "ph": "10/9/8"
+       "p": "strength.sq",
+       "q": "Opakování jednotlivých sérií",
+       "kind": "sets",
+       "sets": 4,
+       "ph": "8"
       },
       {
        "p": "strength.sq.rir",
@@ -364,6 +388,7 @@
      "icon": "dumbbell",
      "title": "Nordic curl",
      "sub": "Síla · Lower A",
+     "pre": "3 série po 5–8 · pomalu dolů",
      "fields": [
       {
        "p": "strength.nordic.w",
@@ -372,10 +397,11 @@
        "ph": "26"
       },
       {
-       "p": "strength.nordic.r",
-       "q": "Opakování sérií",
-       "kind": "txt",
-       "ph": "10/9/8"
+       "p": "strength.nordic",
+       "q": "Opakování jednotlivých sérií",
+       "kind": "sets",
+       "sets": 3,
+       "ph": "8"
       },
       {
        "p": "strength.nordic.rir",
@@ -391,6 +417,7 @@
      "icon": "dumbbell",
      "title": "Výpony ve stoje",
      "sub": "Síla · Lower A",
+     "pre": "3 série po 12–15 · pauza nahoře",
      "fields": [
       {
        "p": "strength.calf.w",
@@ -399,10 +426,11 @@
        "ph": "26"
       },
       {
-       "p": "strength.calf.r",
-       "q": "Opakování sérií",
-       "kind": "txt",
-       "ph": "10/9/8"
+       "p": "strength.calf",
+       "q": "Opakování jednotlivých sérií",
+       "kind": "sets",
+       "sets": 3,
+       "ph": "8"
       },
       {
        "p": "strength.calf.rir",
@@ -417,6 +445,7 @@
      "day": 3,
      "icon": "run",
      "title": "Klus Z1 · 25 min",
+     "pre": "25' velmi lehce, jen rozhýbat.",
      "fields": [
       {
        "p": "runs.z.where",
@@ -440,6 +469,7 @@
      "day": 3,
      "icon": "waves",
      "title": "Plavání (Čt)",
+     "pre": "15–20' stejné čtyři body jako v úterý.",
      "fields": [
       {
        "p": "other.sw2was",
@@ -464,6 +494,7 @@
      "icon": "target2",
      "title": "Váha",
      "sub": "nalačno, po záchodě a před jídlem",
+     "pre": "Zvaž se hned po probuzení, před jídlem a pitím.",
      "fields": [
       {
        "p": "weight.pa",
@@ -479,6 +510,7 @@
      "icon": "dumbbell",
      "title": "Shyby s přítěží",
      "sub": "Síla · Upper B",
+     "pre": "4 série po 6 opakováních · přítěž podle pocitu",
      "fields": [
       {
        "p": "strength.pull.w",
@@ -487,10 +519,11 @@
        "ph": "26"
       },
       {
-       "p": "strength.pull.r",
-       "q": "Opakování sérií",
-       "kind": "txt",
-       "ph": "10/9/8"
+       "p": "strength.pull",
+       "q": "Opakování jednotlivých sérií",
+       "kind": "sets",
+       "sets": 4,
+       "ph": "8"
       },
       {
        "p": "strength.pull.rir",
@@ -506,6 +539,7 @@
      "icon": "dumbbell",
      "title": "Flat DB press",
      "sub": "Síla · Upper B",
+     "pre": "3 série po 8–10 · RIR 2",
      "fields": [
       {
        "p": "strength.flat.w",
@@ -514,10 +548,11 @@
        "ph": "26"
       },
       {
-       "p": "strength.flat.r",
-       "q": "Opakování sérií",
-       "kind": "txt",
-       "ph": "10/9/8"
+       "p": "strength.flat",
+       "q": "Opakování jednotlivých sérií",
+       "kind": "sets",
+       "sets": 3,
+       "ph": "8"
       },
       {
        "p": "strength.flat.rir",
@@ -533,6 +568,7 @@
      "icon": "dumbbell",
      "title": "Dipy",
      "sub": "Síla · Upper B",
+     "pre": "3 série po 8–12",
      "fields": [
       {
        "p": "strength.dips.w",
@@ -541,10 +577,11 @@
        "ph": "26"
       },
       {
-       "p": "strength.dips.r",
-       "q": "Opakování sérií",
-       "kind": "txt",
-       "ph": "10/9/8"
+       "p": "strength.dips",
+       "q": "Opakování jednotlivých sérií",
+       "kind": "sets",
+       "sets": 3,
+       "ph": "8"
       },
       {
        "p": "strength.dips.rir",
@@ -560,6 +597,7 @@
      "icon": "dumbbell",
      "title": "Straight-arm pulldown",
      "sub": "Síla · Upper B",
+     "pre": "3 série po 12–15",
      "fields": [
       {
        "p": "strength.sap.w",
@@ -568,10 +606,11 @@
        "ph": "26"
       },
       {
-       "p": "strength.sap.r",
-       "q": "Opakování sérií",
-       "kind": "txt",
-       "ph": "10/9/8"
+       "p": "strength.sap",
+       "q": "Opakování jednotlivých sérií",
+       "kind": "sets",
+       "sets": 3,
+       "ph": "8"
       },
       {
        "p": "strength.sap.rir",
@@ -587,6 +626,7 @@
      "icon": "dumbbell",
      "title": "Reverse pec deck",
      "sub": "Síla · Upper B",
+     "pre": "4 série po 15",
      "fields": [
       {
        "p": "strength.rpd.w",
@@ -595,10 +635,11 @@
        "ph": "26"
       },
       {
-       "p": "strength.rpd.r",
-       "q": "Opakování sérií",
-       "kind": "txt",
-       "ph": "10/9/8"
+       "p": "strength.rpd",
+       "q": "Opakování jednotlivých sérií",
+       "kind": "sets",
+       "sets": 4,
+       "ph": "8"
       },
       {
        "p": "strength.rpd.rir",
@@ -614,6 +655,7 @@
      "icon": "dumbbell",
      "title": "Lateral raise (kladka, 1 ruka)",
      "sub": "Síla · Upper B",
+     "pre": "3 série po 12–15 na každou ruku",
      "fields": [
       {
        "p": "strength.latB.w",
@@ -622,10 +664,11 @@
        "ph": "26"
       },
       {
-       "p": "strength.latB.r",
-       "q": "Opakování sérií",
-       "kind": "txt",
-       "ph": "10/9/8"
+       "p": "strength.latB",
+       "q": "Opakování jednotlivých sérií",
+       "kind": "sets",
+       "sets": 3,
+       "ph": "8"
       },
       {
        "p": "strength.latB.rir",
@@ -641,6 +684,7 @@
      "icon": "dumbbell",
      "title": "Prone Y",
      "sub": "Síla · Upper B",
+     "pre": "3 série po 12 · lehce, lopatky",
      "fields": [
       {
        "p": "strength.ypr.w",
@@ -649,10 +693,11 @@
        "ph": "26"
       },
       {
-       "p": "strength.ypr.r",
-       "q": "Opakování sérií",
-       "kind": "txt",
-       "ph": "10/9/8"
+       "p": "strength.ypr",
+       "q": "Opakování jednotlivých sérií",
+       "kind": "sets",
+       "sets": 3,
+       "ph": "8"
       },
       {
        "p": "strength.ypr.rir",
@@ -668,6 +713,7 @@
      "icon": "dumbbell",
      "title": "Cable crunch",
      "sub": "Síla · Upper B",
+     "pre": "3 série po 12–15",
      "fields": [
       {
        "p": "strength.crunch.w",
@@ -676,10 +722,11 @@
        "ph": "26"
       },
       {
-       "p": "strength.crunch.r",
-       "q": "Opakování sérií",
-       "kind": "txt",
-       "ph": "10/9/8"
+       "p": "strength.crunch",
+       "q": "Opakování jednotlivých sérií",
+       "kind": "sets",
+       "sets": 3,
+       "ph": "8"
       },
       {
        "p": "strength.crunch.rir",
@@ -694,6 +741,7 @@
      "day": 5,
      "icon": "run",
      "title": "Longrun",
+     "pre": "70' v tempu 5:45–6:20/km, tep 139–152, voda s sebou.",
      "fields": [
       {
        "p": "runs.lr.where",
@@ -718,6 +766,7 @@
      "icon": "dumbbell",
      "title": "Trap bar",
      "sub": "Síla · Lower B",
+     "pre": "4 série po 5–8 · RIR 2",
      "fields": [
       {
        "p": "strength.rdlb.w",
@@ -726,10 +775,11 @@
        "ph": "26"
       },
       {
-       "p": "strength.rdlb.r",
-       "q": "Opakování sérií",
-       "kind": "txt",
-       "ph": "10/9/8"
+       "p": "strength.rdlb",
+       "q": "Opakování jednotlivých sérií",
+       "kind": "sets",
+       "sets": 4,
+       "ph": "8"
       },
       {
        "p": "strength.rdlb.rir",
@@ -745,6 +795,7 @@
      "icon": "dumbbell",
      "title": "RDL",
      "sub": "Síla · Lower B",
+     "pre": "3 série po 8 · 2 s dolů, rovná záda",
      "fields": [
       {
        "p": "strength.rdl.w",
@@ -753,10 +804,11 @@
        "ph": "26"
       },
       {
-       "p": "strength.rdl.r",
-       "q": "Opakování sérií",
-       "kind": "txt",
-       "ph": "10/9/8"
+       "p": "strength.rdl",
+       "q": "Opakování jednotlivých sérií",
+       "kind": "sets",
+       "sets": 3,
+       "ph": "8"
       },
       {
        "p": "strength.rdl.rir",
@@ -772,6 +824,7 @@
      "icon": "dumbbell",
      "title": "Bulharský dřep",
      "sub": "Síla · Lower B",
+     "pre": "2 série po 8–10 na nohu",
      "fields": [
       {
        "p": "strength.bulg.w",
@@ -780,10 +833,11 @@
        "ph": "26"
       },
       {
-       "p": "strength.bulg.r",
-       "q": "Opakování sérií",
-       "kind": "txt",
-       "ph": "10/9/8"
+       "p": "strength.bulg",
+       "q": "Opakování jednotlivých sérií",
+       "kind": "sets",
+       "sets": 2,
+       "ph": "8"
       },
       {
        "p": "strength.bulg.rir",
@@ -799,6 +853,7 @@
      "icon": "dumbbell",
      "title": "Výpony v sedu",
      "sub": "Síla · Lower B",
+     "pre": "3 série po 15 · 3 s dolů",
      "fields": [
       {
        "p": "strength.calfsit.w",
@@ -807,10 +862,11 @@
        "ph": "26"
       },
       {
-       "p": "strength.calfsit.r",
-       "q": "Opakování sérií",
-       "kind": "txt",
-       "ph": "10/9/8"
+       "p": "strength.calfsit",
+       "q": "Opakování jednotlivých sérií",
+       "kind": "sets",
+       "sets": 3,
+       "ph": "8"
       },
       {
        "p": "strength.calfsit.rir",
@@ -826,6 +882,7 @@
      "icon": "target2",
      "title": "Váha",
      "sub": "nalačno, po záchodě a před jídlem",
+     "pre": "Zvaž se hned po probuzení, před jídlem a pitím.",
      "fields": [
       {
        "p": "weight.ne",
@@ -841,6 +898,7 @@
      "icon": "heart",
      "title": "Bolesti",
      "sub": "nic → nech prázdné",
+     "pre": "Cokoliv, co zlobilo — rameno, holeně, koleno. Když nic, nech prázdné.",
      "fields": [
       {
        "p": "pain.note",
@@ -856,6 +914,7 @@
      "icon": "clipboard",
      "title": "Cokoliv dalšího",
      "sub": "nic → nech prázdné",
+     "pre": "Spánek, práce, nemoc, cestování — co ovlivnilo týden.",
      "fields": [
       {
        "p": "extra.note",
@@ -887,957 +946,6 @@
     "- triceps: {s:tri}",
     "",
     "LOWER A (st)",
-    "- box jump (výška bedny): {s:box}",
-    "- broad jump (vzdálenost): {s:broad}",
-    "- dřep: {s:sq}",
-    "- nordic curl: {s:nordic}",
-    "- výpony ve stoje: {s:calf}",
-    "",
-    "UPPER B (pá)",
-    "- shyby s přítěží: {s:pull}",
-    "- flat DB press: {s:flat}",
-    "- dipy: {s:dips}",
-    "- straight-arm pulldown: {s:sap}",
-    "- reverse pec deck: {s:rpd}",
-    "- lateral raise (kladka, 1 ruka): {s:latB}",
-    "- prone Y: {s:ypr}",
-    "- cable crunch: {s:crunch}",
-    "",
-    "LOWER B (so)",
-    "- trap bar: {s:rdlb}",
-    "- RDL: {s:rdl}",
-    "- bulharský dřep: {s:bulg}",
-    "- výpony v sedu: {s:calfsit}",
-    "",
-    "── PLAVÁNÍ ──",
-    "Út: {other.sw1was|byl/nebyl} · věta: {other.sw1|__}",
-    "Čt: {other.sw2was|byl/nebyl} · věta: {other.sw2|__}",
-    "",
-    "── BĚHY (jen kde + pocit — čísla si vytáhnu) ──",
-    "Po Q: {runs.q.where|pás/venku} · {runs.q.feel|__}",
-    "St E: {runs.e.where|pás/venku} · {runs.e.feel|__}",
-    "Čt klus: {runs.z.where|pás/venku} · {runs.z.feel|__}",
-    "So LR: {runs.lr.where|pás/venku} · {runs.lr.feel|__}",
-    "",
-    "── COKOLIV DALŠÍHO (nic → „nic\") ──",
-    "{extra.note|nic}"
-   ]
-  },
-  {
-   "from": "2026-09-14",
-   "name": "ZKUŠEBNÍ — test úprav plánu",
-   "topics": [
-    {
-     "id": "ex-test",
-     "day": 2,
-     "icon": "dumbbell",
-     "title": "ZKOUŠKA — hip thrust",
-     "sub": "zkušební otázka, za chvíli zmizí",
-     "fields": [
-      {
-       "p": "strength.testhip.w",
-       "q": "Váha (kg)",
-       "kind": "num",
-       "ph": "100"
-      },
-      {
-       "p": "strength.testhip.r",
-       "q": "Opakování sérií",
-       "kind": "txt",
-       "ph": "10/9/8"
-      },
-      {
-       "p": "strength.testhip.rir",
-       "q": "RIR",
-       "kind": "num",
-       "ph": "2"
-      }
-     ]
-    },
-    {
-     "id": "q",
-     "day": 0,
-     "icon": "run",
-     "title": "Q-běh",
-     "fields": [
-      {
-       "p": "runs.q.where",
-       "q": "Kde jsi běžel?",
-       "kind": "chips",
-       "vals": [
-        "pás",
-        "venku"
-       ]
-      },
-      {
-       "p": "runs.q.feel",
-       "q": "Jak to šlo?",
-       "kind": "text",
-       "ph": "jak to šlo"
-      }
-     ]
-    },
-    {
-     "id": "ex-ia",
-     "day": 0,
-     "icon": "dumbbell",
-     "title": "Incline DB press",
-     "sub": "Síla · Upper A",
-     "fields": [
-      {
-       "p": "strength.ia.w",
-       "q": "Váha (kg)",
-       "kind": "num",
-       "ph": "26"
-      },
-      {
-       "p": "strength.ia.r",
-       "q": "Opakování sérií",
-       "kind": "txt",
-       "ph": "10/9/8"
-      },
-      {
-       "p": "strength.ia.rir",
-       "q": "RIR poslední série",
-       "kind": "num",
-       "ph": "2"
-      }
-     ]
-    },
-    {
-     "id": "ex-row",
-     "day": 0,
-     "icon": "dumbbell",
-     "title": "Chest-supported row",
-     "sub": "Síla · Upper A",
-     "fields": [
-      {
-       "p": "strength.row.w",
-       "q": "Váha (kg)",
-       "kind": "num",
-       "ph": "26"
-      },
-      {
-       "p": "strength.row.r",
-       "q": "Opakování sérií",
-       "kind": "txt",
-       "ph": "10/9/8"
-      },
-      {
-       "p": "strength.row.rir",
-       "q": "RIR poslední série",
-       "kind": "num",
-       "ph": "2"
-      }
-     ]
-    },
-    {
-     "id": "ex-ohp",
-     "day": 0,
-     "icon": "dumbbell",
-     "title": "OHP ve stoje",
-     "sub": "Síla · Upper A",
-     "fields": [
-      {
-       "p": "strength.ohp.w",
-       "q": "Váha (kg)",
-       "kind": "num",
-       "ph": "26"
-      },
-      {
-       "p": "strength.ohp.r",
-       "q": "Opakování sérií",
-       "kind": "txt",
-       "ph": "10/9/8"
-      },
-      {
-       "p": "strength.ohp.rir",
-       "q": "RIR poslední série",
-       "kind": "num",
-       "ph": "2"
-      }
-     ]
-    },
-    {
-     "id": "ex-latA",
-     "day": 0,
-     "icon": "dumbbell",
-     "title": "Lateral raise (kladka, 1 ruka)",
-     "sub": "Síla · Upper A",
-     "fields": [
-      {
-       "p": "strength.latA.w",
-       "q": "Váha (kg)",
-       "kind": "num",
-       "ph": "26"
-      },
-      {
-       "p": "strength.latA.r",
-       "q": "Opakování sérií",
-       "kind": "txt",
-       "ph": "10/9/8"
-      },
-      {
-       "p": "strength.latA.rir",
-       "q": "RIR poslední série",
-       "kind": "num",
-       "ph": "2"
-      }
-     ]
-    },
-    {
-     "id": "ex-face",
-     "day": 0,
-     "icon": "dumbbell",
-     "title": "Face pull",
-     "sub": "Síla · Upper A",
-     "fields": [
-      {
-       "p": "strength.face.w",
-       "q": "Váha (kg)",
-       "kind": "num",
-       "ph": "26"
-      },
-      {
-       "p": "strength.face.r",
-       "q": "Opakování sérií",
-       "kind": "txt",
-       "ph": "10/9/8"
-      },
-      {
-       "p": "strength.face.rir",
-       "q": "RIR poslední série",
-       "kind": "num",
-       "ph": "2"
-      }
-     ]
-    },
-    {
-     "id": "ex-bic",
-     "day": 0,
-     "icon": "dumbbell",
-     "title": "Biceps",
-     "sub": "Síla · Upper A",
-     "fields": [
-      {
-       "p": "strength.bic.w",
-       "q": "Váha (kg)",
-       "kind": "num",
-       "ph": "26"
-      },
-      {
-       "p": "strength.bic.r",
-       "q": "Opakování sérií",
-       "kind": "txt",
-       "ph": "10/9/8"
-      },
-      {
-       "p": "strength.bic.rir",
-       "q": "RIR poslední série",
-       "kind": "num",
-       "ph": "2"
-      }
-     ]
-    },
-    {
-     "id": "ex-tri",
-     "day": 0,
-     "icon": "dumbbell",
-     "title": "Triceps",
-     "sub": "Síla · Upper A",
-     "fields": [
-      {
-       "p": "strength.tri.w",
-       "q": "Váha (kg)",
-       "kind": "num",
-       "ph": "26"
-      },
-      {
-       "p": "strength.tri.r",
-       "q": "Opakování sérií",
-       "kind": "txt",
-       "ph": "10/9/8"
-      },
-      {
-       "p": "strength.tri.rir",
-       "q": "RIR poslední série",
-       "kind": "num",
-       "ph": "2"
-      }
-     ]
-    },
-    {
-     "id": "sw1",
-     "day": 1,
-     "icon": "waves",
-     "title": "Plavání (Út)",
-     "fields": [
-      {
-       "p": "other.sw1was",
-       "q": "Byl jsi na tréninku?",
-       "kind": "chips",
-       "vals": [
-        "byl",
-        "nebyl"
-       ]
-      },
-      {
-       "p": "other.sw1",
-       "q": "Co šlo a co drhlo",
-       "kind": "text",
-       "ph": "např. výdechy ok, splývání drhne"
-      }
-     ]
-    },
-    {
-     "id": "w-st",
-     "day": 2,
-     "icon": "target2",
-     "title": "Váha",
-     "sub": "nalačno, po záchodě a před jídlem",
-     "fields": [
-      {
-       "p": "weight.st",
-       "q": "Kolik kg?",
-       "kind": "num",
-       "ph": "82,5"
-      }
-     ]
-    },
-    {
-     "id": "e",
-     "day": 2,
-     "icon": "run",
-     "title": "E-běh",
-     "fields": [
-      {
-       "p": "runs.e.where",
-       "q": "Kde jsi běžel?",
-       "kind": "chips",
-       "vals": [
-        "pás",
-        "venku"
-       ]
-      },
-      {
-       "p": "runs.e.feel",
-       "q": "Jak to šlo?",
-       "kind": "text",
-       "ph": "jak to šlo"
-      }
-     ]
-    },
-    {
-     "id": "ex-box",
-     "day": 2,
-     "icon": "dumbbell",
-     "title": "Box jump",
-     "sub": "Síla · Lower A",
-     "fields": [
-      {
-       "p": "strength.box.w",
-       "q": "výška bedny (cm)",
-       "kind": "num",
-       "ph": "60"
-      },
-      {
-       "p": "strength.box.r",
-       "q": "Opakování sérií",
-       "kind": "txt",
-       "ph": "10/9/8"
-      },
-      {
-       "p": "strength.box.rir",
-       "q": "RIR poslední série",
-       "kind": "num",
-       "ph": "2"
-      }
-     ]
-    },
-    {
-     "id": "ex-broad",
-     "day": 2,
-     "icon": "dumbbell",
-     "title": "Broad jump",
-     "sub": "Síla · Lower A",
-     "fields": [
-      {
-       "p": "strength.broad.w",
-       "q": "vzdálenost (cm)",
-       "kind": "num",
-       "ph": "60"
-      },
-      {
-       "p": "strength.broad.r",
-       "q": "Opakování sérií",
-       "kind": "txt",
-       "ph": "10/9/8"
-      },
-      {
-       "p": "strength.broad.rir",
-       "q": "RIR poslední série",
-       "kind": "num",
-       "ph": "2"
-      }
-     ]
-    },
-    {
-     "id": "ex-sq",
-     "day": 2,
-     "icon": "dumbbell",
-     "title": "Dřep",
-     "sub": "Síla · Lower A",
-     "fields": [
-      {
-       "p": "strength.sq.w",
-       "q": "Váha (kg)",
-       "kind": "num",
-       "ph": "26"
-      },
-      {
-       "p": "strength.sq.r",
-       "q": "Opakování sérií",
-       "kind": "txt",
-       "ph": "10/9/8"
-      },
-      {
-       "p": "strength.sq.rir",
-       "q": "RIR poslední série",
-       "kind": "num",
-       "ph": "2"
-      }
-     ]
-    },
-    {
-     "id": "ex-nordic",
-     "day": 2,
-     "icon": "dumbbell",
-     "title": "Nordic curl",
-     "sub": "Síla · Lower A",
-     "fields": [
-      {
-       "p": "strength.nordic.w",
-       "q": "Váha (kg)",
-       "kind": "num",
-       "ph": "26"
-      },
-      {
-       "p": "strength.nordic.r",
-       "q": "Opakování sérií",
-       "kind": "txt",
-       "ph": "10/9/8"
-      },
-      {
-       "p": "strength.nordic.rir",
-       "q": "RIR poslední série",
-       "kind": "num",
-       "ph": "2"
-      }
-     ]
-    },
-    {
-     "id": "ex-calf",
-     "day": 2,
-     "icon": "dumbbell",
-     "title": "Výpony ve stoje",
-     "sub": "Síla · Lower A",
-     "fields": [
-      {
-       "p": "strength.calf.w",
-       "q": "Váha (kg)",
-       "kind": "num",
-       "ph": "26"
-      },
-      {
-       "p": "strength.calf.r",
-       "q": "Opakování sérií",
-       "kind": "txt",
-       "ph": "10/9/8"
-      },
-      {
-       "p": "strength.calf.rir",
-       "q": "RIR poslední série",
-       "kind": "num",
-       "ph": "2"
-      }
-     ]
-    },
-    {
-     "id": "z",
-     "day": 3,
-     "icon": "run",
-     "title": "Klus Z1 · 25 min",
-     "fields": [
-      {
-       "p": "runs.z.where",
-       "q": "Kde jsi klusal?",
-       "kind": "chips",
-       "vals": [
-        "pás",
-        "venku"
-       ]
-      },
-      {
-       "p": "runs.z.feel",
-       "q": "Jak to šlo?",
-       "kind": "text",
-       "ph": "jak to šlo"
-      }
-     ]
-    },
-    {
-     "id": "sw2",
-     "day": 3,
-     "icon": "waves",
-     "title": "Plavání (Čt)",
-     "fields": [
-      {
-       "p": "other.sw2was",
-       "q": "Byl jsi na tréninku?",
-       "kind": "chips",
-       "vals": [
-        "byl",
-        "nebyl"
-       ]
-      },
-      {
-       "p": "other.sw2",
-       "q": "Co šlo a co drhlo",
-       "kind": "text",
-       "ph": "např. výdechy ok, splývání drhne"
-      }
-     ]
-    },
-    {
-     "id": "w-pa",
-     "day": 4,
-     "icon": "target2",
-     "title": "Váha",
-     "sub": "nalačno, po záchodě a před jídlem",
-     "fields": [
-      {
-       "p": "weight.pa",
-       "q": "Kolik kg?",
-       "kind": "num",
-       "ph": "82,5"
-      }
-     ]
-    },
-    {
-     "id": "ex-pull",
-     "day": 4,
-     "icon": "dumbbell",
-     "title": "Shyby s přítěží",
-     "sub": "Síla · Upper B",
-     "fields": [
-      {
-       "p": "strength.pull.w",
-       "q": "Váha (kg)",
-       "kind": "num",
-       "ph": "26"
-      },
-      {
-       "p": "strength.pull.r",
-       "q": "Opakování sérií",
-       "kind": "txt",
-       "ph": "10/9/8"
-      },
-      {
-       "p": "strength.pull.rir",
-       "q": "RIR poslední série",
-       "kind": "num",
-       "ph": "2"
-      }
-     ]
-    },
-    {
-     "id": "ex-flat",
-     "day": 4,
-     "icon": "dumbbell",
-     "title": "Flat DB press",
-     "sub": "Síla · Upper B",
-     "fields": [
-      {
-       "p": "strength.flat.w",
-       "q": "Váha (kg)",
-       "kind": "num",
-       "ph": "26"
-      },
-      {
-       "p": "strength.flat.r",
-       "q": "Opakování sérií",
-       "kind": "txt",
-       "ph": "10/9/8"
-      },
-      {
-       "p": "strength.flat.rir",
-       "q": "RIR poslední série",
-       "kind": "num",
-       "ph": "2"
-      }
-     ]
-    },
-    {
-     "id": "ex-dips",
-     "day": 4,
-     "icon": "dumbbell",
-     "title": "Dipy",
-     "sub": "Síla · Upper B",
-     "fields": [
-      {
-       "p": "strength.dips.w",
-       "q": "Váha (kg)",
-       "kind": "num",
-       "ph": "26"
-      },
-      {
-       "p": "strength.dips.r",
-       "q": "Opakování sérií",
-       "kind": "txt",
-       "ph": "10/9/8"
-      },
-      {
-       "p": "strength.dips.rir",
-       "q": "RIR poslední série",
-       "kind": "num",
-       "ph": "2"
-      }
-     ]
-    },
-    {
-     "id": "ex-sap",
-     "day": 4,
-     "icon": "dumbbell",
-     "title": "Straight-arm pulldown",
-     "sub": "Síla · Upper B",
-     "fields": [
-      {
-       "p": "strength.sap.w",
-       "q": "Váha (kg)",
-       "kind": "num",
-       "ph": "26"
-      },
-      {
-       "p": "strength.sap.r",
-       "q": "Opakování sérií",
-       "kind": "txt",
-       "ph": "10/9/8"
-      },
-      {
-       "p": "strength.sap.rir",
-       "q": "RIR poslední série",
-       "kind": "num",
-       "ph": "2"
-      }
-     ]
-    },
-    {
-     "id": "ex-rpd",
-     "day": 4,
-     "icon": "dumbbell",
-     "title": "Reverse pec deck",
-     "sub": "Síla · Upper B",
-     "fields": [
-      {
-       "p": "strength.rpd.w",
-       "q": "Váha (kg)",
-       "kind": "num",
-       "ph": "26"
-      },
-      {
-       "p": "strength.rpd.r",
-       "q": "Opakování sérií",
-       "kind": "txt",
-       "ph": "10/9/8"
-      },
-      {
-       "p": "strength.rpd.rir",
-       "q": "RIR poslední série",
-       "kind": "num",
-       "ph": "2"
-      }
-     ]
-    },
-    {
-     "id": "ex-latB",
-     "day": 4,
-     "icon": "dumbbell",
-     "title": "Lateral raise (kladka, 1 ruka)",
-     "sub": "Síla · Upper B",
-     "fields": [
-      {
-       "p": "strength.latB.w",
-       "q": "Váha (kg)",
-       "kind": "num",
-       "ph": "26"
-      },
-      {
-       "p": "strength.latB.r",
-       "q": "Opakování sérií",
-       "kind": "txt",
-       "ph": "10/9/8"
-      },
-      {
-       "p": "strength.latB.rir",
-       "q": "RIR poslední série",
-       "kind": "num",
-       "ph": "2"
-      }
-     ]
-    },
-    {
-     "id": "ex-ypr",
-     "day": 4,
-     "icon": "dumbbell",
-     "title": "Prone Y",
-     "sub": "Síla · Upper B",
-     "fields": [
-      {
-       "p": "strength.ypr.w",
-       "q": "Váha (kg)",
-       "kind": "num",
-       "ph": "26"
-      },
-      {
-       "p": "strength.ypr.r",
-       "q": "Opakování sérií",
-       "kind": "txt",
-       "ph": "10/9/8"
-      },
-      {
-       "p": "strength.ypr.rir",
-       "q": "RIR poslední série",
-       "kind": "num",
-       "ph": "2"
-      }
-     ]
-    },
-    {
-     "id": "ex-crunch",
-     "day": 4,
-     "icon": "dumbbell",
-     "title": "Cable crunch",
-     "sub": "Síla · Upper B",
-     "fields": [
-      {
-       "p": "strength.crunch.w",
-       "q": "Váha (kg)",
-       "kind": "num",
-       "ph": "26"
-      },
-      {
-       "p": "strength.crunch.r",
-       "q": "Opakování sérií",
-       "kind": "txt",
-       "ph": "10/9/8"
-      },
-      {
-       "p": "strength.crunch.rir",
-       "q": "RIR poslední série",
-       "kind": "num",
-       "ph": "2"
-      }
-     ]
-    },
-    {
-     "id": "lr",
-     "day": 5,
-     "icon": "run",
-     "title": "Longrun",
-     "fields": [
-      {
-       "p": "runs.lr.where",
-       "q": "Kde jsi běžel?",
-       "kind": "chips",
-       "vals": [
-        "pás",
-        "venku"
-       ]
-      },
-      {
-       "p": "runs.lr.feel",
-       "q": "Jak to šlo?",
-       "kind": "text",
-       "ph": "jak to šlo"
-      }
-     ]
-    },
-    {
-     "id": "ex-rdlb",
-     "day": 5,
-     "icon": "dumbbell",
-     "title": "Trap bar",
-     "sub": "Síla · Lower B",
-     "fields": [
-      {
-       "p": "strength.rdlb.w",
-       "q": "Váha (kg)",
-       "kind": "num",
-       "ph": "26"
-      },
-      {
-       "p": "strength.rdlb.r",
-       "q": "Opakování sérií",
-       "kind": "txt",
-       "ph": "10/9/8"
-      },
-      {
-       "p": "strength.rdlb.rir",
-       "q": "RIR poslední série",
-       "kind": "num",
-       "ph": "2"
-      }
-     ]
-    },
-    {
-     "id": "ex-rdl",
-     "day": 5,
-     "icon": "dumbbell",
-     "title": "RDL",
-     "sub": "Síla · Lower B",
-     "fields": [
-      {
-       "p": "strength.rdl.w",
-       "q": "Váha (kg)",
-       "kind": "num",
-       "ph": "26"
-      },
-      {
-       "p": "strength.rdl.r",
-       "q": "Opakování sérií",
-       "kind": "txt",
-       "ph": "10/9/8"
-      },
-      {
-       "p": "strength.rdl.rir",
-       "q": "RIR poslední série",
-       "kind": "num",
-       "ph": "2"
-      }
-     ]
-    },
-    {
-     "id": "ex-bulg",
-     "day": 5,
-     "icon": "dumbbell",
-     "title": "Bulharský dřep",
-     "sub": "Síla · Lower B",
-     "fields": [
-      {
-       "p": "strength.bulg.w",
-       "q": "Váha (kg)",
-       "kind": "num",
-       "ph": "26"
-      },
-      {
-       "p": "strength.bulg.r",
-       "q": "Opakování sérií",
-       "kind": "txt",
-       "ph": "10/9/8"
-      },
-      {
-       "p": "strength.bulg.rir",
-       "q": "RIR poslední série",
-       "kind": "num",
-       "ph": "2"
-      }
-     ]
-    },
-    {
-     "id": "ex-calfsit",
-     "day": 5,
-     "icon": "dumbbell",
-     "title": "Výpony v sedu",
-     "sub": "Síla · Lower B",
-     "fields": [
-      {
-       "p": "strength.calfsit.w",
-       "q": "Váha (kg)",
-       "kind": "num",
-       "ph": "26"
-      },
-      {
-       "p": "strength.calfsit.r",
-       "q": "Opakování sérií",
-       "kind": "txt",
-       "ph": "10/9/8"
-      },
-      {
-       "p": "strength.calfsit.rir",
-       "q": "RIR poslední série",
-       "kind": "num",
-       "ph": "2"
-      }
-     ]
-    },
-    {
-     "id": "w-ne",
-     "day": 6,
-     "icon": "target2",
-     "title": "Váha",
-     "sub": "nalačno, po záchodě a před jídlem",
-     "fields": [
-      {
-       "p": "weight.ne",
-       "q": "Kolik kg?",
-       "kind": "num",
-       "ph": "82,5"
-      }
-     ]
-    },
-    {
-     "id": "pain",
-     "day": 6,
-     "icon": "heart",
-     "title": "Bolesti",
-     "sub": "nic → nech prázdné",
-     "fields": [
-      {
-       "p": "pain.note",
-       "q": "Co bolí, jak moc (0–10) a kdy?",
-       "kind": "text",
-       "ph": "např. rameno 3/10 při OHP"
-      }
-     ]
-    },
-    {
-     "id": "extra",
-     "day": 6,
-     "icon": "clipboard",
-     "title": "Cokoliv dalšího",
-     "sub": "nic → nech prázdné",
-     "fields": [
-      {
-       "p": "extra.note",
-       "q": "Co by měl trenér vědět?",
-       "kind": "text",
-       "ph": "např. hodně práce, málo spánku"
-      }
-     ]
-    }
-   ],
-   "export": [
-    "TÝDEN Č.: {no}",
-    "",
-    "── VÁHA ──",
-    "St: {weight.st|__}   Pá: {weight.pa|__}   Ne: {weight.ne|__}",
-    "",
-    "── BOLESTI (cokoliv; nic → „nic\") ──",
-    "Co + 0–10 + kdy: {pain.note|nic}",
-    "",
-    "── SÍLA (váha: opakování + RIR) ──",
-    "",
-    "UPPER A (po)",
-    "- incline DB press: {s:ia}",
-    "- chest-supported row: {s:row}",
-    "- OHP ve stoje: {s:ohp}",
-    "- lateral raise (kladka, 1 ruka): {s:latA}",
-    "- face pull: {s:face}",
-    "- biceps: {s:bic}",
-    "- triceps: {s:tri}",
-    "",
-    "LOWER A (st)",
-    "- ZKOUŠKA hip thrust: {s:testhip}",
     "- box jump (výška bedny): {s:box}",
     "- broad jump (vzdálenost): {s:broad}",
     "- dřep: {s:sq}",
