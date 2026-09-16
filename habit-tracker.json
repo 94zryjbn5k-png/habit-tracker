@@ -396,24 +396,6 @@
    "color": null
   },
   {
-   "id": "1175d216-034a-4694-ba88-b36fcd529151",
-   "name": "Kreatin",
-   "emoji": "💊",
-   "type": "check",
-   "goal": null,
-   "unit": "",
-   "archived": false,
-   "order": 3,
-   "createdAt": 1789563441196,
-   "freq": {
-    "type": "daily"
-   },
-   "vacations": [],
-   "timerMin": null,
-   "link": null,
-   "color": null
-  },
-  {
    "id": "e9ba72de-09fc-4644-a210-4b4a73a87be1",
    "name": "Duolingo",
    "emoji": "🦉",
@@ -1717,7 +1699,7 @@
   "note": "hv b",
   "items": []
  },
- "updatedAt": 1789563571108,
+ "updatedAt": 1789563579392,
  "mods": {
   "entries": {
    "2026-09-16": 1789562698659
@@ -1730,7 +1712,7 @@
    "2026-09-14|other.sw1was": 1789562435618
   },
   "notes": {},
-  "habits": 1789563571108,
+  "habits": 1789563579391,
   "shopping": 1789562761798
  },
  "hideDone": false,
