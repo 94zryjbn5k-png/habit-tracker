@@ -1,20 +1,21 @@
 name: Připomínky
- 
+
 on:
   schedule:
-    - cron: '*/15 * * * *'   # každých 15 minut (GitHub se občas opozdí o pár minut)
-  workflow_dispatch:          # ruční spuštění pro test
- 
+    - cron: '0 */3 * * *'     # záloha: každé 3 hodiny, kdyby se řetěz přetrhl
+  workflow_dispatch:
+
 permissions:
   contents: write
- 
+
 concurrency:
   group: reminders
   cancel-in-progress: false
- 
+
 jobs:
   send:
     runs-on: ubuntu-latest
+    timeout-minutes: 350
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -24,7 +25,7 @@ jobs:
       - name: Rozeslat naplánovaná oznámení
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CHAIN_TOKEN: ${{ secrets.CHAIN_TOKEN }}
           VAPID_PUBLIC: ${{ secrets.VAPID_PUBLIC }}
           VAPID_PRIVATE: ${{ secrets.VAPID_PRIVATE }}
         run: node scripts/send-reminders.js
- 
