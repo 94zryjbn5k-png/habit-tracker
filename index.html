@@ -886,7 +886,16 @@ input,textarea,select,.meal-f,.ck-in{border-radius:13px;}
 'use strict';
 
 /* ============ Konstanty ============ */
-const APP_VERSION = 'v39';
+function touch(kind, key){
+  if (!data.mods) data.mods = { entries: {}, checkins: {}, ck: {}, notes: {}, habits: 0, shopping: 0 };
+  const now = Date.now();
+  if (key === undefined) data.mods[kind] = now;
+  else {
+    if (!data.mods[kind]) data.mods[kind] = {};
+    data.mods[kind][key] = now;
+  }
+}
+const APP_VERSION = 'v40';
 const STORAGE_KEY = 'habit-tracker-data-v1';
 const WD = ['Po','Út','St','Čt','Pá','So','Ne'];
 const EMOJI_PICKS = ['✅','💪','🏃','🚶','🧘','😴','📖','✍️','📓','💧','🥗','🍎','🚫','💊','🦉','🎓','💼','🎸','🧹','🧠'];
@@ -1246,6 +1255,7 @@ function defaultData(){
     shopping: { note: '', items: [] },
     hideDone: false,
     updatedAt: 0,
+    mods: { entries: {}, checkins: {}, ck: {}, notes: {}, habits: 0, shopping: 0 },
     theme: { ...THEME_DEFAULT },
     plan: DEFAULT_PLAN
   };
@@ -1340,6 +1350,7 @@ function normalizeData(obj){
     checkins: {},
     shopping: { note: '', items: [] },
     updatedAt: (typeof obj.updatedAt === 'number' && isFinite(obj.updatedAt)) ? obj.updatedAt : 0,
+    mods: { entries: {}, checkins: {}, ck: {}, notes: {}, habits: 0, shopping: 0 },
     hideDone: !!obj.hideDone,
     theme: normTheme(obj.theme || (typeof obj.bg === 'string' && LEGACY_BG_IDS[obj.bg] ? { bg: LEGACY_BG_IDS[obj.bg] } : null)),
     plan: typeof obj.plan === 'string' ? obj.plan.slice(0, 50000) : DEFAULT_PLAN
@@ -1386,6 +1397,16 @@ function normalizeData(obj){
       }
       if (Object.keys(day).length) out.notes[k] = day;
     }
+  }
+  if (obj.mods && typeof obj.mods === 'object'){
+    const num = v => (typeof v === 'number' && isFinite(v) && v > 0) ? v : 0;
+    const mapOf = m => {
+      const o = {};
+      if (m && typeof m === 'object') for (const k of Object.keys(m)) if (num(m[k])) o[k] = m[k];
+      return o;
+    };
+    out.mods = { entries: mapOf(obj.mods.entries), checkins: mapOf(obj.mods.checkins), ck: mapOf(obj.mods.ck),
+      notes: mapOf(obj.mods.notes), habits: num(obj.mods.habits), shopping: num(obj.mods.shopping) };
   }
   if (obj.shopping && typeof obj.shopping === 'object' && !Array.isArray(obj.shopping)){
     if (typeof obj.shopping.note === 'string') out.shopping.note = obj.shopping.note.slice(0, 2000);
@@ -1485,36 +1506,87 @@ function setSyncMeta(patch){
   try { localStorage.setItem(SYNC_M, JSON.stringify(m)); } catch (e) {}
   return m;
 }
-function mergeData(older, newer){
-  const out = normalizeData(JSON.parse(JSON.stringify(newer)));
-  const byId = {};
-  out.habits.forEach(h => { byId[h.id] = true; });
-  older.habits.forEach(h => { if (!byId[h.id]) out.habits.push(JSON.parse(JSON.stringify(h))); });
-  for (const k of Object.keys(older.entries || {})){
-    if (!out.entries[k]) out.entries[k] = {};
-    for (const id of Object.keys(older.entries[k])){
-      if (out.entries[k][id] === undefined) out.entries[k][id] = older.entries[k][id];
-    }
+function mergeData(a, b){
+  // a, b = dvě kopie dat; rozhoduje se podle razítek změn u jednotlivých dnů/týdnů,
+  // takže se správně přenese i smazání (odškrtnutí zpět)
+  const A = normalizeData(JSON.parse(JSON.stringify(a)));
+  const B = normalizeData(JSON.parse(JSON.stringify(b)));
+  const newer = (B.updatedAt || 0) >= (A.updatedAt || 0) ? B : A;
+  const older = newer === B ? A : B;
+  const out = JSON.parse(JSON.stringify(newer));
+  const modOf = (o, kind, key) => ((o.mods && o.mods[kind]) ? (o.mods[kind][key] || 0) : 0);
+
+  // dny se záznamy: každý den patří tomu, kdo ho upravil později
+  const dayKeys = new Set([...Object.keys(A.entries || {}), ...Object.keys(B.entries || {}),
+    ...Object.keys((A.mods || {}).entries || {}), ...Object.keys((B.mods || {}).entries || {})]);
+  out.entries = {};
+  for (const k of dayKeys){
+    const src = modOf(older, 'entries', k) > modOf(newer, 'entries', k) ? older : newer;
+    if (src.entries[k] && Object.keys(src.entries[k]).length) out.entries[k] = JSON.parse(JSON.stringify(src.entries[k]));
   }
-  for (const k of Object.keys(older.notes || {})){
-    if (!out.notes[k]) out.notes[k] = {};
-    for (const id of Object.keys(older.notes[k])){
-      if (!out.notes[k][id]) out.notes[k][id] = older.notes[k][id];
-    }
-  }
-  for (const wk of Object.keys(older.checkins || {})){
-    if (!out.checkins[wk]) out.checkins[wk] = {};
+  // check-iny: rozhoduje se po jednotlivých políčkách, ať se nepřepíšou zápisy z druhého zařízení
+  const wkKeys = new Set([...Object.keys(A.checkins || {}), ...Object.keys(B.checkins || {})]);
+  out.checkins = {};
+  for (const k of wkKeys){
+    const w = {};
     for (const p of CK_PATHS){
-      const a = ckRead(older.checkins[wk], p);
-      const b = ckRead(out.checkins[wk], p);
-      if (typeof a === 'string' && a.trim() && !(typeof b === 'string' && b.trim())) ckWrite(out.checkins[wk], p, a);
+      const tagN = modOf(newer, 'ck', k + '|' + p);
+      const tagO = modOf(older, 'ck', k + '|' + p);
+      let src;
+      if (tagO > tagN) src = older;
+      else if (tagN > tagO) src = newer;
+      else {
+        // bez razítek: nikdy nezahazovat vyplněnou hodnotu, jen doplnit
+        const vN = ckRead(newer.checkins[k] || {}, p);
+        const vO = ckRead(older.checkins[k] || {}, p);
+        const hasN = typeof vN === 'string' && vN.trim();
+        const hasO = typeof vO === 'string' && vO.trim();
+        if (hasN && !hasO) src = newer;
+        else if (hasO && !hasN) src = older;
+        else src = modOf(older, 'checkins', k) > modOf(newer, 'checkins', k) ? older : newer;
+      }
+      const v = ckRead(src.checkins[k] || {}, p);
+      if (typeof v === 'string' && v.trim()) ckWrite(w, p, v);
     }
+    if (Object.keys(w).length) out.checkins[k] = w;
   }
+  // poznámky po dnech
+  const nKeys = new Set([...Object.keys(A.notes || {}), ...Object.keys(B.notes || {})]);
+  out.notes = {};
+  for (const k of nKeys){
+    const src = modOf(older, 'notes', k) > modOf(newer, 'notes', k) ? older : newer;
+    if (src.notes[k] && Object.keys(src.notes[k]).length) out.notes[k] = JSON.parse(JSON.stringify(src.notes[k]));
+  }
+  // návyky: vyhrává novější seznam (aby se přenesla i smazání),
+  // ale doplní se návyky založené na druhém zařízení až po jeho poslední změně
+  const hNew = (newer.mods && newer.mods.habits) || 0;
+  const hOld = (older.mods && older.mods.habits) || 0;
+  const base = hOld > hNew ? older : newer;
+  const other = base === newer ? older : newer;
+  const baseMod = base === newer ? hNew : hOld;
+  out.habits = JSON.parse(JSON.stringify(base.habits));
+  const have = {};
+  out.habits.forEach(h => { have[h.id] = true; });
+  other.habits.forEach(h => { if (!have[h.id] && (h.createdAt || 0) > baseMod) out.habits.push(JSON.parse(JSON.stringify(h))); });
+  // nákupní seznam jako celek
+  const sNew = (newer.mods && newer.mods.shopping) || 0;
+  const sOld = (older.mods && older.mods.shopping) || 0;
+  out.shopping = JSON.parse(JSON.stringify(sOld > sNew ? older.shopping : newer.shopping));
+  // milníky: platí dřívější datum
+  out.milestones = Object.assign({}, newer.milestones);
   for (const k of Object.keys(older.milestones || {})){
     if (!out.milestones[k] || older.milestones[k] < out.milestones[k]) out.milestones[k] = older.milestones[k];
   }
-  if (!out.shopping.items.length && older.shopping && older.shopping.items.length) out.shopping = JSON.parse(JSON.stringify(older.shopping));
-  out.updatedAt = Math.max(older.updatedAt || 0, newer.updatedAt || 0);
+  // razítka: z obou stran to pozdější
+  out.mods = { entries: {}, checkins: {}, ck: {}, notes: {},
+    habits: Math.max(hNew, hOld), shopping: Math.max(sNew, sOld) };
+  for (const kind of ['entries', 'checkins', 'ck', 'notes']){
+    for (const src of [A, B]){
+      const m2 = (src.mods && src.mods[kind]) || {};
+      for (const k of Object.keys(m2)) out.mods[kind][k] = Math.max(out.mods[kind][k] || 0, m2[k]);
+    }
+  }
+  out.updatedAt = Math.max(A.updatedAt || 0, B.updatedAt || 0);
   return out;
 }
 function syncRawUrl(){
@@ -1639,7 +1711,7 @@ function syncPullMerge(loud){
       if (remT === locT){ if (loud) toast('Data jsou stejná jako v cloudu'); return; }
       if (typingNow() && !loud) return; // nikdy nepřepisovat rozepsané pole
       const before = JSON.stringify(data);
-      data = remT > locT ? mergeData(data, rem.obj) : mergeData(rem.obj, data);
+      data = mergeData(data, rem.obj);
       const changed = JSON.stringify(data) !== before;
       if (changed){
         try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch (e) {}
@@ -1749,6 +1821,7 @@ function getVal(key, habitId){
 }
 function setVal(key, habitId, value){
   nextSyncFast = true; // odškrtnutí / změna čísla = okamžité odeslání
+  touch('entries', key);
   const isTodayKey = key === dateKey(today());
   const before = isTodayKey ? dayStats(key).pct : -1;
   let day = data.entries[key];
@@ -1998,6 +2071,8 @@ function ckGet(wk, path){
 }
 function ckSet(wk, path, val){
   if (CK_PATHS.indexOf(path) === -1) return;
+  touch('checkins', wk);
+  touch('ck', wk + '|' + path);
   const t = String(val || '').slice(0, 500);
   if (!data.checkins[wk]) data.checkins[wk] = {};
   ckWrite(data.checkins[wk], path, t.trim() ? t : '');
@@ -2205,6 +2280,7 @@ function getNote(key, hid){
   return (data.notes[key] && data.notes[key][hid]) || '';
 }
 function setNote(key, hid, text){
+  touch('notes', key);
   const t = String(text || '').trim().slice(0, 500);
   if (t){
     if (!data.notes[key]) data.notes[key] = {};
@@ -3804,6 +3880,7 @@ document.addEventListener('click', ev => {
       break;
     }
     case 'shopAdd': {
+      touch('shopping');
       const inp = $('#shop-new');
       const t = (inp && inp.value || '').trim().slice(0, 120);
       if (!t) break;
@@ -3815,6 +3892,7 @@ document.addEventListener('click', ev => {
       break;
     }
     case 'shopToggle': {
+      touch('shopping');
       const it = data.shopping.items[Number(el.dataset.i)];
       if (!it) break;
       it.done = !it.done;
@@ -3823,6 +3901,7 @@ document.addEventListener('click', ev => {
       break;
     }
     case 'shopDel': {
+      touch('shopping');
       data.shopping.items.splice(Number(el.dataset.i), 1);
       save();
       render();
@@ -3830,6 +3909,7 @@ document.addEventListener('click', ev => {
     }
     case 'shopPaste': openShopPasteModal(); break;
     case 'shopPasteAdd': {
+      touch('shopping');
       const parsed = parseShopText(($('#shop-paste') && $('#shop-paste').value) || '');
       if (!parsed.length){ toast('Nic k přidání — vlož text seznamu', true); break; }
       data.shopping.items = data.shopping.items.concat(parsed).slice(0, 200);
@@ -3841,6 +3921,7 @@ document.addEventListener('click', ev => {
       break;
     }
     case 'shopClearDone': {
+      touch('shopping');
       data.shopping.items = data.shopping.items.filter(i => !i.done);
       save();
       render();
@@ -3876,11 +3957,13 @@ document.addEventListener('click', ev => {
     case 'editHabit': { const h = habitById(id); if (h) openHabitModal(h); break; }
     case 'confirmDelete': { const h = habitById(id); if (h) openDeleteModal(h, el.dataset.arch === '1'); break; }
     case 'archiveHabit': {
+      touch('habits');
       const h = habitById(id);
       if (h){ h.archived = true; save(); closeModal(); render(); toast('Návyk „' + h.name + '“ byl archivován'); }
       break;
     }
     case 'deleteHabit': {
+      touch('habits');
       const h = habitById(id);
       if (h){
         data.habits = data.habits.filter(x => x.id !== id);
@@ -3894,6 +3977,7 @@ document.addEventListener('click', ev => {
       break;
     }
     case 'restoreHabit': {
+      touch('habits');
       const h = habitById(id);
       if (h){
         h.archived = false;
@@ -3977,6 +4061,7 @@ document.addEventListener('click', ev => {
       break;
     }
     case 'delVac': {
+      touch('habits');
       const h = habitById(id);
       if (!h) break;
       h.vacations = vacList(h).filter(v => !(v.from === el.dataset.from && v.to === el.dataset.to));
@@ -4037,6 +4122,7 @@ document.addEventListener('click', ev => {
       break;
     }
     case 'saveHabit': {
+      touch('habits');
       const name = ($('#f-name') && $('#f-name').value || '').trim();
       if (!name){ toast('Zadejte název návyku', true); break; }
       const emoji = ($('#f-emoji') && $('#f-emoji').value || '').trim().slice(0, 8);
