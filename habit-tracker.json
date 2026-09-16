@@ -396,24 +396,6 @@
    "color": null
   },
   {
-   "id": "d1ee775b-57c8-4cba-b0bd-d9df89effa81",
-   "name": "Cvičení",
-   "emoji": "💪",
-   "type": "check",
-   "goal": null,
-   "unit": "",
-   "archived": false,
-   "order": 2,
-   "createdAt": 1789563441196,
-   "freq": {
-    "type": "daily"
-   },
-   "vacations": [],
-   "timerMin": null,
-   "link": null,
-   "color": null
-  },
-  {
    "id": "1175d216-034a-4694-ba88-b36fcd529151",
    "name": "Kreatin",
    "emoji": "💊",
@@ -1735,7 +1717,7 @@
   "note": "hv b",
   "items": []
  },
- "updatedAt": 1789563562342,
+ "updatedAt": 1789563571108,
  "mods": {
   "entries": {
    "2026-09-16": 1789562698659
@@ -1748,7 +1730,7 @@
    "2026-09-14|other.sw1was": 1789562435618
   },
   "notes": {},
-  "habits": 1789563562342,
+  "habits": 1789563571108,
   "shopping": 1789562761798
  },
  "hideDone": false,
