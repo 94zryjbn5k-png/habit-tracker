@@ -80,3 +80,27 @@ Prázdný řetězec `""` znamená prázdný řádek.
 
 - Data uživatele: `habit-tracker.json` ve větvi `data` (jen číst; zapisuje je aplikace).
 - Historie check-inů je v `checkins["<pondělí týdne>"]`, sestavená podle cest z plánu.
+
+### Zadani a predvyplneni
+
+- `topics[].pre` — text zadani, ktery se uzivateli ukaze nahore v karte (co ma ten den odcvicit).
+- `fields[].kind: "sets"` + `"sets": 4` — misto jedne kolonky se vykresli kolonka na kazdou serii
+  (`strength.klic.s1` … `s4`). Do exportu je slozi `{s:klic}` jako `60: 12/11/10/9, RIR 2`.
+- Tlacitko "Vyplnit podle zadani" predvyplni prazdne kolonky. Hodnoty bere:
+  1. z `fields[].def` (jedna hodnota) nebo `fields[].defs` (pole hodnot pro jednotlive serie),
+  2. jinak je odvodi z textu `pre` — `po 8-10` -> 8, `RIR 2` -> 2, `26 kg` -> 26.
+  Co uz uzivatel zapsal, tlacitko nikdy neprepise.
+
+Priklad cviku se ctyrmi seriemi a presnym zadanim:
+
+```json
+{
+  "id": "ex-row", "day": 0, "icon": "dumbbell", "title": "Chest-supported row",
+  "pre": "4 serie po 10-12 opakovanich · RIR 2 · vaha 60 kg",
+  "fields": [
+    { "p": "strength.row.w",   "q": "Vaha (kg)", "kind": "num",  "def": "60" },
+    { "p": "strength.row",     "q": "Opakovani jednotlivych serii", "kind": "sets", "sets": 4, "defs": ["12","12","11","10"] },
+    { "p": "strength.row.rir", "q": "RIR posledni serie", "kind": "num", "def": "2" }
+  ]
+}
+```
