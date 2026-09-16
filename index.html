@@ -895,7 +895,7 @@ function touch(kind, key){
     data.mods[kind][key] = now;
   }
 }
-const APP_VERSION = 'v45';
+const APP_VERSION = 'v46';
 const STORAGE_KEY = 'habit-tracker-data-v1';
 const WD = ['Po','Út','St','Čt','Pá','So','Ne'];
 const EMOJI_PICKS = ['✅','💪','🏃','🚶','🧘','😴','📖','✍️','📓','💧','🥗','🍎','🚫','💊','🦉','🎓','💼','🎸','🧹','🧠'];
@@ -1418,16 +1418,26 @@ function normalizeData(obj){
     }
   }
   if (obj.checkins && typeof obj.checkins === 'object' && !Array.isArray(obj.checkins)){
+    // historii nikdy nezahazujeme — uloží se vše, co má tvar check-inu, bez ohledu na aktuální plán
+    const clean = (src, depth) => {
+      const o = {};
+      if (!src || typeof src !== 'object' || Array.isArray(src)) return o;
+      let n = 0;
+      for (const k of Object.keys(src)){
+        if (++n > 300 || !/^[a-z0-9_]{1,30}$/i.test(k)) continue;
+        const v = src[k];
+        if (typeof v === 'string'){ if (v.trim()) o[k] = v.slice(0, 500); }
+        else if (typeof v === 'number' && isFinite(v)) o[k] = String(v);
+        else if (v && typeof v === 'object' && depth < 2){
+          const sub = clean(v, depth + 1);
+          if (Object.keys(sub).length) o[k] = sub;
+        }
+      }
+      return o;
+    };
     for (const wk of Object.keys(obj.checkins)){
       if (!DATE_RE.test(wk)) continue;
-      const src = obj.checkins[wk];
-      if (!src || typeof src !== 'object') continue;
-      const cw = {};
-      for (const p of CK_PATHS){
-        const v = ckRead(src, p);
-        if (typeof v === 'string' && v.trim()) ckWrite(cw, p, v.slice(0, 500));
-        else if (typeof v === 'number' && isFinite(v)) ckWrite(cw, p, String(v));
-      }
+      const cw = clean(obj.checkins[wk], 0);
       if (Object.keys(cw).length) out.checkins[wk] = cw;
     }
   }
@@ -1537,7 +1547,17 @@ function mergeData(a, b){
   out.checkins = {};
   for (const k of wkKeys){
     const w = {};
-    for (const p of CK_PATHS){
+    const paths = {};
+    for (const side of [newer.checkins[k] || {}, older.checkins[k] || {}]){
+      (function walk(o, pre){
+        for (const kk of Object.keys(o)){
+          const v = o[kk];
+          const np = pre ? pre + '.' + kk : kk;
+          if (v && typeof v === 'object') walk(v, np); else paths[np] = true;
+        }
+      })(side, '');
+    }
+    for (const p of Object.keys(paths)){
       const tagN = modOf(newer, 'ck', k + '|' + p);
       const tagO = modOf(older, 'ck', k + '|' + p);
       let src;
@@ -2052,6 +2072,50 @@ function normMeal(v){
   return m;
 }
 /* ============ Trenérský check-in ============ */
+const CK_PLAN_FILE = 'checkin-plans.json';
+const CK_PLANS_KEY = 'ht-ck-plans';
+const CK_DEFAULT_PLANS = {"plans": [{"from": "2026-08-03", "name": "Plán od 3. 8. 2026", "topics": [{"id": "q", "day": 0, "icon": "run", "title": "Q-běh", "fields": [{"p": "runs.q.where", "q": "Kde jsi běžel?", "kind": "chips", "vals": ["pás", "venku"]}, {"p": "runs.q.feel", "q": "Jak to šlo?", "kind": "text", "ph": "jak to šlo"}]}, {"id": "ex-ia", "day": 0, "icon": "dumbbell", "title": "Incline DB press", "sub": "Síla · Upper A", "fields": [{"p": "strength.ia.w", "q": "Váha (kg)", "kind": "num", "ph": "26"}, {"p": "strength.ia.r", "q": "Opakování sérií", "kind": "txt", "ph": "10/9/8"}, {"p": "strength.ia.rir", "q": "RIR poslední série", "kind": "num", "ph": "2"}]}, {"id": "ex-row", "day": 0, "icon": "dumbbell", "title": "Chest-supported row", "sub": "Síla · Upper A", "fields": [{"p": "strength.row.w", "q": "Váha (kg)", "kind": "num", "ph": "26"}, {"p": "strength.row.r", "q": "Opakování sérií", "kind": "txt", "ph": "10/9/8"}, {"p": "strength.row.rir", "q": "RIR poslední série", "kind": "num", "ph": "2"}]}, {"id": "ex-ohp", "day": 0, "icon": "dumbbell", "title": "OHP ve stoje", "sub": "Síla · Upper A", "fields": [{"p": "strength.ohp.w", "q": "Váha (kg)", "kind": "num", "ph": "26"}, {"p": "strength.ohp.r", "q": "Opakování sérií", "kind": "txt", "ph": "10/9/8"}, {"p": "strength.ohp.rir", "q": "RIR poslední série", "kind": "num", "ph": "2"}]}, {"id": "ex-latA", "day": 0, "icon": "dumbbell", "title": "Lateral raise (kladka, 1 ruka)", "sub": "Síla · Upper A", "fields": [{"p": "strength.latA.w", "q": "Váha (kg)", "kind": "num", "ph": "26"}, {"p": "strength.latA.r", "q": "Opakování sérií", "kind": "txt", "ph": "10/9/8"}, {"p": "strength.latA.rir", "q": "RIR poslední série", "kind": "num", "ph": "2"}]}, {"id": "ex-face", "day": 0, "icon": "dumbbell", "title": "Face pull", "sub": "Síla · Upper A", "fields": [{"p": "strength.face.w", "q": "Váha (kg)", "kind": "num", "ph": "26"}, {"p": "strength.face.r", "q": "Opakování sérií", "kind": "txt", "ph": "10/9/8"}, {"p": "strength.face.rir", "q": "RIR poslední série", "kind": "num", "ph": "2"}]}, {"id": "ex-bic", "day": 0, "icon": "dumbbell", "title": "Biceps", "sub": "Síla · Upper A", "fields": [{"p": "strength.bic.w", "q": "Váha (kg)", "kind": "num", "ph": "26"}, {"p": "strength.bic.r", "q": "Opakování sérií", "kind": "txt", "ph": "10/9/8"}, {"p": "strength.bic.rir", "q": "RIR poslední série", "kind": "num", "ph": "2"}]}, {"id": "ex-tri", "day": 0, "icon": "dumbbell", "title": "Triceps", "sub": "Síla · Upper A", "fields": [{"p": "strength.tri.w", "q": "Váha (kg)", "kind": "num", "ph": "26"}, {"p": "strength.tri.r", "q": "Opakování sérií", "kind": "txt", "ph": "10/9/8"}, {"p": "strength.tri.rir", "q": "RIR poslední série", "kind": "num", "ph": "2"}]}, {"id": "sw1", "day": 1, "icon": "waves", "title": "Plavání (Út)", "fields": [{"p": "other.sw1was", "q": "Byl jsi na tréninku?", "kind": "chips", "vals": ["byl", "nebyl"]}, {"p": "other.sw1", "q": "Co šlo a co drhlo", "kind": "text", "ph": "např. výdechy ok, splývání drhne"}]}, {"id": "w-st", "day": 2, "icon": "target2", "title": "Váha", "sub": "nalačno, po záchodě a před jídlem", "fields": [{"p": "weight.st", "q": "Kolik kg?", "kind": "num", "ph": "82,5"}]}, {"id": "e", "day": 2, "icon": "run", "title": "E-běh", "fields": [{"p": "runs.e.where", "q": "Kde jsi běžel?", "kind": "chips", "vals": ["pás", "venku"]}, {"p": "runs.e.feel", "q": "Jak to šlo?", "kind": "text", "ph": "jak to šlo"}]}, {"id": "ex-box", "day": 2, "icon": "dumbbell", "title": "Box jump", "sub": "Síla · Lower A", "fields": [{"p": "strength.box.w", "q": "výška bedny (cm)", "kind": "num", "ph": "60"}, {"p": "strength.box.r", "q": "Opakování sérií", "kind": "txt", "ph": "10/9/8"}, {"p": "strength.box.rir", "q": "RIR poslední série", "kind": "num", "ph": "2"}]}, {"id": "ex-broad", "day": 2, "icon": "dumbbell", "title": "Broad jump", "sub": "Síla · Lower A", "fields": [{"p": "strength.broad.w", "q": "vzdálenost (cm)", "kind": "num", "ph": "60"}, {"p": "strength.broad.r", "q": "Opakování sérií", "kind": "txt", "ph": "10/9/8"}, {"p": "strength.broad.rir", "q": "RIR poslední série", "kind": "num", "ph": "2"}]}, {"id": "ex-sq", "day": 2, "icon": "dumbbell", "title": "Dřep", "sub": "Síla · Lower A", "fields": [{"p": "strength.sq.w", "q": "Váha (kg)", "kind": "num", "ph": "26"}, {"p": "strength.sq.r", "q": "Opakování sérií", "kind": "txt", "ph": "10/9/8"}, {"p": "strength.sq.rir", "q": "RIR poslední série", "kind": "num", "ph": "2"}]}, {"id": "ex-nordic", "day": 2, "icon": "dumbbell", "title": "Nordic curl", "sub": "Síla · Lower A", "fields": [{"p": "strength.nordic.w", "q": "Váha (kg)", "kind": "num", "ph": "26"}, {"p": "strength.nordic.r", "q": "Opakování sérií", "kind": "txt", "ph": "10/9/8"}, {"p": "strength.nordic.rir", "q": "RIR poslední série", "kind": "num", "ph": "2"}]}, {"id": "ex-calf", "day": 2, "icon": "dumbbell", "title": "Výpony ve stoje", "sub": "Síla · Lower A", "fields": [{"p": "strength.calf.w", "q": "Váha (kg)", "kind": "num", "ph": "26"}, {"p": "strength.calf.r", "q": "Opakování sérií", "kind": "txt", "ph": "10/9/8"}, {"p": "strength.calf.rir", "q": "RIR poslední série", "kind": "num", "ph": "2"}]}, {"id": "z", "day": 3, "icon": "run", "title": "Klus Z1 · 25 min", "fields": [{"p": "runs.z.where", "q": "Kde jsi klusal?", "kind": "chips", "vals": ["pás", "venku"]}, {"p": "runs.z.feel", "q": "Jak to šlo?", "kind": "text", "ph": "jak to šlo"}]}, {"id": "sw2", "day": 3, "icon": "waves", "title": "Plavání (Čt)", "fields": [{"p": "other.sw2was", "q": "Byl jsi na tréninku?", "kind": "chips", "vals": ["byl", "nebyl"]}, {"p": "other.sw2", "q": "Co šlo a co drhlo", "kind": "text", "ph": "např. výdechy ok, splývání drhne"}]}, {"id": "w-pa", "day": 4, "icon": "target2", "title": "Váha", "sub": "nalačno, po záchodě a před jídlem", "fields": [{"p": "weight.pa", "q": "Kolik kg?", "kind": "num", "ph": "82,5"}]}, {"id": "ex-pull", "day": 4, "icon": "dumbbell", "title": "Shyby s přítěží", "sub": "Síla · Upper B", "fields": [{"p": "strength.pull.w", "q": "Váha (kg)", "kind": "num", "ph": "26"}, {"p": "strength.pull.r", "q": "Opakování sérií", "kind": "txt", "ph": "10/9/8"}, {"p": "strength.pull.rir", "q": "RIR poslední série", "kind": "num", "ph": "2"}]}, {"id": "ex-flat", "day": 4, "icon": "dumbbell", "title": "Flat DB press", "sub": "Síla · Upper B", "fields": [{"p": "strength.flat.w", "q": "Váha (kg)", "kind": "num", "ph": "26"}, {"p": "strength.flat.r", "q": "Opakování sérií", "kind": "txt", "ph": "10/9/8"}, {"p": "strength.flat.rir", "q": "RIR poslední série", "kind": "num", "ph": "2"}]}, {"id": "ex-dips", "day": 4, "icon": "dumbbell", "title": "Dipy", "sub": "Síla · Upper B", "fields": [{"p": "strength.dips.w", "q": "Váha (kg)", "kind": "num", "ph": "26"}, {"p": "strength.dips.r", "q": "Opakování sérií", "kind": "txt", "ph": "10/9/8"}, {"p": "strength.dips.rir", "q": "RIR poslední série", "kind": "num", "ph": "2"}]}, {"id": "ex-sap", "day": 4, "icon": "dumbbell", "title": "Straight-arm pulldown", "sub": "Síla · Upper B", "fields": [{"p": "strength.sap.w", "q": "Váha (kg)", "kind": "num", "ph": "26"}, {"p": "strength.sap.r", "q": "Opakování sérií", "kind": "txt", "ph": "10/9/8"}, {"p": "strength.sap.rir", "q": "RIR poslední série", "kind": "num", "ph": "2"}]}, {"id": "ex-rpd", "day": 4, "icon": "dumbbell", "title": "Reverse pec deck", "sub": "Síla · Upper B", "fields": [{"p": "strength.rpd.w", "q": "Váha (kg)", "kind": "num", "ph": "26"}, {"p": "strength.rpd.r", "q": "Opakování sérií", "kind": "txt", "ph": "10/9/8"}, {"p": "strength.rpd.rir", "q": "RIR poslední série", "kind": "num", "ph": "2"}]}, {"id": "ex-latB", "day": 4, "icon": "dumbbell", "title": "Lateral raise (kladka, 1 ruka)", "sub": "Síla · Upper B", "fields": [{"p": "strength.latB.w", "q": "Váha (kg)", "kind": "num", "ph": "26"}, {"p": "strength.latB.r", "q": "Opakování sérií", "kind": "txt", "ph": "10/9/8"}, {"p": "strength.latB.rir", "q": "RIR poslední série", "kind": "num", "ph": "2"}]}, {"id": "ex-ypr", "day": 4, "icon": "dumbbell", "title": "Prone Y", "sub": "Síla · Upper B", "fields": [{"p": "strength.ypr.w", "q": "Váha (kg)", "kind": "num", "ph": "26"}, {"p": "strength.ypr.r", "q": "Opakování sérií", "kind": "txt", "ph": "10/9/8"}, {"p": "strength.ypr.rir", "q": "RIR poslední série", "kind": "num", "ph": "2"}]}, {"id": "ex-crunch", "day": 4, "icon": "dumbbell", "title": "Cable crunch", "sub": "Síla · Upper B", "fields": [{"p": "strength.crunch.w", "q": "Váha (kg)", "kind": "num", "ph": "26"}, {"p": "strength.crunch.r", "q": "Opakování sérií", "kind": "txt", "ph": "10/9/8"}, {"p": "strength.crunch.rir", "q": "RIR poslední série", "kind": "num", "ph": "2"}]}, {"id": "lr", "day": 5, "icon": "run", "title": "Longrun", "fields": [{"p": "runs.lr.where", "q": "Kde jsi běžel?", "kind": "chips", "vals": ["pás", "venku"]}, {"p": "runs.lr.feel", "q": "Jak to šlo?", "kind": "text", "ph": "jak to šlo"}]}, {"id": "ex-rdlb", "day": 5, "icon": "dumbbell", "title": "Trap bar", "sub": "Síla · Lower B", "fields": [{"p": "strength.rdlb.w", "q": "Váha (kg)", "kind": "num", "ph": "26"}, {"p": "strength.rdlb.r", "q": "Opakování sérií", "kind": "txt", "ph": "10/9/8"}, {"p": "strength.rdlb.rir", "q": "RIR poslední série", "kind": "num", "ph": "2"}]}, {"id": "ex-rdl", "day": 5, "icon": "dumbbell", "title": "RDL", "sub": "Síla · Lower B", "fields": [{"p": "strength.rdl.w", "q": "Váha (kg)", "kind": "num", "ph": "26"}, {"p": "strength.rdl.r", "q": "Opakování sérií", "kind": "txt", "ph": "10/9/8"}, {"p": "strength.rdl.rir", "q": "RIR poslední série", "kind": "num", "ph": "2"}]}, {"id": "ex-bulg", "day": 5, "icon": "dumbbell", "title": "Bulharský dřep", "sub": "Síla · Lower B", "fields": [{"p": "strength.bulg.w", "q": "Váha (kg)", "kind": "num", "ph": "26"}, {"p": "strength.bulg.r", "q": "Opakování sérií", "kind": "txt", "ph": "10/9/8"}, {"p": "strength.bulg.rir", "q": "RIR poslední série", "kind": "num", "ph": "2"}]}, {"id": "ex-calfsit", "day": 5, "icon": "dumbbell", "title": "Výpony v sedu", "sub": "Síla · Lower B", "fields": [{"p": "strength.calfsit.w", "q": "Váha (kg)", "kind": "num", "ph": "26"}, {"p": "strength.calfsit.r", "q": "Opakování sérií", "kind": "txt", "ph": "10/9/8"}, {"p": "strength.calfsit.rir", "q": "RIR poslední série", "kind": "num", "ph": "2"}]}, {"id": "w-ne", "day": 6, "icon": "target2", "title": "Váha", "sub": "nalačno, po záchodě a před jídlem", "fields": [{"p": "weight.ne", "q": "Kolik kg?", "kind": "num", "ph": "82,5"}]}, {"id": "pain", "day": 6, "icon": "heart", "title": "Bolesti", "sub": "nic → nech prázdné", "fields": [{"p": "pain.note", "q": "Co bolí, jak moc (0–10) a kdy?", "kind": "text", "ph": "např. rameno 3/10 při OHP"}]}, {"id": "extra", "day": 6, "icon": "clipboard", "title": "Cokoliv dalšího", "sub": "nic → nech prázdné", "fields": [{"p": "extra.note", "q": "Co by měl trenér vědět?", "kind": "text", "ph": "např. hodně práce, málo spánku"}]}], "export": ["TÝDEN Č.: {no}", "", "── VÁHA ──", "St: {weight.st|__}   Pá: {weight.pa|__}   Ne: {weight.ne|__}", "", "── BOLESTI (cokoliv; nic → „nic\") ──", "Co + 0–10 + kdy: {pain.note|nic}", "", "── SÍLA (váha: opakování + RIR) ──", "", "UPPER A (po)", "- incline DB press: {s:ia}", "- chest-supported row: {s:row}", "- OHP ve stoje: {s:ohp}", "- lateral raise (kladka, 1 ruka): {s:latA}", "- face pull: {s:face}", "- biceps: {s:bic}", "- triceps: {s:tri}", "", "LOWER A (st)", "- box jump (výška bedny): {s:box}", "- broad jump (vzdálenost): {s:broad}", "- dřep: {s:sq}", "- nordic curl: {s:nordic}", "- výpony ve stoje: {s:calf}", "", "UPPER B (pá)", "- shyby s přítěží: {s:pull}", "- flat DB press: {s:flat}", "- dipy: {s:dips}", "- straight-arm pulldown: {s:sap}", "- reverse pec deck: {s:rpd}", "- lateral raise (kladka, 1 ruka): {s:latB}", "- prone Y: {s:ypr}", "- cable crunch: {s:crunch}", "", "LOWER B (so)", "- trap bar: {s:rdlb}", "- RDL: {s:rdl}", "- bulharský dřep: {s:bulg}", "- výpony v sedu: {s:calfsit}", "", "── PLAVÁNÍ ──", "Út: {other.sw1was|byl/nebyl} · věta: {other.sw1|__}", "Čt: {other.sw2was|byl/nebyl} · věta: {other.sw2|__}", "", "── BĚHY (jen kde + pocit — čísla si vytáhnu) ──", "Po Q: {runs.q.where|pás/venku} · {runs.q.feel|__}", "St E: {runs.e.where|pás/venku} · {runs.e.feel|__}", "Čt klus: {runs.z.where|pás/venku} · {runs.z.feel|__}", "So LR: {runs.lr.where|pás/venku} · {runs.lr.feel|__}", "", "── COKOLIV DALŠÍHO (nic → „nic\") ──", "{extra.note|nic}"]}]};
+let ckPlans = null;
+function ckPlansAll(){
+  if (ckPlans && Array.isArray(ckPlans.plans) && ckPlans.plans.length) return ckPlans.plans;
+  try {
+    const st = JSON.parse(localStorage.getItem(CK_PLANS_KEY));
+    if (st && Array.isArray(st.plans) && st.plans.length){ ckPlans = st; return st.plans; }
+  } catch (e) {}
+  return CK_DEFAULT_PLANS.plans;
+}
+function ckPlanFor(d){
+  const wk = dateKey(startOfWeek(d));
+  const all = ckPlansAll();
+  let best = null;
+  for (const p of all){
+    if (typeof p.from === 'string' && p.from <= wk && (!best || p.from > best.from)) best = p;
+  }
+  return best || all[0];
+}
+function ckPlanPaths(){
+  const set = {};
+  for (const p of ckPlansAll()) for (const t of (p.topics || [])) for (const f of (t.fields || [])) set[f.p] = true;
+  return Object.keys(set);
+}
+let ckPlanFetching = false;
+function ckPlanFetch(){
+  if (!syncConfigured() || typeof fetch === 'undefined' || ckPlanFetching) return Promise.resolve();
+  ckPlanFetching = true;
+  return fetch(ghApi('/contents/' + CK_PLAN_FILE + '?ref=' + SYNC_BRANCH), { headers: ghHeaders() })
+    .then(r => r.ok ? r.json() : null)
+    .then(j => {
+      if (!j) return;
+      const o = JSON.parse(b64decode(j.content));
+      if (!o || !Array.isArray(o.plans) || !o.plans.length) return;
+      const before = JSON.stringify(ckPlansAll());
+      ckPlans = o;
+      try { localStorage.setItem(CK_PLANS_KEY, JSON.stringify(o)); } catch (e) {}
+      if (JSON.stringify(o.plans) !== before && tab === 'checkin') render();
+    })
+    .catch(() => {})
+    .then(() => { ckPlanFetching = false; });
+}
 const CK_START = '2026-08-03'; // pondělí týdne č. 1
 const CK_EX = {
   ua: [['ia', 'Incline DB press'], ['row', 'Chest-supported row'], ['ohp', 'OHP ve stoje'],
@@ -2063,16 +2127,7 @@ const CK_EX = {
        ['latB', 'Lateral raise (kladka, 1 ruka)'], ['ypr', 'Prone Y'], ['crunch', 'Cable crunch']],
   lb: [['rdlb', 'Trap bar'], ['rdl', 'RDL'], ['bulg', 'Bulharský dřep'], ['calfsit', 'Výpony v sedu']]
 };
-const CK_PATHS = (() => {
-  const p = ['weight.st', 'weight.pa', 'weight.ne', 'pain.note', 'extra.note',
-    'runs.q.where', 'runs.q.feel', 'runs.e.where', 'runs.e.feel',
-    'runs.z.where', 'runs.z.feel', 'runs.lr.where', 'runs.lr.feel',
-    'other.sw1', 'other.sw1was', 'other.sw2', 'other.sw2was'];
-  for (const grp of Object.keys(CK_EX))
-    for (const ex of CK_EX[grp])
-      for (const f of ['w', 'r', 'rir']) p.push('strength.' + ex[0] + '.' + f);
-  return p;
-})();
+const CK_PATHS = ckPlanPaths();
 function ckRead(obj, path){
   let o = obj;
   for (const k of path.split('.')){
@@ -2105,8 +2160,14 @@ function ckGet(wk, path){
   const v = ckRead(data.checkins[wk] || {}, path);
   return typeof v === 'string' ? v : '';
 }
+const CK_PATH_RE = /^[a-z][a-z0-9_]{0,30}(\.[a-z0-9_]{1,30}){0,2}$/i;
+function ckPathOk(wk, path){
+  if (!CK_PATH_RE.test(path)) return false;
+  if (ckPlanPaths().indexOf(path) !== -1) return true;
+  return ckRead(data.checkins[wk] || {}, path) !== undefined; // starší plán: zápis do existujícího pole
+}
 function ckSet(wk, path, val){
-  if (CK_PATHS.indexOf(path) === -1) return;
+  if (!ckPathOk(wk, path)) return;
   touch('checkins', wk);
   touch('ck', wk + '|' + path);
   const t = String(val || '').slice(0, 500);
@@ -2128,31 +2189,18 @@ function ckStrengthLine(wk, ex){
   return out.trim();
 }
 function checkinText(wk){
-  const g = p => ckGet(wk, p).trim();
+  const plan = ckPlanFor(parseKey(wk));
   const no = ckWeekNo(wk);
-  const run = (lbl, r) => lbl + ': ' + (g('runs.' + r + '.where') || 'pás/venku') + ' \u00b7 ' + (g('runs.' + r + '.feel') || '__') + '\n';
-  const block = (title, grp) => '\n' + title + '\n' + CK_EX[grp].map(ex => '- ' + ckExLabel(ex) + ': ' + ckStrengthLine(wk, ex[0]) + '\n').join('');
-  let out = 'T\u00ddDEN \u010c.: ' + (no || '') + '\n\n';
-  out += '\u2500\u2500 V\u00c1HA \u2500\u2500\n';
-  out += 'St: ' + (g('weight.st') || '__') + '   P\u00e1: ' + (g('weight.pa') || '__') + '   Ne: ' + (g('weight.ne') || '__') + '\n\n';
-  out += '\u2500\u2500 BOLESTI (cokoliv; nic \u2192 \u201enic\u201c) \u2500\u2500\n';
-  out += 'Co + 0\u201310 + kdy: ' + (g('pain.note') || 'nic') + '\n\n';
-  out += '\u2500\u2500 S\u00cdLA (v\u00e1ha: opakov\u00e1n\u00ed + RIR) \u2500\u2500\n';
-  out += block('UPPER A (po)', 'ua');
-  out += block('LOWER A (st)', 'la');
-  out += block('UPPER B (p\u00e1)', 'ub');
-  out += block('LOWER B (so)', 'lb');
-  out += '\n\u2500\u2500 PLAV\u00c1N\u00cd \u2500\u2500\n';
-  out += '\u00dat: ' + (g('other.sw1was') || 'byl/nebyl') + ' \u00b7 v\u011bta: ' + (g('other.sw1') || '__') + '\n';
-  out += '\u010ct: ' + (g('other.sw2was') || 'byl/nebyl') + ' \u00b7 v\u011bta: ' + (g('other.sw2') || '__') + '\n\n';
-  out += '\u2500\u2500 B\u011aHY (jen kde + pocit \u2014 \u010d\u00edsla si vyt\u00e1hnu) \u2500\u2500\n';
-  out += run('Po Q', 'q');
-  out += run('St E', 'e');
-  out += run('\u010ct klus', 'z');
-  out += run('So LR', 'lr');
-  out += '\n\u2500\u2500 COKOLIV DAL\u0160\u00cdHO (nic \u2192 \u201enic\u201c) \u2500\u2500\n';
-  out += (g('extra.note') || 'nic');
-  return out;
+  const lines = Array.isArray(plan.export) ? plan.export : [];
+  return lines.map(ln => String(ln).replace(/\{([^}]+)\}/g, (m0, tok) => {
+    const bar = tok.indexOf('|');
+    const key = (bar === -1 ? tok : tok.slice(0, bar)).trim();
+    const fb = bar === -1 ? '' : tok.slice(bar + 1);
+    if (key === 'no') return no ? String(no) : '';
+    if (key.slice(0, 2) === 's:') return ckStrengthLine(wk, key.slice(2));
+    const v = ckGet(wk, key).trim();
+    return v || fb;
+  })).join('\n');
 }
 function ckExLabel(ex){
   return ({ ia: 'incline DB press', row: 'chest-supported row', ohp: 'OHP ve stoje',
@@ -3227,63 +3275,15 @@ function ckChips(wk, path, values){
 let ckStep = 0;
 function ckTopics(d){
   const wd = weekdayIdx(d);
-  const wk = dateKey(startOfWeek(d));
-  const T = [];
-  if (wd === 2 || wd === 4 || wd === 6){
-    const wp = wd === 2 ? 'weight.st' : wd === 4 ? 'weight.pa' : 'weight.ne';
-    T.push({ id: 'w', ico: 'target2', title: 'Váha', sub: 'nalačno, po záchodě a před jídlem',
-      fields: [{ kind: 'num', p: wp, q: 'Kolik kg?', ph: '82,5' }] });
-  }
-  if (wd === 0) T.push({ id: 'q', ico: 'run', title: 'Q-běh', fields: [
-    { kind: 'chips', p: 'runs.q.where', q: 'Kde jsi běžel?', vals: ['pás', 'venku'] },
-    { kind: 'text', p: 'runs.q.feel', q: 'Jak to šlo?', ph: 'např. rovinky svižné, nohy těžké' }] });
-  if (wd === 2) T.push({ id: 'e', ico: 'run', title: 'E-běh', fields: [
-    { kind: 'chips', p: 'runs.e.where', q: 'Kde jsi běžel?', vals: ['pás', 'venku'] },
-    { kind: 'text', p: 'runs.e.feel', q: 'Jak to šlo?', ph: 'jak se běželo' }] });
-  if (wd === 3) T.push({ id: 'z', ico: 'run', title: 'Klus Z1 · 25 min', fields: [
-    { kind: 'chips', p: 'runs.z.where', q: 'Kde jsi klusal?', vals: ['pás', 'venku'] },
-    { kind: 'text', p: 'runs.z.feel', q: 'Jak to šlo?', ph: 'jak se klusalo' }] });
-  if (wd === 5) T.push({ id: 'lr', ico: 'run', title: 'Longrun', fields: [
-    { kind: 'chips', p: 'runs.lr.where', q: 'Kde jsi běžel?', vals: ['pás', 'venku'] },
-    { kind: 'text', p: 'runs.lr.feel', q: 'Jak to šlo?', ph: 'jak to šlo' }] });
-  if (wd === 1) T.push({ id: 'sw1', ico: 'waves', title: 'Plavání (Út)', fields: [
-    { kind: 'chips', p: 'other.sw1was', q: 'Byl jsi na tréninku?', vals: ['byl', 'nebyl'] },
-    { kind: 'text', p: 'other.sw1', q: 'Co šlo a co drhlo', ph: 'např. výdechy ok, splývání drhne' }] });
-  if (wd === 3) T.push({ id: 'sw2', ico: 'waves', title: 'Plavání (Čt)', fields: [
-    { kind: 'chips', p: 'other.sw2was', q: 'Byl jsi na tréninku?', vals: ['byl', 'nebyl'] },
-    { kind: 'text', p: 'other.sw2', q: 'Co šlo a co drhlo', ph: 'např. kop drží tělo nahoře' }] });
-  if (wd === 6){
-    T.push({ id: 'pain', ico: 'heart', title: 'Bolesti', sub: 'nic → nech prázdné', fields: [
-      { kind: 'text', p: 'pain.note', q: 'Co bolí, jak moc (0–10) a kdy?', ph: 'např. rameno 3/10 při OHP' }] });
-    T.push({ id: 'extra', ico: 'clipboard', title: 'Cokoliv dalšího', sub: 'nic → nech prázdné', fields: [
-      { kind: 'text', p: 'extra.note', q: 'Co by měl trenér vědět?', ph: 'např. hodně práce, málo spánku' }] });
-  }
-  const grp = wd === 0 ? ['ua', 'Upper A'] : wd === 2 ? ['la', 'Lower A'] : wd === 4 ? ['ub', 'Upper B'] : wd === 5 ? ['lb', 'Lower B'] : null;
-  if (grp) for (const ex of CK_EX[grp[0]]){
-    T.push({ id: 'ex-' + ex[0], ico: 'dumbbell', title: ex[1], sub: 'Síla · ' + grp[1], ex: ex, fields: [
-      { kind: 'num', p: 'strength.' + ex[0] + '.w', q: ex[2] ? 'Výška bedny (cm)' : 'Váha (kg)', ph: ex[2] ? '60' : '26' },
-      { kind: 'txt2', p: 'strength.' + ex[0] + '.r', q: 'Opakování sérií', ph: '10/9/8' },
-      { kind: 'num', p: 'strength.' + ex[0] + '.rir', q: 'RIR poslední série', ph: '2' }] });
-  }
-  return T;
-}
-const CK_HABIT = [
-  [/^other\.sw/, /plav/i],
-  [/^runs\./, /b\u011bh|beh|run/i],
-  [/^strength\./, /silov|tr\u00e9nink|posilov/i]
-];
-function ckAutoDone(path, val){
-  const t = String(val || '').trim();
-  if (!t || /^(nebyl|ne)$/i.test(t)) return;
-  let re = null;
-  for (const p of CK_HABIT){ if (p[0].test(path)){ re = p[1]; break; } }
-  if (!re) return;
-  const d = ckDay();
-  const key = dateKey(d);
-  const h = activeHabits().find(x => x.type === 'check' && re.test(x.name) && (isPeriodic(x) || isScheduled(x, d)));
-  if (!h || isDone(h, key)) return;
-  setVal(key, h.id, true);
-  toast(h.name + ' odškrtnuto v Dnes');
+  const plan = ckPlanFor(d);
+  return (plan.topics || []).filter(t => Number(t.day) === wd).map(t => ({
+    id: t.id, ico: t.icon || 'check2', title: t.title || '', sub: t.sub || '',
+    fields: (t.fields || []).map(f => ({
+      p: f.p, q: f.q || '', ph: f.ph || '',
+      kind: f.kind === 'chips' ? 'chips' : f.kind === 'text' ? 'text' : f.kind === 'num' ? 'num' : 'txt2',
+      vals: Array.isArray(f.vals) ? f.vals : []
+    }))
+  }));
 }
 function ckTopicFilled(wk, t){
   return t.fields.some(f => ckGet(wk, f.p).trim());
@@ -3839,6 +3839,10 @@ document.addEventListener('click', ev => {
         monthAnchor = firstOfMonth(selectedDate);
       }
       render();
+      if (syncConfigured()){
+        syncPullMerge(false);
+        if (tab === 'checkin') ckPlanFetch(); // ověřit, jestli trenér nezměnil plán
+      }
       break;
     }
     case 'prevDay': selectedDate = addDays(selectedDate, -1); render(); break;
@@ -4404,7 +4408,12 @@ data = load();
 if (!storageOk) $('#storage-banner').hidden = false;
 render();
 // po startu appky zkusit stáhnout novější data z cloudu
-if (typeof syncConfigured === 'function' && syncConfigured()){ setTimeout(() => syncPullMerge(false), 600); syncPollStart(); }
+if (typeof syncConfigured === 'function' && syncConfigured()){
+  setTimeout(() => syncPullMerge(false), 600);
+  setTimeout(() => ckPlanFetch(), 900);
+  setInterval(() => ckPlanFetch(), 600000);
+  syncPollStart();
+}
 window.addEventListener('pagehide', () => {
   if (syncConfigured() && syncMeta().pending) syncNow();
 });
