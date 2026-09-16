@@ -1451,7 +1451,7 @@ const SYNC_M = 'ht-sync-meta';
 const SYNC_FILE = 'habit-tracker.json';
 const SYNC_BRANCH = 'data';
 let syncTimer = null;
-let SYNC_DEBOUNCE = 40000; // po změně počká, ať se nenahrává každé ťuknutí
+let SYNC_DEBOUNCE = 4000; // krátký klid po poslední změně, ať z každého písmene není commit
 let syncBusy = false;
 function ghRepoDefault(){
   let owner = '94zryjbn5k-png', repo = 'habit-tracker';
@@ -1590,6 +1590,23 @@ function syncFetchRemote(){
     });
 }
 let syncPulling = false;
+let syncPollTimer = null;
+const SYNC_POLL = 20000;
+function typingNow(){
+  const a = document.activeElement;
+  return !!(a && (a.tagName === 'INPUT' || a.tagName === 'TEXTAREA' || a.isContentEditable));
+}
+function syncPollStart(){
+  if (syncPollTimer || typeof setInterval === 'undefined') return;
+  syncPollTimer = setInterval(() => {
+    if (!syncConfigured() || document.hidden || typingNow() || syncMeta().pending || modalOpen()) return;
+    syncPullMerge(false);
+  }, SYNC_POLL);
+}
+function modalOpen(){
+  const m = document.getElementById('modal');
+  return !!(m && !m.hidden);
+}
 function syncPullMerge(loud){
   if (!syncConfigured() || typeof fetch === 'undefined' || syncPulling) return Promise.resolve();
   syncPulling = true;
@@ -1601,6 +1618,7 @@ function syncPullMerge(loud){
       const remT = rem.obj.updatedAt || 0;
       const locT = data.updatedAt || 0;
       if (remT === locT){ if (loud) toast('Data jsou stejná jako v cloudu'); return; }
+      if (typingNow() && !loud) return; // nikdy nepřepisovat rozepsané pole
       const before = JSON.stringify(data);
       data = remT > locT ? mergeData(data, rem.obj) : mergeData(rem.obj, data);
       const changed = JSON.stringify(data) !== before;
@@ -1680,6 +1698,7 @@ function syncPull(){
 function syncDisconnect(){
   try { localStorage.removeItem(SYNC_T); localStorage.removeItem(SYNC_R); localStorage.removeItem(SYNC_M); } catch (e) {}
   if (syncTimer){ clearTimeout(syncTimer); syncTimer = null; }
+  if (syncPollTimer){ clearInterval(syncPollTimer); syncPollTimer = null; }
   render();
   toast('Synchronizace odpojena (záloha na GitHubu zůstává)');
 }
@@ -3269,7 +3288,7 @@ function renderStats(){
   else syncStatus = '—';
   html += '<div class="card"><div class="sec-title" style="margin-top:0">Synchronizace pro Clauda</div>'
     + (syncConfigured()
-      ? '<p class="muted" style="margin:6px 0 12px">' + syncStatus + ' Data se po každé změně nahrají do cloudu a při otevření appky se stáhne novější verze — iPhone i Mac tak jedou na stejných datech.</p>'
+      ? '<p class="muted" style="margin:6px 0 12px">' + syncStatus + ' Změny se nahrají do pár vteřin a appka si každých 20 s sama stahuje novinky z druhého zařízení.</p>'
         + '<div class="row-btns"><button class="btn" data-action="syncPullNow">' + uiIco('down', 'ui-ico sm') + ' Načíst z cloudu</button>'
         + '<button class="btn" data-action="syncNow">' + uiIco('refresh', 'ui-ico sm') + ' Nahrát teď</button>'
         + '<button class="btn" data-action="syncCopyLink">' + uiIco('clipboard', 'ui-ico sm') + ' Odkaz</button>'
@@ -4236,7 +4255,7 @@ data = load();
 if (!storageOk) $('#storage-banner').hidden = false;
 render();
 // po startu appky zkusit stáhnout novější data z cloudu
-if (typeof syncConfigured === 'function' && syncConfigured()) setTimeout(() => syncPullMerge(false), 600);
+if (typeof syncConfigured === 'function' && syncConfigured()){ setTimeout(() => syncPullMerge(false), 600); syncPollStart(); }
 window.addEventListener('pageshow', ev => {
   if (ev.persisted && syncConfigured()) syncPullMerge(false); // návrat ze zmrazené stránky (iOS)
 });
