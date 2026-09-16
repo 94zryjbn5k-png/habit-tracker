@@ -865,6 +865,8 @@ input,textarea,select,.meal-f,.ck-in{border-radius:13px;}
 .ck-set{display:flex;flex-direction:column;gap:5px;}
 .ck-set span{font-size:10.5px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:var(--muted);}
 .ck-set .ck-in{width:100%;text-align:center;font-size:17px;padding:10px 6px;}
+
+.ck-fill{display:block;margin-top:8px;font-size:13px;font-weight:700;color:var(--accent);}
 </style>
 </head>
 <body>
@@ -905,7 +907,7 @@ function touch(kind, key){
     data.mods[kind][key] = now;
   }
 }
-const APP_VERSION = 'v47';
+const APP_VERSION = 'v48';
 const STORAGE_KEY = 'habit-tracker-data-v1';
 const WD = ['Po','Út','St','Čt','Pá','So','Ne'];
 const EMOJI_PICKS = ['✅','💪','🏃','🚶','🧘','😴','📖','✍️','📓','💧','🥗','🍎','🚫','💊','🦉','🎓','💼','🎸','🧹','🧠'];
@@ -3313,6 +3315,31 @@ function ckSetPaths(f){
   for (let i = 1; i <= n; i++) out.push(f.p + '.s' + i);
   return out;
 }
+function ckPlanFill(t){
+  // co vyplnit: buď přímo z plánu (def/defs), nebo odvozeno ze zadání („4 série po 10–12 · RIR 2")
+  const pre = String(t.pre || '');
+  const mRep = pre.match(/po\s+(\d+)(?:\s*[–\-]\s*(\d+))?/i);
+  const mRir = pre.match(/RIR\s*(\d+)/i);
+  const mKg = pre.match(/(\d+(?:[.,]\d+)?)\s*kg/i);
+  const out = [];
+  for (const f of (t.fields || [])){
+    if (f.kind === 'sets'){
+      const paths = ckSetPaths(f);
+      const defs = Array.isArray(f.defs) ? f.defs : null;
+      paths.forEach((p, i) => {
+        const v = defs ? defs[i] : (f.def || (mRep ? mRep[1] : ''));
+        if (v) out.push([p, String(v)]);
+      });
+    } else if (f.def){
+      out.push([f.p, String(f.def)]);
+    } else if (/\.rir$/.test(f.p) && mRir){
+      out.push([f.p, mRir[1]]);
+    } else if (/\.w$/.test(f.p) && mKg){
+      out.push([f.p, mKg[1]]);
+    }
+  }
+  return out;
+}
 function ckField(wk, f){
   let ctrl;
   if (f.kind === 'sets'){
@@ -3373,7 +3400,9 @@ function renderCheckin(){
     + '<div class="ck-step-h"><span class="ck-step-i">' + uiIco(t.ico, 'ui-ico') + '</span>'
     + '<span class="ck-step-tt"><strong>' + esc(t.title) + '</strong>'
     + '<span>' + (ckStep + 1) + '. otázka ze ' + T.length + ' · ' + (t.sub ? esc(t.sub) : 'týden ' + range) + '</span></span></div>'
-    + (t.pre ? '<div class="ck-pre"><span class="ck-pre-l">Zadání</span>' + esc(t.pre).replace(/\n/g, '<br>') + '</div>' : '')
+    + (t.pre ? '<div class="ck-pre"><span class="ck-pre-l">Zadání</span>' + esc(t.pre).replace(/\n/g, '<br>')
+        + (ckPlanFill(t).length ? '<button class="linklike ck-fill" data-action="ckFill">Vyplnit podle zadání</button>' : '')
+        + '</div>' : '')
     + t.fields.map(f => ckField(wk, f)).join('')
     + '<div class="ck-step-f">'
     + '<button class="btn ghost" data-action="ckPrevStep"' + (ckStep === 0 ? ' disabled' : '') + '>‹ Zpět</button>'
@@ -3937,6 +3966,20 @@ document.addEventListener('click', ev => {
     case 'ckNextDay': if (ckDay() < today()){ ckDate = addDays(ckDay(), 1); ckStep = 0; render(); } break;
     case 'ckToday': ckDate = null; ckStep = 0; render(); break;
     case 'ckNext': ckStep++; render(); window.scrollTo({ top: 0, behavior: 'smooth' }); break;
+    case 'ckFill': {
+      const T = ckTopics(ckDay());
+      const t = T[ckStep];
+      if (!t) break;
+      const wk = ckWeekKey();
+      let n = 0;
+      for (const pair of ckPlanFill(t)){
+        if (!ckGet(wk, pair[0]).trim()){ ckSet(wk, pair[0], pair[1]); n++; } // nepřepisovat, co už jsi zapsal
+      }
+      nextSyncFast = true;
+      renderCheckin();
+      toast(n ? 'Vyplněno podle zadání (' + n + ')' : 'Všechno už je vyplněné');
+      break;
+    }
     case 'ckPrevStep': if (ckStep > 0) ckStep--; render(); break;
     case 'ckGoDay': ckDate = parseKey(el.dataset.key); ckStep = 0; render(); break;
     case 'ckChip': {
