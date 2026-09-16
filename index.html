@@ -1612,7 +1612,7 @@ function syncPullMerge(loud){
       if (JSON.stringify(data) !== JSON.stringify(rem.obj)) return syncNow();
     })
     .catch(() => { if (loud) toast('Stažení se nepodařilo', true); })
-    .then(() => { syncPulling = false; });
+    .then(() => { syncPulling = false; setSyncMeta({ lastPull: Date.now() }); });
 }
 function syncConnect(token){
   if (typeof fetch === 'undefined'){ toast('Prohlížeč nepodporuje synchronizaci', true); return; }
@@ -4235,6 +4235,16 @@ storageOk = checkStorage();
 data = load();
 if (!storageOk) $('#storage-banner').hidden = false;
 render();
+// po startu appky zkusit stáhnout novější data z cloudu
+if (typeof syncConfigured === 'function' && syncConfigured()) setTimeout(() => syncPullMerge(false), 600);
+window.addEventListener('pageshow', ev => {
+  if (ev.persisted && syncConfigured()) syncPullMerge(false); // návrat ze zmrazené stránky (iOS)
+});
+window.addEventListener('focus', () => {
+  if (!syncConfigured()) return;
+  const m = syncMeta();
+  if (!m.lastPull || Date.now() - m.lastPull > 20000) syncPullMerge(false);
+});
 
 /* PWA: offline režim přes service worker (jen na webu, lokální soubor nezmění) */
 if ('serviceWorker' in navigator && location.protocol === 'https:'){
