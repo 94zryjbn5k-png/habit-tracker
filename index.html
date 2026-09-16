@@ -907,7 +907,7 @@ function touch(kind, key){
     data.mods[kind][key] = now;
   }
 }
-const APP_VERSION = 'v49';
+const APP_VERSION = 'v50';
 const STORAGE_KEY = 'habit-tracker-data-v1';
 const WD = ['Po','Út','St','Čt','Pá','So','Ne'];
 const EMOJI_PICKS = ['✅','💪','🏃','🚶','🧘','😴','📖','✍️','📓','💧','🥗','🍎','🚫','💊','🦉','🎓','💼','🎸','🧹','🧠'];
@@ -3315,12 +3315,21 @@ function ckSetPaths(f){
   for (let i = 1; i <= n; i++) out.push(f.p + '.s' + i);
   return out;
 }
+function ckParseKg(pre){
+  // váha ze zadání: „60 kg", „@ 85 kg", „2×14 kg", „+7,5 kg", „80–85 kg" (horní), „90/95/100 kg" (po sériích)
+  const m = String(pre || '').match(/(?:@\s*)?\+?\s*((?:\d+(?:[.,]\d+)?)(?:\s*[\/×x]\s*\d+(?:[.,]\d+)?)*(?:\s*[–-]\s*\d+(?:[.,]\d+)?)?)\s*(?:kg|KG|Kg)/);
+  if (!m) return '';
+  let v = m[1].replace(/\s+/g, '');
+  if (/[–-]/.test(v)) return v.split(/[–-]/).pop();      // rozsah → horní hranice
+  if (/[×x]/i.test(v)) return v.split(/[×x]/i).pop();     // 2×14 → váha jedné činky
+  return v;                                              // 90/95/100 ponechat po sériích
+}
 function ckPlanFill(t){
   // co vyplnit: buď přímo z plánu (def/defs), nebo odvozeno ze zadání („4 série po 10–12 · RIR 2")
   const pre = String(t.pre || '');
   const mRep = pre.match(/po\s+(\d+)(?:\s*[–\-]\s*(\d+))?/i);
   const mRir = pre.match(/RIR\s*(\d+)/i);
-  const mKg = pre.match(/(\d+(?:[.,]\d+)?)\s*kg/i);
+  const kgTxt = ckParseKg(pre);
   const out = [];
   for (const f of (t.fields || [])){
     if (f.kind === 'sets'){
@@ -3334,8 +3343,8 @@ function ckPlanFill(t){
       out.push([f.p, String(f.def)]);
     } else if (/\.rir$/.test(f.p) && mRir){
       out.push([f.p, mRir[1]]);
-    } else if (/\.w$/.test(f.p) && mKg){
-      out.push([f.p, mKg[1]]);
+    } else if (/\.w$/.test(f.p) && kgTxt){
+      out.push([f.p, kgTxt]);
     }
   }
   return out;
