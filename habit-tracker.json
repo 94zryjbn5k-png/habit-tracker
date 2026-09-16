@@ -944,8 +944,7 @@
   },
   "2026-09-16": {
    "449beb16-d8cf-48e1-9a9a-df5eb8e71c6c": 9,
-   "05438702-6033-4e10-a86a-3337629d6f7d": 10,
-   "81cceb09-bbfb-4d13-aa67-078b8f6c3491": true
+   "05438702-6033-4e10-a86a-3337629d6f7d": 10
   }
  },
  "meals": {
@@ -1571,7 +1570,17 @@
   "note": "hv b",
   "items": []
  },
- "updatedAt": 1789559840176,
+ "updatedAt": 1789560589948,
+ "mods": {
+  "entries": {
+   "2026-09-16": 1789560589948
+  },
+  "checkins": {},
+  "ck": {},
+  "notes": {},
+  "habits": 0,
+  "shopping": 0
+ },
  "hideDone": false,
  "theme": {
   "bg": "#000000",
