@@ -394,24 +394,6 @@
    "timerMin": null,
    "link": "https://honzovyletenky.cz/",
    "color": null
-  },
-  {
-   "id": "e599ea17-d001-45e4-934e-828b403b2f24",
-   "name": "Práce",
-   "emoji": "💼",
-   "type": "number",
-   "goal": 85,
-   "unit": "h",
-   "archived": false,
-   "order": 6,
-   "createdAt": 1789563441196,
-   "freq": {
-    "type": "monthly"
-   },
-   "vacations": [],
-   "timerMin": null,
-   "link": null,
-   "color": null
   }
  ],
  "entries": {
@@ -1591,7 +1573,7 @@
   "note": "hv b",
   "items": []
  },
- "updatedAt": 1789563664942,
+ "updatedAt": 1789563684658,
  "mods": {
   "entries": {
    "2026-09-16": 1789562698659
@@ -1604,7 +1586,7 @@
    "2026-09-14|other.sw1was": 1789562435618
   },
   "notes": {},
-  "habits": 1789563664942,
+  "habits": 1789563684658,
   "shopping": 1789562761798
  },
  "hideDone": false,
