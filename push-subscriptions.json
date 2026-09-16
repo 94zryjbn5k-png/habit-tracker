@@ -1,0 +1,46 @@
+{
+ "devices": [
+  {
+   "sub": {
+    "endpoint": "https://web.push.apple.com/QFZvkm0CJEEanQQFzmhlANfYQC2Uqt09fPJcbToqh3BBVyzZnCMN8SXX8LW7ZRn1xOHVenmtlRguPL4kKgTFxz1hZHAStL2kOG46Vnrq0X1Mvs7JBejuAIGW3Q21y1VvUri-kbQqnGyzzMs-8hJHpF2PGIaXXFYzQBQw40On5IY",
+    "keys": {
+     "p256dh": "BNff-oChi_D3xEwFSkBnwrLC7QkgRRlMBgf1PJfPnxN6r3B3BVCVeHHu_auWWZbsteicxnUkz7bd3hn3vM9Jm8E",
+     "auth": "3UKcbjpItkIHphdIuDzDnA"
+    }
+   },
+   "reminders": [
+    {
+     "id": "weigh",
+     "time": "08:00",
+     "days": [
+      2,
+      4,
+      6
+     ],
+     "kind": "weight",
+     "text": "Vážení nalačno",
+     "on": true
+    },
+    {
+     "id": "left",
+     "time": "20:00",
+     "days": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     "kind": "remaining",
+     "text": "Co ještě zbývá",
+     "on": true
+    }
+   ],
+   "tz": "Europe/Prague",
+   "name": "iPhone"
+  }
+ ],
+ "updatedAt": 1789570428868
+}
