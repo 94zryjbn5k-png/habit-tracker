@@ -103,7 +103,7 @@ function message(rem, data, t){
 }
 
 /* ---------- hlavní běh ---------- */
-const LOOP_MIN = 350;     // běh hlídá čas skoro 6 hodin (limit úlohy je 6 h) — nespoléháme na časté starty
+const LOOP_MIN = 55;      // běh zůstane vzhůru skoro hodinu; další start čeká ve frontě → navazují bez mezer
 const TICK_SEC = 30;      // kontrola času každých 30 s
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
@@ -160,6 +160,20 @@ async function tick(){
   return changed;
 }
 
+async function chainNext(){
+  // řetězení: běh si před koncem objedná další, takže se nespoléhá na plánovač GitHubu
+  const t = process.env.CHAIN_TOKEN;
+  if (!t) return console.log('řetězení vypnuto (chybí CHAIN_TOKEN)');
+  try {
+    const r = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/actions/workflows/reminders.yml/dispatches`, {
+      method: 'POST',
+      headers: { Authorization: 'Bearer ' + t, Accept: 'application/vnd.github+json', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ref: 'main' })
+    });
+    console.log('další běh objednán →', r.status);
+  } catch (e) { console.log('řetězení selhalo:', e.message); }
+}
+
 (async () => {
   const until = Date.now() + LOOP_MIN * 60000;
   let n = 0;
@@ -169,5 +183,6 @@ async function tick(){
     if (Date.now() >= until) break;
     await sleep(TICK_SEC * 1000);
   }
+  await chainNext();
   console.log('konec běhu, kontrol:', n);
 })().catch(e => { console.error(e); process.exit(1); });
