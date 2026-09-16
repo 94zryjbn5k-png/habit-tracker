@@ -46,11 +46,21 @@
      "kind": "custom",
      "text": "nic",
      "on": true
+    },
+    {
+     "id": "r1789571456616",
+     "time": "17:15",
+     "days": [
+      2
+     ],
+     "kind": "custom",
+     "text": "lol",
+     "on": true
     }
    ],
    "tz": "Europe/Prague",
    "name": "iPhone"
   }
  ],
- "updatedAt": 1789570451418
+ "updatedAt": 1789571457562
 }
