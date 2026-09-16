@@ -895,7 +895,7 @@ function touch(kind, key){
     data.mods[kind][key] = now;
   }
 }
-const APP_VERSION = 'v43';
+const APP_VERSION = 'v44';
 const STORAGE_KEY = 'habit-tracker-data-v1';
 const WD = ['Po','Út','St','Čt','Pá','So','Ne'];
 const EMOJI_PICKS = ['✅','💪','🏃','🚶','🧘','😴','📖','✍️','📓','💧','🥗','🍎','🚫','💊','🦉','🎓','💼','🎸','🧹','🧠'];
@@ -1506,6 +1506,14 @@ function setSyncMeta(patch){
   try { localStorage.setItem(SYNC_M, JSON.stringify(m)); } catch (e) {}
   return m;
 }
+function sameContent(a, b){
+  const strip = o => {
+    const c = JSON.parse(JSON.stringify(o));
+    delete c.mods; delete c.updatedAt;
+    return JSON.stringify(c);
+  };
+  return strip(a) === strip(b);
+}
 function mergeData(a, b){
   // a, b = dvě kopie dat; rozhoduje se podle razítek změn u jednotlivých dnů/týdnů,
   // takže se správně přenese i smazání (odškrtnutí zpět)
@@ -1638,10 +1646,22 @@ function syncPut(retry){
         setSyncMeta({ lastAt: Date.now(), err: null, pending: false, etag: null });
       });
       if ((r.status === 409 || r.status === 422) && !retry){
-        // sha zastaralá (zápis odjinud) — načíst novou a zkusit jednou znovu
+        // mezitím zapsalo druhé zařízení — stáhnout, sloučit a teprve pak poslat
         return fetch(ghApi('/contents/' + SYNC_FILE + '?ref=' + SYNC_BRANCH), { headers: ghHeaders() })
           .then(r2 => r2.ok ? r2.json() : null)
-          .then(j => { if (j && j.sha) setSyncRepo({ sha: j.sha }); return syncPut(true); });
+          .then(j => {
+            if (!j) return;
+            setSyncRepo({ sha: j.sha });
+            try {
+              const obj = JSON.parse(b64decode(j.content));
+              if (!validateData(obj)){
+                data = mergeData(data, normalizeData(obj));
+                try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch (e) {}
+                render();
+              }
+            } catch (e) {}
+            return syncPut(true);
+          });
       }
       setSyncMeta({ err: r.status, pending: true });
     });
@@ -1730,7 +1750,7 @@ function syncPullMerge(loud){
         render();
         toast(remT > locT ? 'Načteno novější z cloudu' : 'Data sloučena');
       } else if (loud) toast('Vše je aktuální');
-      if (JSON.stringify(data) !== JSON.stringify(rem.obj)) return syncNow();
+      if (!sameContent(data, rem.obj)) return syncNow();
     })
     .catch(() => { if (loud) toast('Stažení se nepodařilo', true); })
     .then(() => { syncPulling = false; setSyncMeta({ lastPull: Date.now() }); });
