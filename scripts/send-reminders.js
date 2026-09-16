@@ -103,7 +103,7 @@ function message(rem, data, t){
 }
 
 /* ---------- hlavní běh ---------- */
-const LOOP_MIN = 55;      // běh zůstane vzhůru skoro hodinu; další start čeká ve frontě → navazují bez mezer
+const LOOP_MIN = 350;     // běh hlídá čas skoro 6 hodin (limit úlohy je 6 h) — nespoléháme na časté starty
 const TICK_SEC = 30;      // kontrola času každých 30 s
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
