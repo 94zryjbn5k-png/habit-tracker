@@ -9,7 +9,7 @@ const REPO = 'habit-tracker';
 const BRANCH = 'data';
 const API = `https://api.github.com/repos/${OWNER}/${REPO}/contents/`;
 const TOKEN = process.env.GH_TOKEN;
-const WINDOW_MIN = 45; // kolik minut po zadaném čase se ještě smí odeslat (Actions se občas zpozdí)
+const WINDOW_MIN = 90; // pojistka, kdyby GitHub spustil běh se zpožděním
 
 webpush.setVapidDetails('mailto:habit-tracker@example.com', process.env.VAPID_PUBLIC, process.env.VAPID_PRIVATE);
 
@@ -103,7 +103,11 @@ function message(rem, data, t){
 }
 
 /* ---------- hlavní běh ---------- */
-(async () => {
+const LOOP_MIN = 26;      // jak dlouho běh zůstane vzhůru (cron jede každých 15 min → souvislé pokrytí)
+const TICK_SEC = 60;      // jak často se kontroluje čas
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+async function tick(){
   const t = prague();
   const push = (await ghGet('push-subscriptions.json')).obj;
   if (!push || !Array.isArray(push.devices) || !push.devices.length){
@@ -153,5 +157,17 @@ function message(rem, data, t){
     cur.obj.devices = alive;
     await ghPut('push-subscriptions.json', cur.obj, cur.sha, 'uklid neplatnych zarizeni');
   }
-  console.log('hotovo', t.date, String(Math.floor(t.min / 60)).padStart(2, '0') + ':' + String(t.min % 60).padStart(2, '0'));
+  return changed;
+}
+
+(async () => {
+  const until = Date.now() + LOOP_MIN * 60000;
+  let n = 0;
+  while (true){
+    try { await tick(); } catch (e) { console.log('kontrola selhala:', e.message); }
+    n++;
+    if (Date.now() >= until) break;
+    await sleep(TICK_SEC * 1000);
+  }
+  console.log('konec běhu, kontrol:', n);
 })().catch(e => { console.error(e); process.exit(1); });
