@@ -877,6 +877,8 @@ input,textarea,select,.meal-f,.ck-in{border-radius:13px;}
 .rem-n{flex:1;display:flex;flex-direction:column;gap:1px;font-size:14.5px;min-width:0;}
 .rem-d{font-size:12px;color:var(--muted);}
 .rem-del{min-width:34px;min-height:34px;font-size:13px;color:var(--muted);background:transparent;box-shadow:none;}
+
+.rem-t{font-size:16px;font-weight:700;font-variant-numeric:tabular-nums;min-width:56px;text-align:left;color:var(--accent);}
 </style>
 </head>
 <body>
@@ -920,8 +922,8 @@ function touch(kind, key){
 const VAPID_PUBLIC = 'BANao4KGasP1Dn-eKOPazE-n6NM0ZsWBGn6x3PYZ5MhhzAIHn3nOeyaSEkZHMqii_2bCcaBRap1lKN65HwLFxUE';
 const PUSH_FILE = 'push-subscriptions.json';
 const DEFAULT_REMINDERS = [
-  { id: 'weigh', time: '08:00', days: [2, 4, 6], kind: 'weight', text: 'Vážení nalačno', on: true },
-  { id: 'left', time: '20:00', days: [0, 1, 2, 3, 4, 5, 6], kind: 'remaining', text: 'Co ještě zbývá', on: true }
+  { id: 'weigh', time: '07:00', days: [2, 4, 6], kind: 'weight', text: 'Vážení nalačno', on: true },
+  { id: 'left', time: '21:00', days: [0, 1, 2, 3, 4, 5, 6], kind: 'remaining', text: 'Co ještě zbývá', on: true }
 ];
 function pushLocal(){
   try { return JSON.parse(localStorage.getItem('ht-push')) || {}; } catch (e) { return {}; }
@@ -993,7 +995,7 @@ function pushSaveRemote(){
     })
     .catch(() => {});
 }
-const APP_VERSION = 'v52';
+const APP_VERSION = 'v53';
 const STORAGE_KEY = 'habit-tracker-data-v1';
 const WD = ['Po','Út','St','Čt','Pá','So','Ne'];
 const EMOJI_PICKS = ['✅','💪','🏃','🚶','🧘','😴','📖','✍️','📓','💧','🥗','🍎','🚫','💊','🦉','🎓','💼','🎸','🧹','🧠'];
@@ -3585,7 +3587,7 @@ function renderStats(){
   const remHtml = reminders().map(r =>
     '<div class="rem-row' + (r.on === false ? ' off' : '') + '">'
     + '<button class="rem-tog" data-action="remToggle" data-id="' + esc(r.id) + '" aria-label="Zapnout/vypnout">' + (r.on === false ? '○' : '●') + '</button>'
-    + '<span class="rem-t">' + esc(r.time) + '</span>'
+    + '<button class="rem-t" data-action="remEdit" data-id="' + esc(r.id) + '">' + esc(r.time) + '</button>'
     + '<span class="rem-n">' + esc(r.text || (r.kind === 'weight' ? 'Vážení' : r.kind === 'remaining' ? 'Co zbývá' : 'Připomínka'))
     + '<span class="rem-d">' + (r.days && r.days.length === 7 ? 'každý den' : (r.days || []).map(d => WDS2[d]).join(' · ')) + '</span></span>'
     + '<button class="icon-btn rem-del" data-action="remDel" data-id="' + esc(r.id) + '" aria-label="Smazat">✕</button>'
@@ -3596,7 +3598,7 @@ function renderStats(){
         + '<div class="rem-list">' + remHtml + '</div>'
         + '<div class="row-btns"><button class="btn" data-action="remAdd">' + uiIco('plus', 'ui-ico sm') + ' Přidat</button>'
         + '<button class="btn" data-action="pushOff">Vypnout vše</button></div>'
-      : '<p class="muted" style="margin:6px 0 12px">Ranní připomínka vážení (St, Pá, Ne v 8:00) a večerní přehled toho, co ještě zbývá.</p>'
+      : '<p class="muted" style="margin:6px 0 12px">Ranní připomínka vážení (St, Pá, Ne v 7:00) a večerní přehled toho, co ještě zbývá (21:00).</p>'
         + '<div class="row-btns"><button class="btn primary" data-action="pushOn">Zapnout oznámení</button></div>')
     + '</div>';
   const sm = syncMeta();
@@ -4462,6 +4464,22 @@ document.addEventListener('click', ev => {
       render();
       break;
     }
+    case 'remEdit': {
+      const r = reminders().find(x => x.id === el.dataset.id);
+      if (!r) break;
+      openModal(
+        '<div class="sheet-title">Upravit připomínku</div>'
+        + '<label class="field"><span class="field-lbl">Čas</span><input id="rem-time" type="time" value="' + esc(r.time) + '"></label>'
+        + (r.kind === 'custom' ? '<label class="field"><span class="field-lbl">Text</span><input id="rem-text" maxlength="80" value="' + esc(r.text || '') + '"></label>' : '')
+        + '<div class="field"><span class="field-lbl">Dny</span><div class="day-picker" id="rem-days">'
+        + ['Po','Út','St','Čt','Pá','So','Ne'].map((d, i) => '<button class="day-chip' + ((r.days || []).indexOf(i) !== -1 ? ' on' : '') + '" data-action="toggleDay" data-day="' + i + '">' + d + '</button>').join('')
+        + '</div></div>'
+        + '<input type="hidden" id="rem-id" value="' + esc(r.id) + '">'
+        + '<div class="modal-actions"><button class="btn" data-action="closeModal">Zrušit</button>'
+        + '<button class="btn primary" data-action="remSave">Uložit</button></div>'
+      );
+      break;
+    }
     case 'remAdd':
       openModal(
         '<div class="sheet-title">Nová připomínka</div>'
@@ -4479,12 +4497,15 @@ document.addEventListener('click', ev => {
       const tx = (($('#rem-text') && $('#rem-text').value) || '').trim();
       const days = [...document.querySelectorAll('#rem-days .day-chip.on')].map(b => Number(b.dataset.day));
       if (!/^\d{2}:\d{2}$/.test(t) || !days.length){ toast('Vyplň čas a alespoň jeden den', true); break; }
-      const rs = reminders().concat([{ id: 'r' + Date.now(), time: t, days, kind: 'custom', text: tx || 'Připomínka', on: true }]);
+      const eid = ($('#rem-id') && $('#rem-id').value) || '';
+      const rs = eid
+        ? reminders().map(r => r.id === eid ? Object.assign({}, r, { time: t, days, text: tx || r.text }) : r)
+        : reminders().concat([{ id: 'r' + Date.now(), time: t, days, kind: 'custom', text: tx || 'Připomínka', on: true }]);
       setPushLocal({ reminders: rs });
       closeModal();
       pushSaveRemote().then(() => render());
       render();
-      toast('Připomínka přidána');
+      toast(eid ? 'Připomínka upravena' : 'Připomínka přidána');
       break;
     }
     case 'syncCopyLink': copyPlainText(syncRawUrl(), 'odkaz.txt', 'Odkaz zkopírován — pošli ho Claudovi'); break;
