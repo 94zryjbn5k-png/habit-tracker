@@ -1,5 +1,5 @@
 'use strict';
-const CACHE = 'habit-tracker-v41';
+const CACHE = 'habit-tracker-v42';
 const ASSETS = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
 
 self.addEventListener('install', e => {
@@ -20,7 +20,7 @@ self.addEventListener('fetch', e => {
   // Otevření aplikace: nejdřív síť (aktualizace), při výpadku cache
   if (e.request.mode === 'navigate'){
     e.respondWith(
-      fetch(e.request)
+      fetch(e.request, { cache: 'reload' }) // obejít desetiminutovou mezipaměť GitHub Pages
         .then(resp => {
           const copy = resp.clone();
           caches.open(CACHE).then(c => c.put('./index.html', copy));
