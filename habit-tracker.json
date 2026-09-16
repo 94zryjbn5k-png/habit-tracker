@@ -396,24 +396,6 @@
    "color": null
   },
   {
-   "id": "f914e0d9-fc41-4a9a-b703-8220c5cd19fa",
-   "name": "Spánek",
-   "emoji": "😴",
-   "type": "number",
-   "goal": 8,
-   "unit": "h",
-   "archived": false,
-   "order": 0,
-   "createdAt": 1789563441196,
-   "freq": {
-    "type": "daily"
-   },
-   "vacations": [],
-   "timerMin": null,
-   "link": null,
-   "color": null
-  },
-  {
    "id": "742b174c-7ac0-4987-ab39-1f51d34bdea0",
    "name": "Čtení",
    "emoji": "📖",
@@ -1789,7 +1771,7 @@
   "note": "hv b",
   "items": []
  },
- "updatedAt": 1789563486975,
+ "updatedAt": 1789563527175,
  "mods": {
   "entries": {
    "2026-09-16": 1789562698659
@@ -1802,7 +1784,7 @@
    "2026-09-14|other.sw1was": 1789562435618
   },
   "notes": {},
-  "habits": 0,
+  "habits": 1789563527174,
   "shopping": 1789562761798
  },
  "hideDone": false,
