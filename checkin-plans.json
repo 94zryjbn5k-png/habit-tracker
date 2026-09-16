@@ -1359,7 +1359,7 @@
         },
         {
           "id": "ex-sq",
-          "day": 0,
+          "day": 2,
           "icon": "dumbbell",
           "title": "Dřep",
           "sub": "Síla · Lower A",
@@ -1393,7 +1393,7 @@
         },
         {
           "id": "ex-nordic",
-          "day": 0,
+          "day": 2,
           "icon": "dumbbell",
           "title": "Nordic curl",
           "sub": "Síla · Lower A",
@@ -1426,7 +1426,7 @@
         },
         {
           "id": "ex-calf",
-          "day": 0,
+          "day": 2,
           "icon": "dumbbell",
           "title": "Výpony ve stoje (jednonož)",
           "sub": "Síla · Lower A",
@@ -1500,7 +1500,7 @@
         },
         {
           "id": "ex-pull",
-          "day": 0,
+          "day": 4,
           "icon": "dumbbell",
           "title": "Shyby s přítěží",
           "sub": "Síla · Upper B",
@@ -1534,7 +1534,7 @@
         },
         {
           "id": "ex-flat",
-          "day": 0,
+          "day": 4,
           "icon": "dumbbell",
           "title": "Flat DB press",
           "sub": "Síla · Upper B",
@@ -1567,7 +1567,7 @@
         },
         {
           "id": "ex-dips",
-          "day": 0,
+          "day": 4,
           "icon": "dumbbell",
           "title": "Dipy s náklonem",
           "sub": "Síla · Upper B",
@@ -1600,7 +1600,7 @@
         },
         {
           "id": "ex-pec",
-          "day": 0,
+          "day": 4,
           "icon": "dumbbell",
           "title": "Pec deck (nový)",
           "sub": "Síla · Upper B",
@@ -1632,7 +1632,7 @@
         },
         {
           "id": "ex-sap",
-          "day": 0,
+          "day": 4,
           "icon": "dumbbell",
           "title": "Straight-arm pulldown",
           "sub": "Síla · Upper B",
@@ -1665,7 +1665,7 @@
         },
         {
           "id": "ex-rpd",
-          "day": 0,
+          "day": 4,
           "icon": "dumbbell",
           "title": "Reverse pec deck",
           "sub": "Síla · Upper B",
@@ -1699,7 +1699,7 @@
         },
         {
           "id": "ex-latB",
-          "day": 0,
+          "day": 4,
           "icon": "dumbbell",
           "title": "Lateral raise (kladka, 1 ruka)",
           "sub": "Síla · Upper B",
@@ -1733,7 +1733,7 @@
         },
         {
           "id": "ex-ypr",
-          "day": 0,
+          "day": 4,
           "icon": "dumbbell",
           "title": "Prone Y",
           "sub": "Síla · Upper B",
@@ -1766,7 +1766,7 @@
         },
         {
           "id": "ex-crunch",
-          "day": 0,
+          "day": 4,
           "icon": "dumbbell",
           "title": "Cable crunch",
           "sub": "Síla · Upper B",
@@ -1824,7 +1824,7 @@
         },
         {
           "id": "ex-rdlb",
-          "day": 0,
+          "day": 5,
           "icon": "dumbbell",
           "title": "Trap bar",
           "sub": "Síla · Lower B",
@@ -1857,7 +1857,7 @@
         },
         {
           "id": "ex-bulg",
-          "day": 0,
+          "day": 5,
           "icon": "dumbbell",
           "title": "Bulharský dřep",
           "sub": "Síla · Lower B",
@@ -1890,7 +1890,7 @@
         },
         {
           "id": "ex-rdl",
-          "day": 0,
+          "day": 5,
           "icon": "dumbbell",
           "title": "RDL",
           "sub": "Síla · Lower B",
@@ -1923,7 +1923,7 @@
         },
         {
           "id": "ex-calfsit",
-          "day": 0,
+          "day": 5,
           "icon": "dumbbell",
           "title": "Výpony v sedu",
           "sub": "Síla · Lower B",
