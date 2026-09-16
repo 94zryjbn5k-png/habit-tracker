@@ -1521,6 +1521,9 @@
    }
   },
   "2026-09-14": {
+   "weight": {
+    "st": "99"
+   },
    "runs": {
     "q": {
      "where": "pás",
@@ -1566,17 +1569,19 @@
      "r": "12",
      "rir": "2"
     }
-   },
-   "weight": {
-    "st": "99"
    }
   }
  },
  "shopping": {
   "note": "hv b",
-  "items": []
+  "items": [
+   {
+    "t": "jjj",
+    "done": false
+   }
+  ]
  },
- "updatedAt": 1789562704590,
+ "updatedAt": 1789562715678,
  "mods": {
   "entries": {
    "2026-09-16": 1789562698659
@@ -1590,7 +1595,7 @@
   },
   "notes": {},
   "habits": 0,
-  "shopping": 1789562447384
+  "shopping": 1789562715678
  },
  "hideDone": false,
  "theme": {
