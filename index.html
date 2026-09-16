@@ -895,7 +895,7 @@ function touch(kind, key){
     data.mods[kind][key] = now;
   }
 }
-const APP_VERSION = 'v44';
+const APP_VERSION = 'v45';
 const STORAGE_KEY = 'habit-tracker-data-v1';
 const WD = ['Po','Út','St','Čt','Pá','So','Ne'];
 const EMOJI_PICKS = ['✅','💪','🏃','🚶','🧘','😴','📖','✍️','📓','💧','🥗','🍎','🚫','💊','🦉','🎓','💼','🎸','🧹','🧠'];
@@ -1704,7 +1704,11 @@ let syncPollTimer = null;
 const SYNC_POLL = 2500;
 function typingNow(){
   const a = document.activeElement;
-  return !!(a && (a.tagName === 'INPUT' || a.tagName === 'TEXTAREA' || a.isContentEditable));
+  if (!a) return false;
+  if (a.isContentEditable) return true;
+  // blokovat jen když je v poli opravdu rozepsaný text (prázdné pole nesmí zastavit synchronizaci)
+  if (a.tagName === 'INPUT' || a.tagName === 'TEXTAREA') return String(a.value || '').trim().length > 0;
+  return false;
 }
 let lastTouchPull = 0;
 function syncPullOnTouch(){
@@ -3912,6 +3916,7 @@ document.addEventListener('click', ev => {
       break;
     }
     case 'shopAdd': {
+      nextSyncFast = true;
       touch('shopping');
       const inp = $('#shop-new');
       const t = (inp && inp.value || '').trim().slice(0, 120);
@@ -3924,6 +3929,7 @@ document.addEventListener('click', ev => {
       break;
     }
     case 'shopToggle': {
+      nextSyncFast = true;
       touch('shopping');
       const it = data.shopping.items[Number(el.dataset.i)];
       if (!it) break;
@@ -3933,6 +3939,7 @@ document.addEventListener('click', ev => {
       break;
     }
     case 'shopDel': {
+      nextSyncFast = true;
       touch('shopping');
       data.shopping.items.splice(Number(el.dataset.i), 1);
       save();
@@ -3941,6 +3948,7 @@ document.addEventListener('click', ev => {
     }
     case 'shopPaste': openShopPasteModal(); break;
     case 'shopPasteAdd': {
+      nextSyncFast = true;
       touch('shopping');
       const parsed = parseShopText(($('#shop-paste') && $('#shop-paste').value) || '');
       if (!parsed.length){ toast('Nic k přidání — vlož text seznamu', true); break; }
@@ -3953,6 +3961,7 @@ document.addEventListener('click', ev => {
       break;
     }
     case 'shopClearDone': {
+      nextSyncFast = true;
       touch('shopping');
       data.shopping.items = data.shopping.items.filter(i => !i.done);
       save();
