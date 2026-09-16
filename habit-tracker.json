@@ -1571,9 +1571,14 @@
  },
  "shopping": {
   "note": "hv b",
-  "items": []
+  "items": [
+   {
+    "t": "lol",
+    "done": false
+   }
+  ]
  },
- "updatedAt": 1789562294638,
+ "updatedAt": 1789562314911,
  "mods": {
   "entries": {
    "2026-09-16": 1789562278320
@@ -1586,7 +1591,7 @@
   },
   "notes": {},
   "habits": 0,
-  "shopping": 0
+  "shopping": 1789562314911
  },
  "hideDone": false,
  "theme": {
