@@ -396,24 +396,6 @@
    "color": null
   },
   {
-   "id": "e9ba72de-09fc-4644-a210-4b4a73a87be1",
-   "name": "Duolingo",
-   "emoji": "🦉",
-   "type": "check",
-   "goal": null,
-   "unit": "",
-   "archived": false,
-   "order": 4,
-   "createdAt": 1789563441196,
-   "freq": {
-    "type": "daily"
-   },
-   "vacations": [],
-   "timerMin": null,
-   "link": null,
-   "color": null
-  },
-  {
    "id": "8b52cd2e-2212-4ebd-8c32-360d95f11573",
    "name": "Učení se",
    "emoji": "🎓",
@@ -1699,7 +1681,7 @@
   "note": "hv b",
   "items": []
  },
- "updatedAt": 1789563579392,
+ "updatedAt": 1789563593476,
  "mods": {
   "entries": {
    "2026-09-16": 1789562698659
@@ -1712,7 +1694,7 @@
    "2026-09-14|other.sw1was": 1789562435618
   },
   "notes": {},
-  "habits": 1789563579391,
+  "habits": 1789563593475,
   "shopping": 1789562761798
  },
  "hideDone": false,
