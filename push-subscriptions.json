@@ -11,7 +11,7 @@
    "reminders": [
     {
      "id": "weigh",
-     "time": "07:00",
+     "time": "08:00",
      "days": [
       2,
       4,
@@ -23,7 +23,7 @@
     },
     {
      "id": "left",
-     "time": "21:00",
+     "time": "20:00",
      "days": [
       0,
       1,
@@ -36,21 +36,11 @@
      "kind": "remaining",
      "text": "Co ještě zbývá",
      "on": true
-    },
-    {
-     "id": "r1789579051051",
-     "time": "19:19",
-     "days": [
-      2
-     ],
-     "kind": "custom",
-     "text": "nic",
-     "on": true
     }
    ],
    "tz": "Europe/Prague",
    "name": "iPhone"
   }
  ],
- "updatedAt": 1789579051595
+ "updatedAt": 1789589356460
 }
