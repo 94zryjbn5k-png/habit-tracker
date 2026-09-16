@@ -129,7 +129,7 @@ async function tick(){
       if (!Array.isArray(rem.days) || rem.days.indexOf(t.wd) === -1) continue;
       const at = toMin(rem.time);
       if (at === null || t.min < at || t.min > at + WINDOW_MIN) continue;
-      const mark = tag + '|' + rem.id;
+      const mark = tag + '|' + rem.id + '|' + rem.time; // čas je součástí značky, aby šlo připomínku přenastavit a poslat znovu
       if (todaySent.indexOf(mark) !== -1) continue;
 
       const msg = message(rem, data, t);
