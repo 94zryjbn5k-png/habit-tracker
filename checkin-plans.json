@@ -1244,6 +1244,41 @@
           ]
         },
         {
+          "id": "extras-po",
+          "day": 0,
+          "icon": "dumbbell",
+          "title": "Zbytek pondělí (Q-běh + Upper A)",
+          "sub": "bez vah — odškrtni, co jsi udělal",
+          "pre": "Aktivace před během, tibialis po něm, rozcvička a core na konci Upper A.",
+          "fields": [
+            {
+              "p": "extras.po.activation.done",
+              "q": "Před během: glute bridge 1×10 · 4 výpady/noha",
+              "kind": "done"
+            },
+            {
+              "p": "extras.po.tibialis.done",
+              "q": "Tibialis u zdi 1×20 (po Q-běhu, doma)",
+              "kind": "done"
+            },
+            {
+              "p": "extras.ua.warmup.done",
+              "q": "Rozcvička: 5' veslo · scap push-up 2×12 · YTWL 1×8 · 90/90 2×8/str",
+              "kind": "done"
+            },
+            {
+              "p": "extras.ua.pallof.done",
+              "q": "Pallof press 3×10/str",
+              "kind": "done"
+            },
+            {
+              "p": "extras.ua.abwheel.done",
+              "q": "Ab wheel 3×8–12",
+              "kind": "done"
+            }
+          ]
+        },
+        {
           "id": "sw1",
           "day": 1,
           "icon": "waves",
@@ -1454,6 +1489,41 @@
               "q": "RIR poslední série",
               "kind": "num",
               "def": "2"
+            }
+          ]
+        },
+        {
+          "id": "extras-la",
+          "day": 2,
+          "icon": "dumbbell",
+          "title": "Zbytek Lower A",
+          "sub": "bez vah — odškrtni, co jsi udělal",
+          "pre": "Aktivace před během, rozcvička ve fitku, prehab na konci.",
+          "fields": [
+            {
+              "p": "extras.st.activation.done",
+              "q": "Před během: glute bridge 1×10 · 4 výpady/noha (skoky máš zvlášť)",
+              "kind": "done"
+            },
+            {
+              "p": "extras.la.warmup.done",
+              "q": "Rozcvička: 5' kolo · dřep osa ×10, 40 ×6, 60 ×3 (podpatky)",
+              "kind": "done"
+            },
+            {
+              "p": "extras.la.tibialis.done",
+              "q": "Tibialis raises 2×20",
+              "kind": "done"
+            },
+            {
+              "p": "extras.la.copenhagen.done",
+              "q": "Copenhagen 2×10/str",
+              "kind": "done"
+            },
+            {
+              "p": "extras.la.bandwalk.done",
+              "q": "Band walk 2×15/směr (na závěr, pomalu)",
+              "kind": "done"
             }
           ]
         },
@@ -1798,6 +1868,21 @@
           ]
         },
         {
+          "id": "extras-ub",
+          "day": 4,
+          "icon": "dumbbell",
+          "title": "Zbytek Upper B",
+          "sub": "bez vah — odškrtni, co jsi udělal",
+          "pre": "Rozcvička před shyby — rameno jde dnes poprvé do dipů se zátěží, nevynechávat.",
+          "fields": [
+            {
+              "p": "extras.ub.warmup.done",
+              "q": "Rozcvička: 5' veslo · scap push-up 2×12 · YTWL 1×8 · lehká série shybů",
+              "kind": "done"
+            }
+          ]
+        },
+        {
           "id": "lr",
           "day": 5,
           "icon": "run",
@@ -1955,6 +2040,31 @@
           ]
         },
         {
+          "id": "extras-lb",
+          "day": 5,
+          "icon": "dumbbell",
+          "title": "Zbytek Lower B",
+          "sub": "bez vah — odškrtni, co jsi udělal",
+          "pre": "Aktivace před longrunem, rozcvička ve fitku, band walk na závěr (SI oblast).",
+          "fields": [
+            {
+              "p": "extras.so.activation.done",
+              "q": "Před longrunem: glute bridge 1×10 · 4 výpady/noha",
+              "kind": "done"
+            },
+            {
+              "p": "extras.lb.warmup.done",
+              "q": "Rozcvička: 5' kolo · lehká série trap baru (60–70 kg)",
+              "kind": "done"
+            },
+            {
+              "p": "extras.lb.bandwalk.done",
+              "q": "Band walk 2×15/směr (na závěr, pomalu)",
+              "kind": "done"
+            }
+          ]
+        },
+        {
           "id": "w-ne",
           "day": 6,
           "icon": "target2",
@@ -2103,6 +2213,12 @@
         "St E 55': {runs.e.where|pás/venku} · {runs.e.feel|__}",
         "Čt klus 30': {runs.z.where|pás/venku} · {runs.z.feel|__}",
         "So LR 90': {runs.lr.where|pás/venku} · {runs.lr.feel|__}",
+        "",
+        "── DOPLŇKY (✓ = udělal, — = vynechal) ──",
+        "Po: aktivace {extras.po.activation.done|—} · tibialis po běhu {extras.po.tibialis.done|—} · rozcvička UA {extras.ua.warmup.done|—} · Pallof {extras.ua.pallof.done|—} · ab wheel {extras.ua.abwheel.done|—}",
+        "St: aktivace {extras.st.activation.done|—} · rozcvička LA {extras.la.warmup.done|—} · tibialis {extras.la.tibialis.done|—} · Copenhagen {extras.la.copenhagen.done|—} · band walk {extras.la.bandwalk.done|—}",
+        "Pá: rozcvička UB {extras.ub.warmup.done|—}",
+        "So: aktivace {extras.so.activation.done|—} · rozcvička LB {extras.lb.warmup.done|—} · band walk {extras.lb.bandwalk.done|—}",
         "",
         "── COKOLIV DALŠÍHO ──",
         "{extra.note|nic}"
