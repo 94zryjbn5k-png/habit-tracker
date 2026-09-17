@@ -1030,7 +1030,7 @@ function pushSaveRemote(retry){
       return false;
     });
 }
-const APP_VERSION = 'v58';
+const APP_VERSION = 'v59';
 const STORAGE_KEY = 'habit-tracker-data-v1';
 const WD = ['Po','Út','St','Čt','Pá','So','Ne'];
 const EMOJI_PICKS = ['✅','💪','🏃','🚶','🧘','😴','📖','✍️','📓','💧','🥗','🍎','🚫','💊','🦉','🎓','💼','🎸','🧹','🧠'];
@@ -1563,7 +1563,7 @@ function normalizeData(obj){
         const v = src[k];
         if (typeof v === 'string'){ if (v.trim()) o[k] = v.slice(0, 500); }
         else if (typeof v === 'number' && isFinite(v)) o[k] = String(v);
-        else if (v && typeof v === 'object' && depth < 2){
+        else if (v && typeof v === 'object' && depth < 4){
           const sub = clean(v, depth + 1);
           if (Object.keys(sub).length) o[k] = sub;
         }
@@ -2309,7 +2309,7 @@ function ckGet(wk, path){
   const v = ckRead(data.checkins[wk] || {}, path);
   return typeof v === 'string' ? v : '';
 }
-const CK_PATH_RE = /^[a-z][a-z0-9_]{0,30}(\.[a-z0-9_]{1,30}){0,2}$/i;
+const CK_PATH_RE = /^[a-z][a-z0-9_]{0,30}(\.[a-z0-9_]{1,30}){0,4}$/i; // až 5 úrovní (extras.po.activation.done)
 function ckPathOk(wk, path){
   if (!CK_PATH_RE.test(path)) return false;
   if (ckPlanPaths().indexOf(path) !== -1) return true;
