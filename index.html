@@ -879,6 +879,18 @@ input,textarea,select,.meal-f,.ck-in{border-radius:13px;}
 .rem-del{min-width:34px;min-height:34px;font-size:13px;color:var(--muted);background:transparent;box-shadow:none;}
 
 .rem-t{font-size:16px;font-weight:700;font-variant-numeric:tabular-nums;min-width:56px;text-align:left;color:var(--accent);}
+
+.ck-done{
+  display:flex;align-items:center;gap:12px;width:100%;text-align:left;
+  background:var(--card2);border:1.5px solid var(--line);border-radius:14px;
+  padding:14px 15px;font-size:16px;font-weight:600;color:var(--text);margin-bottom:9px;
+}
+.ck-done.on{border-color:var(--accent);background:var(--accent-ring);}
+.ck-done-b{
+  width:24px;height:24px;flex:0 0 auto;border-radius:8px;border:1.5px solid var(--line);
+  display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--accent-text);
+}
+.ck-done.on .ck-done-b{background:var(--accent);border-color:var(--accent);}
 </style>
 </head>
 <body>
@@ -1018,7 +1030,7 @@ function pushSaveRemote(retry){
       return false;
     });
 }
-const APP_VERSION = 'v57';
+const APP_VERSION = 'v58';
 const STORAGE_KEY = 'habit-tracker-data-v1';
 const WD = ['Po','Út','St','Čt','Pá','So','Ne'];
 const EMOJI_PICKS = ['✅','💪','🏃','🚶','🧘','😴','📖','✍️','📓','💧','🥗','🍎','🚫','💊','🦉','🎓','💼','🎸','🧹','🧠'];
@@ -3424,7 +3436,7 @@ function ckTopics(d){
     fields: (t.fields || []).map(f => ({
       p: f.p, q: f.q || '', ph: f.ph || '',
       kind: f.kind === 'chips' ? 'chips' : f.kind === 'text' ? 'text' : f.kind === 'num' ? 'num'
-        : f.kind === 'sets' ? 'sets' : 'txt2',
+        : f.kind === 'sets' ? 'sets' : f.kind === 'done' ? 'done' : 'txt2',
       sets: f.sets, vals: Array.isArray(f.vals) ? f.vals : []
     }))
   }));
@@ -3432,7 +3444,8 @@ function ckTopics(d){
 const CK_HABIT = [
   [/^other\.sw/, /plav/i],
   [/^runs\./, /b\u011bh|beh|run/i],
-  [/^strength\./, /silov|tr\u00e9nink|posilov/i]
+  [/^strength\./, /silov|tr\u00e9nink|posilov/i],
+  [/^extras\./, /silov|tr\u00e9nink|posilov/i]
 ];
 function ckAutoDone(path, val){
   const t = String(val || '').trim();
@@ -3492,6 +3505,11 @@ function ckPlanFill(t){
 }
 function ckField(wk, f){
   let ctrl;
+  if (f.kind === 'done'){
+    const on = ckGet(wk, f.p) === '\u2713';
+    return '<button class="ck-done' + (on ? ' on' : '') + '" data-action="ckDone" data-p="' + esc(f.p) + '" data-w="' + wk + '">'
+      + '<span class="ck-done-b">' + (on ? '\u2713' : '') + '</span>' + esc(f.q || 'Splněno') + '</button>';
+  }
   if (f.kind === 'sets'){
     const paths = ckSetPaths(f);
     ctrl = '<div class="ck-sets">' + paths.map((p, i) =>
@@ -4140,6 +4158,13 @@ document.addEventListener('click', ev => {
     case 'ckNextDay': if (ckDay() < today()){ ckDate = addDays(ckDay(), 1); ckStep = 0; render(); } break;
     case 'ckToday': ckDate = null; ckStep = 0; render(); break;
     case 'ckNext': ckStep++; render(); window.scrollTo({ top: 0, behavior: 'smooth' }); break;
+    case 'ckDone': {
+      const p = el.dataset.p, w = el.dataset.w;
+      ckSet(w, p, ckGet(w, p) === '\u2713' ? '' : '\u2713');
+      nextSyncFast = true;
+      renderCheckin();
+      break;
+    }
     case 'ckFill': {
       const T = ckTopics(ckDay());
       const t = T[ckStep];
