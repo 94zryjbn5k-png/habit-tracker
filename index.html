@@ -896,8 +896,10 @@ input,textarea,select,.meal-f,.ck-in{border-radius:13px;}
 
 .ck-nav{
   position:sticky;top:0;z-index:6;background:var(--bg);
-  padding:10px 0 12px;display:flex;flex-direction:column;gap:11px;
+  padding:8px 0 10px;display:flex;flex-direction:column;gap:10px;
 }
+.ck-nav:has(.segbar:empty):not(:has(.ck-nav-r)){display:none;}
+.ck-nav .segbar:empty{display:none;}
 .ck-nav .ck-seg{margin-bottom:0;}
 .ck-nav-r{display:flex;align-items:center;justify-content:flex-end;gap:8px;}
 .ck-nav-n{font-size:13px;font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums;min-width:46px;text-align:center;}
@@ -1066,7 +1068,7 @@ function pushSaveRemote(retry){
       return false;
     });
 }
-const APP_VERSION = 'v62';
+const APP_VERSION = 'v63';
 const STORAGE_KEY = 'habit-tracker-data-v1';
 const WD = ['Po','Út','St','Čt','Pá','So','Ne'];
 const EMOJI_PICKS = ['✅','💪','🏃','🚶','🧘','😴','📖','✍️','📓','💧','🥗','🍎','🚫','💊','🦉','🎓','💼','🎸','🧹','🧠'];
@@ -1372,6 +1374,8 @@ function cap(s){
 const FMT_FULL   = new Intl.DateTimeFormat('cs-CZ', { weekday:'long', day:'numeric', month:'long' });
 const FMT_FULL_Y = new Intl.DateTimeFormat('cs-CZ', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
 const FMT_MONTH  = new Intl.DateTimeFormat('cs-CZ', { month:'long', year:'numeric' });
+const FMT_SHORT_D = new Intl.DateTimeFormat('cs-CZ', { weekday:'short', day:'numeric', month:'numeric' });
+function fmtDateShort(d){ return cap(FMT_SHORT_D.format(d)); }
 function fmtDateFull(d){
   const f = d.getFullYear() === today().getFullYear() ? FMT_FULL : FMT_FULL_Y;
   return cap(f.format(d));
@@ -3237,7 +3241,7 @@ function renderDay(){
   const st = dayStats(key);
   let html = '<div class="daynav">'
     + '<button class="icon-btn" data-action="prevDay" aria-label="Předchozí den">‹</button>'
-    + '<div class="daynav-mid"><div class="daynav-date">' + (isToday ? 'Dnes' : fmtDateFull(selectedDate)) + '</div>'
+    + '<div class="daynav-mid"><div class="daynav-date">' + (isToday ? 'Dnes' : fmtDateShort(selectedDate)) + '</div>'
     + (isToday ? '<div class="daynav-sub">' + fmtDateFull(selectedDate) + '</div>'
                : '<div class="daynav-sub"><button class="linklike" data-action="goToday">Zpět na dnešek</button></div>')
     + '</div>'
@@ -3580,7 +3584,7 @@ function renderCheckin(){
 
   let html = '<div class="ck-tools">'
     + '<a class="btn small" href="claude://" data-action="openLink" aria-label="Otevřít Claude" title="Otevřít Claude">' + uiIco('robot') + '</a>'
-    + '<button class="btn small" data-action="exportCheckin" aria-label="Zkopírovat check-in" title="Zkopírovat check-in">' + uiIco('clipboard') + '</button></div>';
+    + '</div>';
 
   html += '<div class="view-head"><span class="view-title">Check-in</span>'
     + '<span class="view-meta">' + (no ? 'týden č. ' + no : range) + '</span></div>';
@@ -3602,14 +3606,17 @@ function renderCheckin(){
   }
 
   let segs = '';
-  for (let i = 0; i < T.length; i++) segs += '<span class="' + (i === ckStep ? 'cur' : (ckTopicFilled(wk, T[i]) ? 'on' : '')) + '"></span>';
+  if (T.length > 1) for (let i = 0; i < T.length; i++) segs += '<span class="' + (i === ckStep ? 'cur' : (ckTopicFilled(wk, T[i]) ? 'on' : '')) + '"></span>';
   html += '<div class="ck-nav">'
     + '<div class="segbar ck-seg">' + segs + '</div>'
-    + '<div class="ck-nav-r">'
-    + '<button class="nav-btn" data-action="ckPrevStep"' + (ckStep === 0 ? ' disabled' : '') + ' aria-label="Předchozí otázka">‹</button>'
-    + '<span class="ck-nav-n">' + (ckStep + 1) + ' / ' + T.length + '</span>'
-    + '<button class="nav-btn" data-action="ckNext"' + (ckStep >= T.length - 1 ? ' disabled' : '') + ' aria-label="Další otázka">›</button>'
-    + '</div></div>';
+    + (T.length > 1
+      ? '<div class="ck-nav-r">'
+        + '<button class="nav-btn" data-action="ckPrevStep"' + (ckStep === 0 ? ' disabled' : '') + ' aria-label="Předchozí otázka">‹</button>'
+        + '<span class="ck-nav-n">' + (ckStep + 1) + ' / ' + T.length + '</span>'
+        + '<button class="nav-btn" data-action="ckNext"' + (ckStep >= T.length - 1 ? ' disabled' : '') + ' aria-label="Další otázka">›</button>'
+        + '</div>'
+      : '')
+    + '</div>';
 
   const t = T[ckStep];
   html += '<div class="card ck-step">'
@@ -4202,7 +4209,8 @@ document.addEventListener('click', ev => {
           + '<span class="dp-c">' + (nT ? fil + '/' + nT : 'volno') + '</span></button>';
       }
       openModal('<div class="sheet-title">Vyber den</div><div class="day-pick">' + rows + '</div>'
-        + '<div class="modal-actions"><button class="btn" data-action="closeModal">Zavřít</button></div>');
+        + '<div class="modal-actions"><button class="btn" data-action="closeModal">Zavřít</button>'
+        + '<button class="btn primary" data-action="exportCheckin">' + uiIco('clipboard', 'ui-ico sm') + ' Zkopírovat týden</button></div>');
       break;
     }
     case 'ckToday': ckDate = null; ckStep = 0; render(); break;
