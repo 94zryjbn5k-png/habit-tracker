@@ -891,6 +891,29 @@ input,textarea,select,.meal-f,.ck-in{border-radius:13px;}
   display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--accent-text);
 }
 .ck-done.on .ck-done-b{background:var(--accent);border-color:var(--accent);}
+
+.ck-daynav{display:flex;align-items:center;gap:12px;margin:-6px 0 12px;}
+.ck-daysel-w{
+  position:relative;display:flex;align-items:center;flex:0 1 auto;
+  background:var(--card);border:1.5px solid var(--line);border-radius:13px;padding:0 34px 0 14px;min-height:44px;
+}
+.ck-daysel{
+  appearance:none;-webkit-appearance:none;background:transparent;border:0;outline:0;
+  font:inherit;font-size:15.5px;font-weight:700;color:var(--text);padding:10px 0;max-width:60vw;
+}
+.ck-daysel-c{position:absolute;right:13px;color:var(--muted);font-size:16px;line-height:1;pointer-events:none;}
+.ck-nav{
+  position:sticky;top:0;z-index:6;background:var(--bg);
+  padding:10px 0 12px;display:flex;flex-direction:column;gap:11px;
+}
+.ck-nav .ck-seg{margin-bottom:0;}
+.ck-nav-r{display:flex;align-items:center;justify-content:flex-end;gap:8px;}
+.ck-nav-n{font-size:13px;font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums;min-width:46px;text-align:center;}
+.nav-btn{
+  width:42px;height:42px;border-radius:13px;background:var(--btn-bg);color:var(--text);
+  font-size:20px;line-height:1;display:inline-flex;align-items:center;justify-content:center;
+}
+.nav-btn:disabled{opacity:.28;}
 </style>
 </head>
 <body>
@@ -1030,7 +1053,7 @@ function pushSaveRemote(retry){
       return false;
     });
 }
-const APP_VERSION = 'v59';
+const APP_VERSION = 'v60';
 const STORAGE_KEY = 'habit-tracker-data-v1';
 const WD = ['Po','Út','St','Čt','Pá','So','Ne'];
 const EMOJI_PICKS = ['✅','💪','🏃','🚶','🧘','😴','📖','✍️','📓','💧','🥗','🍎','🚫','💊','🦉','🎓','💼','🎸','🧹','🧠'];
@@ -3460,6 +3483,9 @@ function ckAutoDone(path, val){
   setVal(key, h.id, true);
   toast(h.name + ' odškrtnuto v Dnes');
 }
+function ckDayFilledCount(wk, d){
+  return ckTopics(d).filter(t => ckTopicFilled(wk, t)).length;
+}
 function ckTopicFilled(wk, t){
   return t.fields.some(f => ckGet(wk, f.p).trim());
 }
@@ -3546,11 +3572,20 @@ function renderCheckin(){
   html += '<div class="view-head"><span class="view-title">Check-in</span>'
     + '<span class="view-meta">' + (no ? 'týden č. ' + no : range) + '</span></div>';
 
-  html += '<div class="ck-daynav">'
-    + '<button class="mini-btn" data-action="ckPrevDay" aria-label="Předchozí den">‹</button>'
-    + '<span class="ck-dayname">' + (isToday ? 'Dnes' : fmtDateFull(d)) + '</span>'
-    + '<button class="mini-btn" data-action="ckNextDay" aria-label="Další den"' + (d >= today() ? ' disabled' : '') + '>›</button>'
-    + (isToday ? '' : '<button class="linklike ck-back" data-action="ckToday">Zpět na dnešek</button>')
+  const WDN = ['Po', 'Út', 'St', 'Čt', 'Pá', 'So', 'Ne'];
+  let dayOpts = '';
+  for (let i = 0; i < 21; i++){
+    const dd = addDays(today(), -i);
+    const k = dateKey(dd);
+    const nT = ckTopics(dd).length;
+    const lbl = (i === 0 ? 'Dnes' : i === 1 ? 'Včera' : WDN[weekdayIdx(dd)] + ' ' + dd.getDate() + '. ' + (dd.getMonth() + 1) + '.')
+      + (nT ? '  ·  ' + ckDayFilledCount(dateKey(startOfWeek(dd)), dd) + '/' + nT : '  ·  volno');
+    dayOpts += '<option value="' + k + '"' + (k === dateKey(d) ? ' selected' : '') + '>' + esc(lbl) + '</option>';
+  }
+  html += '<div class="ck-daynav"><div class="ck-daysel-w">'
+    + '<select class="ck-daysel" aria-label="Vyber den">' + dayOpts + '</select>'
+    + '<span class="ck-daysel-c">⌄</span></div>'
+    + (isToday ? '' : '<button class="linklike ck-back" data-action="ckToday">Na dnešek</button>')
     + '</div>';
 
   if (!T.length){
@@ -3561,7 +3596,13 @@ function renderCheckin(){
 
   let segs = '';
   for (let i = 0; i < T.length; i++) segs += '<span class="' + (i === ckStep ? 'cur' : (ckTopicFilled(wk, T[i]) ? 'on' : '')) + '"></span>';
-  html += '<div class="segbar ck-seg">' + segs + '</div>';
+  html += '<div class="ck-nav">'
+    + '<div class="segbar ck-seg">' + segs + '</div>'
+    + '<div class="ck-nav-r">'
+    + '<button class="nav-btn" data-action="ckPrevStep"' + (ckStep === 0 ? ' disabled' : '') + ' aria-label="Předchozí otázka">‹</button>'
+    + '<span class="ck-nav-n">' + (ckStep + 1) + ' / ' + T.length + '</span>'
+    + '<button class="nav-btn" data-action="ckNext"' + (ckStep >= T.length - 1 ? ' disabled' : '') + ' aria-label="Další otázka">›</button>'
+    + '</div></div>';
 
   const t = T[ckStep];
   html += '<div class="card ck-step">'
@@ -3573,9 +3614,10 @@ function renderCheckin(){
         + '</div>' : '')
     + t.fields.map(f => ckField(wk, f)).join('')
     + '<div class="ck-step-f">'
-    + '<button class="btn ghost" data-action="ckPrevStep"' + (ckStep === 0 ? ' disabled' : '') + '>‹ Zpět</button>'
-    + '<span class="muted ck-save">Ukládá se průběžně</span>'
-    + '<button class="btn primary" data-action="ckNext"' + (ckStep >= T.length - 1 ? ' disabled' : '') + '>Další ›</button>'
+    + '<span class="muted">Ukládá se průběžně</span>'
+    + (ckStep >= T.length - 1
+        ? '<button class="btn primary" data-action="exportCheckin">' + uiIco('clipboard', 'ui-ico sm') + ' Zkopírovat</button>'
+        : '<button class="btn" data-action="ckNext">Další ›</button>')
     + '</div></div>';
 
   const rest = [];
@@ -4629,6 +4671,11 @@ document.addEventListener('input', ev => {
   const t = ev.target;
   if (!t) return;
   if (t.id === 'plan-ta'){ planDraft = t.value; return; }
+  if (t.classList && t.classList.contains('ck-daysel')){
+    const nd = parseKey(t.value);
+    if (nd){ ckDate = nd; ckStep = 0; renderCheckin(); }
+    return;
+  }
   if (t.classList && t.classList.contains('ck-in')){
     ckSet(t.dataset.w, t.dataset.ck, t.value);
     return;
