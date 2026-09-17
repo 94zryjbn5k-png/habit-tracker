@@ -925,41 +925,6 @@ const DEFAULT_REMINDERS = [
   { id: 'weigh', time: '07:00', days: [2, 4, 6], kind: 'weight', text: 'Vážení nalačno', on: true },
   { id: 'left', time: '21:00', days: [0, 1, 2, 3, 4, 5, 6], kind: 'remaining', text: 'Co ještě zbývá', on: true }
 ];
-const HEALTH_DIR = 'health/';
-function healthUpload(text){
-  const t = String(text || '').trim();
-  if (!t) { toast('Nic jsi nevložil', true); return; }
-  if (!syncConfigured()){ toast('Nejdřív nastav synchronizaci', true); return; }
-  let obj, day;
-  try {
-    obj = JSON.parse(t);
-    day = (obj.meta && (obj.meta.rangeEnd || obj.meta.exportedAt) || '').slice(0, 10) || dateKey(today());
-  } catch (e) { toast('To nevypadá jako platný export (JSON)', true); return; }
-  const path = HEALTH_DIR + 'health-' + day + '.json';
-  const kb = Math.round(t.length / 1024);
-  toast('Ukládám ' + kb + ' kB…');
-  fetch(ghApi('/contents/' + path + '?ref=' + SYNC_BRANCH), { headers: ghHeaders() })
-    .then(r => r.ok ? r.json() : null)
-    .then(j => {
-      const body = { message: 'health export ' + day, branch: SYNC_BRANCH, content: b64encode(t) };
-      if (j && j.sha) body.sha = j.sha;
-      return fetch(ghApi('/contents/' + path), { method: 'PUT', headers: ghHeaders(), body: JSON.stringify(body) });
-    })
-    .then(r => {
-      if (!r.ok) throw new Error('HTTP ' + r.status);
-      closeModal();
-      const h = activeHabits().find(x => /health|export|zdrav/i.test(x.name));
-      if (h && x_isCheck(h)){
-        setVal(dateKey(today()), h.id, true);
-        setNote(dateKey(today()), h.id, 'health-' + day + '.json · ' + kb + ' kB');
-      }
-      nextSyncFast = true;
-      render();
-      toast('Uloženo pro trenéra (' + kb + ' kB)');
-    })
-    .catch(e => toast('Uložení selhalo: ' + e.message, true));
-}
-function x_isCheck(h){ return h && h.type === 'check'; }
 function pushLocal(){
   try { return JSON.parse(localStorage.getItem('ht-push')) || {}; } catch (e) { return {}; }
 }
@@ -1053,7 +1018,7 @@ function pushSaveRemote(retry){
       return false;
     });
 }
-const APP_VERSION = 'v56';
+const APP_VERSION = 'v57';
 const STORAGE_KEY = 'habit-tracker-data-v1';
 const WD = ['Po','Út','St','Čt','Pá','So','Ne'];
 const EMOJI_PICKS = ['✅','💪','🏃','🚶','🧘','😴','📖','✍️','📓','💧','🥗','🍎','🚫','💊','🦉','🎓','💼','🎸','🧹','🧠'];
@@ -3669,9 +3634,6 @@ function renderStats(){
     + '<span class="rem-d">' + (r.days && r.days.length === 7 ? 'každý den' : (r.days || []).map(d => WDS2[d]).join(' · ')) + '</span></span>'
     + '<button class="icon-btn rem-del" data-action="remDel" data-id="' + esc(r.id) + '" aria-label="Smazat">✕</button>'
     + '</div>').join('');
-  html += '<div class="card"><div class="sec-title" style="margin-top:0">Data pro trenéra</div>'
-    + '<p class="muted" style="margin:6px 0 12px">Export z Health Export Kitu se uloží do repozitáře. V appce se nikde nezobrazuje — čte ho jen trenér.</p>'
-    + '<div class="row-btns"><button class="btn" data-action="healthPaste">' + uiIco('clipboard', 'ui-ico sm') + ' Vložit health export</button></div></div>';
   html += '<div class="card"><div class="sec-title" style="margin-top:0">Oznámení</div>'
     + (pon
       ? '<p class="muted" style="margin:6px 0 10px">' + (po.err
@@ -4531,16 +4493,6 @@ document.addEventListener('click', ev => {
     case 'syncPushInit': closeModal(); syncNow().then(() => toast('Data z tohoto zařízení nahrána')); break;
     case 'syncNow': toast('Nahrávám…'); syncNow(); break;
     case 'syncPullNow': syncPullMerge(true); break;
-    case 'healthPaste':
-      openModal(
-        '<div class="sheet-title">Vložit health export</div>'
-        + '<p class="muted" style="margin:0 0 10px">Otevři Health Export Kit, vyexportuj JSON, zkopíruj ho a vlož sem.</p>'
-        + '<textarea id="health-ta" class="ta" rows="6" placeholder="sem vlož obsah exportu"></textarea>'
-        + '<div class="modal-actions"><button class="btn" data-action="closeModal">Zrušit</button>'
-        + '<button class="btn primary" data-action="healthSave">Uložit</button></div>'
-      );
-      break;
-    case 'healthSave': healthUpload($('#health-ta') ? $('#health-ta').value : ''); break;
     case 'pushOn': pushEnable(); break;
     case 'pushOff': pushDisable(); break;
     case 'pushResend':
