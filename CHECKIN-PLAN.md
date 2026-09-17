@@ -104,3 +104,27 @@ Priklad cviku se ctyrmi seriemi a presnym zadanim:
   ]
 }
 ```
+
+### Cviky bez vah (jen odskrtnuti)
+
+Pro cviky, kde se nezapisuji vahy ani opakovani (core, mobilita, rozcvicka, doplnky na konci treninku),
+pouzij pole `"kind": "done"`. Vykresli se jako velke tlacitko, ktere Jan jednim tuknutim odskrtne.
+Do jedne karty jich muzes dat kolik chces - projdou se na jedne strance.
+
+```json
+{
+  "id": "extras-a", "day": 0, "icon": "dumbbell", "title": "Doplnky na konec",
+  "pre": "Po hlavni casti, bez vah.",
+  "fields": [
+    { "p": "extras.plank.done",    "q": "Plank 3x45 s",            "kind": "done" },
+    { "p": "extras.deadbug.done",  "q": "Dead bug 3x10",           "kind": "done" },
+    { "p": "extras.calf.done",     "q": "Vypony na schodu 2x20",   "kind": "done" }
+  ]
+}
+```
+
+V exportu se hodnota vypise jako `v` (fajfka) kdyz je splneno; pouzij fallback pro nesplneno:
+`- plank: {extras.plank.done|-}`
+
+Cesty zacinajici `extras.` se v aplikaci pocitaji jako soucast siloveho treninku, takze odskrtnuti
+doplnku take odskrtne navyk "Silovy trenink" v zalozce Dnes.
