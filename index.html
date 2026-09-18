@@ -982,6 +982,8 @@ input,textarea,select,.meal-f,.ck-in{border-radius:13px;}
 .next-wk{margin-top:2px;}
 .dp-wl-c.wait{color:var(--muted);font-weight:600;}
 .dp-note{font-size:13px;color:var(--muted);background:var(--card2);border-radius:12px;padding:12px 13px;line-height:1.45;}
+
+.dp-now{font-size:12.5px;font-weight:700;}
 </style>
 </head>
 <body>
@@ -1121,7 +1123,7 @@ function pushSaveRemote(retry){
       return false;
     });
 }
-const APP_VERSION = 'v69';
+const APP_VERSION = 'v70';
 const STORAGE_KEY = 'habit-tracker-data-v1';
 const WD = ['Po','Út','St','Čt','Pá','So','Ne'];
 const EMOJI_PICKS = ['✅','💪','🏃','🚶','🧘','😴','📖','✍️','📓','💧','🥗','🍎','🚫','💊','🦉','🎓','💼','🎸','🧹','🧠'];
@@ -3595,20 +3597,23 @@ function openDayPick(){
   const mon0 = startOfWeek(today());
   let html;
   if (!dpArchive){
-    const s0 = dpWeekStats(mon0);
+    const viewMon = startOfWeek(ckDay());          // panel ukazuje týden, ve kterém právě jsi
+    const isCur = sameDay(viewMon, mon0);
+    const s0 = dpWeekStats(viewMon);
+    const no = ckWeekNo(dateKey(viewMon));
     html = '<div class="sheet-title">Vyber den</div>'
-      + '<div class="dp-wk cur-wk"><div class="dp-wl"><span class="dp-wl-n">Týden č. ' + (ckWeekNo(dateKey(mon0)) || '—') + '</span>'
-      + '<span class="dp-wl-r">' + dpRange(mon0) + '</span>'
+      + '<div class="dp-wk cur-wk"><div class="dp-wl">'
+      + '<span class="dp-wl-n">' + (no ? 'Týden č. ' + no : dpRange(viewMon)) + '</span>'
+      + (isCur ? '' : '<button class="linklike dp-now" data-action="dpWeek" data-key="' + dateKey(mon0) + '">Tento týden</button>')
       + (s0.all ? '<span class="dp-wl-c">' + s0.done + '/' + s0.all + '</span>' : '') + '</div>'
-      + dpWeekTiles(mon0, true) + '</div>';
-    if (weekdayIdx(today()) === 6){  // v neděli ukázat i plán na příští týden
+      + dpWeekTiles(viewMon, true) + '</div>';
+    if (isCur && weekdayIdx(today()) === 6){  // v neděli ukázat i plán na příští týden
       const nm = addDays(mon0, 7);
       const nk = dateKey(nm);
       const hasPlan = ckPlansAll().some(p => p.from === nk);
       let tasks = 0;
       for (let i = 0; i < 7; i++) tasks += ckTopics(addDays(nm, i)).length;
       html += '<div class="dp-wk next-wk"><div class="dp-wl"><span class="dp-wl-n">Příští týden</span>'
-        + '<span class="dp-wl-r">' + dpRange(nm) + '</span>'
         + '<span class="dp-wl-c' + (hasPlan ? '' : ' wait') + '">' + (hasPlan ? tasks + ' úkolů' : 'čeká na trenéra') + '</span></div>'
         + (hasPlan ? dpWeekTiles(nm, false)
                    : '<div class="dp-note">Plán zatím nedorazil — ukáže se sám, jakmile ho trenér zadá.</div>')
@@ -4336,9 +4341,15 @@ document.addEventListener('click', ev => {
     case 'dpBack': dpArchive = false; openDayPick(); break;
     case 'dpWeek': {
       const mon = parseKey(el.dataset.key);
-      if (mon){ ckDate = mon > today() ? today() : mon; ckStep = 0; }
-      closeModal();
-      render();
+      if (mon){
+        const last = addDays(mon, 6);
+        ckDate = (last < today()) ? mon : (mon > today() ? today() : today()); // archivní týden → pondělí
+        if (last < today()) ckDate = mon;
+        ckStep = 0;
+      }
+      dpArchive = false;
+      renderCheckin();
+      openDayPick();   // panel zůstane otevřený, jen přepne na vybraný týden
       break;
     }
     case 'ckToday': ckDate = null; ckStep = 0; render(); break;
