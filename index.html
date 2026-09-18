@@ -932,7 +932,7 @@ input,textarea,select,.meal-f,.ck-in{border-radius:13px;}
 
 .day-pick{max-height:none;overflow:visible;margin:4px 0 2px;}
 .dp-wk{margin-bottom:16px;}
-.dp-wl{font-size:10.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 2px 9px;}
+
 .dp-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;}
 .dp-t{
   display:flex;flex-direction:column;align-items:center;gap:3px;
@@ -955,6 +955,29 @@ input,textarea,select,.meal-f,.ck-in{border-radius:13px;}
 .dp-leg .lg.part{background:linear-gradient(90deg,var(--accent) 50%,transparent 50%);box-shadow:inset 0 0 0 1.5px var(--accent);}
 .dp-leg .lg.none{box-shadow:inset 0 0 0 1.5px var(--line);}
 .dp-leg .lg.fut{box-shadow:inset 0 0 0 1.5px var(--accent);}
+
+.cur-wk{background:var(--card2);border-radius:16px;padding:13px 12px 12px;margin-bottom:14px;}
+.dp-wl{display:flex;align-items:baseline;gap:8px;margin:0 2px 10px;flex-wrap:wrap;}
+.dp-wl-n{font-size:14.5px;font-weight:800;color:var(--text);}
+.dp-wl-r{font-size:12px;color:var(--muted);}
+.dp-wl-c{margin-left:auto;font-size:12.5px;font-weight:800;color:var(--accent);font-variant-numeric:tabular-nums;}
+.cur-wk .dp-t{background:var(--card);}
+.dp-grid.big .dp-t{min-height:70px;padding:11px 0 9px;}
+.dp-grid.big .dp-num{font-size:18px;}
+.dp-arch-btn{
+  display:block;width:100%;text-align:left;padding:13px 14px;border-radius:13px;
+  background:var(--card2);color:var(--accent);font-size:14.5px;font-weight:700;margin-top:2px;
+}
+.dp-arch{max-height:56vh;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+.dp-arow{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;
+  padding:13px 14px;border-radius:13px;margin-bottom:7px;background:var(--card2);color:var(--text);text-align:left;
+}
+.dp-arow.cur{box-shadow:inset 0 0 0 1.5px var(--accent);}
+.dp-an{display:flex;flex-direction:column;gap:2px;font-size:15px;font-weight:700;}
+.dp-ar{font-size:12px;font-weight:500;color:var(--muted);}
+.dp-ac{font-size:13px;font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums;}
+.dp-back{margin-right:10px;font-size:14px;}
 </style>
 </head>
 <body>
@@ -1094,7 +1117,7 @@ function pushSaveRemote(retry){
       return false;
     });
 }
-const APP_VERSION = 'v65';
+const APP_VERSION = 'v66';
 const STORAGE_KEY = 'habit-tracker-data-v1';
 const WD = ['Po','Út','St','Čt','Pá','So','Ne'];
 const EMOJI_PICKS = ['✅','💪','🏃','🚶','🧘','😴','📖','✍️','📓','💧','🥗','🍎','🚫','💊','🦉','🎓','💼','🎸','🧹','🧠'];
@@ -3526,6 +3549,74 @@ function ckAutoDone(path, val){
   setVal(key, h.id, true);
   toast(h.name + ' odškrtnuto v Dnes');
 }
+let dpArchive = false;
+function dpWeekTiles(mon, big){
+  const WDL = ['P', 'Ú', 'S', 'Č', 'P', 'S', 'N'];
+  let tiles = '';
+  for (let i = 0; i < 7; i++){
+    const dd = addDays(mon, i);
+    const k = dateKey(dd);
+    const nT = ckTopics(dd).length;
+    const fil = nT ? ckDayFilledCount(dateKey(mon), dd) : 0;
+    const fut = dd > today();
+    const state = !nT ? 'off' : fut ? 'fut' : fil >= nT ? 'full' : fil ? 'part' : 'none';
+    tiles += '<button class="dp-t ' + state + (k === dateKey(ckDay()) ? ' cur' : '')
+      + (sameDay(dd, today()) ? ' tdy' : '') + '" data-action="ckGoDay" data-key="' + k + '">'
+      + '<span class="dp-wd">' + WDL[i] + '</span>'
+      + '<span class="dp-num">' + dd.getDate() + '</span>'
+      + '<span class="dp-dot"></span></button>';
+  }
+  return '<div class="dp-grid' + (big ? ' big' : '') + '">' + tiles + '</div>';
+}
+function dpWeekStats(mon){
+  let done = 0, all = 0;
+  for (let i = 0; i < 7; i++){
+    const dd = addDays(mon, i);
+    if (dd > today()) continue;
+    const nT = ckTopics(dd).length;
+    all += nT;
+    done += nT ? ckDayFilledCount(dateKey(mon), dd) : 0;
+  }
+  return { done, all };
+}
+function dpRange(mon){
+  const sun = addDays(mon, 6);
+  return mon.getDate() + '. ' + (mon.getMonth() + 1) + '. – ' + sun.getDate() + '. ' + (sun.getMonth() + 1) + '.';
+}
+function openDayPick(){
+  const mon0 = startOfWeek(today());
+  let html;
+  if (!dpArchive){
+    const prev = addDays(mon0, -7);
+    const s0 = dpWeekStats(mon0), s1 = dpWeekStats(prev);
+    html = '<div class="sheet-title">Vyber den</div>'
+      + '<div class="dp-wk cur-wk"><div class="dp-wl"><span class="dp-wl-n">Týden č. ' + (ckWeekNo(dateKey(mon0)) || '—') + '</span>'
+      + '<span class="dp-wl-r">' + dpRange(mon0) + '</span>'
+      + (s0.all ? '<span class="dp-wl-c">' + s0.done + '/' + s0.all + '</span>' : '') + '</div>'
+      + dpWeekTiles(mon0, true) + '</div>'
+      + '<div class="dp-wk"><div class="dp-wl"><span class="dp-wl-n">Minulý týden</span>'
+      + '<span class="dp-wl-r">' + dpRange(prev) + '</span>'
+      + (s1.all ? '<span class="dp-wl-c">' + s1.done + '/' + s1.all + '</span>' : '') + '</div>'
+      + dpWeekTiles(prev, false) + '</div>'
+      + '<button class="dp-arch-btn" data-action="dpArchive">Archiv všech týdnů ›</button>';
+  } else {
+    let rows = '';
+    for (let mon = new Date(mon0); ; mon = addDays(mon, -7)){
+      const k = dateKey(mon);
+      const no = ckWeekNo(k);
+      const st = dpWeekStats(mon);
+      const cur = sameDay(mon, mon0);
+      rows += '<button class="dp-arow' + (cur ? ' cur' : '') + '" data-action="dpWeek" data-key="' + k + '">'
+        + '<span class="dp-an">' + (no ? 'Týden č. ' + no : 'Před začátkem') + '<span class="dp-ar">' + dpRange(mon) + '</span></span>'
+        + '<span class="dp-ac">' + (st.all ? st.done + '/' + st.all : '—') + '</span></button>';
+      if (!no || no <= 1) break;
+    }
+    html = '<div class="sheet-title"><button class="linklike dp-back" data-action="dpBack">‹ Zpět</button>Archiv týdnů</div>'
+      + '<div class="dp-arch">' + rows + '</div>';
+  }
+  openModal(html + '<div class="modal-actions"><button class="btn" data-action="closeModal">Zavřít</button>'
+    + '<button class="btn primary" data-action="exportCheckin">' + uiIco('clipboard', 'ui-ico sm') + ' Zkopírovat týden</button></div>');
+}
 function ckDayFilledCount(wk, d){
   return ckTopics(d).filter(t => ckTopicFilled(wk, t)).length;
 }
@@ -4224,35 +4315,14 @@ document.addEventListener('click', ev => {
       render();
       break;
     }
-    case 'ckPickDay': {
-      const WDL = ['P', 'Ú', 'S', 'Č', 'P', 'S', 'N'];
-      const mon0 = startOfWeek(today());
-      let weeks = '';
-      for (let wi = 0; wi < 3; wi++){
-        const mon = addDays(mon0, -7 * wi);
-        let tiles = '';
-        for (let i = 0; i < 7; i++){
-          const dd = addDays(mon, i);
-          const k = dateKey(dd);
-          const nT = ckTopics(dd).length;
-          const fil = nT ? ckDayFilledCount(dateKey(mon), dd) : 0;
-          const fut = dd > today();
-          const state = !nT ? 'off' : fut ? 'fut' : fil >= nT ? 'full' : fil ? 'part' : 'none';
-          tiles += '<button class="dp-t ' + state + (k === dateKey(ckDay()) ? ' cur' : '')
-            + (sameDay(dd, today()) ? ' tdy' : '') + '" data-action="ckGoDay" data-key="' + k + '">'
-            + '<span class="dp-wd">' + WDL[i] + '</span>'
-            + '<span class="dp-num">' + dd.getDate() + '</span>'
-            + '<span class="dp-dot"></span></button>';
-        }
-        const lbl = wi === 0 ? 'Tento týden' : wi === 1 ? 'Minulý týden'
-          : mon.getDate() + '. ' + (mon.getMonth() + 1) + '. – ' + addDays(mon, 6).getDate() + '. ' + (addDays(mon, 6).getMonth() + 1) + '.';
-        weeks += '<div class="dp-wk"><div class="dp-wl">' + lbl + '</div><div class="dp-grid">' + tiles + '</div></div>';
-      }
-      openModal('<div class="sheet-title">Vyber den</div><div class="day-pick">' + weeks
-        + '<div class="dp-leg"><span><i class="lg full"></i>hotovo</span><span><i class="lg part"></i>rozdělané</span>'
-        + '<span><i class="lg none"></i>nic</span><span><i class="lg fut"></i>čeká</span></div></div>'
-        + '<div class="modal-actions"><button class="btn" data-action="closeModal">Zavřít</button>'
-        + '<button class="btn primary" data-action="exportCheckin">' + uiIco('clipboard', 'ui-ico sm') + ' Zkopírovat týden</button></div>');
+    case 'ckPickDay': dpArchive = false; openDayPick(); break;
+    case 'dpArchive': dpArchive = true; openDayPick(); break;
+    case 'dpBack': dpArchive = false; openDayPick(); break;
+    case 'dpWeek': {
+      const mon = parseKey(el.dataset.key);
+      if (mon){ ckDate = mon > today() ? today() : mon; ckStep = 0; }
+      closeModal();
+      render();
       break;
     }
     case 'ckToday': ckDate = null; ckStep = 0; render(); break;
