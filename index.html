@@ -996,9 +996,6 @@ input,textarea,select,.meal-f,.ck-in{border-radius:13px;}
 .ck-hist-b.open{border-radius:13px 13px 0 0;}
 .ck-hist-l{font-size:10px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);flex:0 0 auto;}
 .ck-hist-v{flex:1;min-width:0;font-size:14.5px;font-weight:700;font-variant-numeric:tabular-nums;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.ck-hd{font-size:11.5px;font-weight:800;padding:3px 7px;border-radius:7px;flex:0 0 auto;}
-.ck-hd.up{color:#30d158;background:rgba(48,209,88,.13);}
-.ck-hd.down{color:#ff9f0a;background:rgba(255,159,10,.13);}
 .ck-hist-a{color:var(--muted);font-size:13px;flex:0 0 auto;}
 
 .ck-hv{flex:1;min-width:0;font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
@@ -1156,7 +1153,7 @@ function pushSaveRemote(retry){
       return false;
     });
 }
-const APP_VERSION = 'v73';
+const APP_VERSION = 'v74';
 const STORAGE_KEY = 'habit-tracker-data-v1';
 const WD = ['Po','Út','St','Čt','Pá','So','Ne'];
 const EMOJI_PICKS = ['✅','💪','🏃','🚶','🧘','😴','📖','✍️','📓','💧','🥗','🍎','🚫','💊','🦉','🎓','💼','🎸','🧹','🧠'];
@@ -3765,16 +3762,10 @@ function ckExHistHtml(wk, t){
   if (!ex) return '';
   const h = ckExHistory(ex, wk, 6);
   if (!h.length) return '';
-  const last = h[0], prev = h[1];
-  let delta = '';
-  if (last.w !== null && prev && prev.w !== null && last.w !== prev.w){
-    const dv = last.w - prev.w;
-    delta = '<span class="ck-hd ' + (dv > 0 ? 'up' : 'down') + '">' + (dv > 0 ? '+' : '\u2212')
-      + String(Math.abs(dv)).replace('.', ',') + ' kg</span>';
-  }
+  const last = h[0];
   let out = '<button class="ck-hist-b' + (ckHistOpen ? ' open' : '') + '" data-action="ckHist">'
     + '<span class="ck-hist-l">Minule</span>'
-    + '<span class="ck-hist-v">' + esc(last.line) + '</span>' + delta
+    + '<span class="ck-hist-v">' + esc(last.line) + '</span>'
     + '<span class="ck-hist-a">' + (ckHistOpen ? '\u2303' : '\u2304') + '</span></button>';
   if (ckHistOpen){
     const arr = h.slice().reverse();
