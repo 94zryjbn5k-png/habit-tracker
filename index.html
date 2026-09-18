@@ -984,6 +984,25 @@ input,textarea,select,.meal-f,.ck-in{border-radius:13px;}
 .dp-note{font-size:13px;color:var(--muted);background:var(--card2);border-radius:12px;padding:12px 13px;line-height:1.45;}
 
 .dp-now{font-size:12.5px;font-weight:700;}
+
+.ck-note-b{
+  width:30px;height:30px;flex:0 0 auto;border-radius:10px;background:var(--btn-bg);color:var(--accent);
+  font-size:16px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;margin-right:2px;
+}
+.ck-hist-w{margin:0 0 14px;}
+.ck-hist-b{
+  display:flex;align-items:center;gap:9px;width:100%;padding:10px 12px;border-radius:12px;
+  background:var(--card2);color:var(--text);text-align:left;
+}
+.ck-hist-l{font-size:10.5px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);}
+.ck-hist-v{flex:1;font-size:14.5px;font-weight:700;font-variant-numeric:tabular-nums;}
+.ck-hist-a{color:var(--muted);font-size:14px;}
+.ck-hist{margin-top:8px;display:flex;flex-direction:column;gap:6px;}
+.ck-hrow{display:flex;align-items:center;gap:9px;}
+.ck-hw{font-size:11px;font-weight:700;color:var(--muted);width:26px;flex:0 0 auto;}
+.ck-hbar{flex:0 0 78px;height:7px;border-radius:4px;background:var(--btn-bg);overflow:hidden;}
+.ck-hbar i{display:block;height:100%;background:var(--accent);border-radius:4px;}
+.ck-hv{flex:1;font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums;}
 </style>
 </head>
 <body>
@@ -1123,7 +1142,7 @@ function pushSaveRemote(retry){
       return false;
     });
 }
-const APP_VERSION = 'v70';
+const APP_VERSION = 'v71';
 const STORAGE_KEY = 'habit-tracker-data-v1';
 const WD = ['Po','Út','St','Čt','Pá','So','Ne'];
 const EMOJI_PICKS = ['✅','💪','🏃','🚶','🧘','😴','📖','✍️','📓','💧','🥗','🍎','🚫','💊','🦉','🎓','💼','🎸','🧹','🧠'];
@@ -2412,6 +2431,9 @@ const CK_PATH_RE = /^[a-z][a-z0-9_]{0,30}(\.[a-z0-9_]{1,30}){0,4}$/i; // až 5 �
 function ckPathOk(wk, path){
   if (!CK_PATH_RE.test(path)) return false;
   if (ckPlanPaths().indexOf(path) !== -1) return true;
+  // vlastní poznámka ke cviku, který plán zná
+  const m = /^strength\.([a-z0-9_]+)\.note$/i.exec(path);
+  if (m && ckPlanPaths().some(p => p.indexOf('strength.' + m[1] + '.') === 0)) return true;
   return ckRead(data.checkins[wk] || {}, path) !== undefined; // starší plán: zápis do existujícího pole
 }
 function ckSet(wk, path, val){
@@ -2427,6 +2449,29 @@ function ckSet(wk, path, val){
 function ckPad(v, n){
   return String(v && String(v).trim() ? String(v).trim() : '__').padStart(n);
 }
+function ckExKeyOf(t){
+  // z tématu vytáhne klíč cviku (strength.sq.* → sq)
+  for (const f of (t.fields || [])){
+    const m = /^strength\.([a-z0-9_]+)/i.exec(f.p || '');
+    if (m) return m[1];
+  }
+  return null;
+}
+function ckExHistory(ex, upToWk, n){
+  // posledních n týdnů, kde je u cviku zápis (bez aktuálního)
+  const out = [];
+  let mon = parseKey(upToWk);
+  for (let i = 0; i < 40 && out.length < (n || 6); i++){
+    mon = addDays(mon, -7);
+    const wk = dateKey(mon);
+    const line = ckStrengthLine(wk, ex);
+    if (line !== '__'){
+      const w = parseFloat(String(ckGet(wk, 'strength.' + ex + '.w')).replace(',', '.'));
+      out.push({ wk, no: ckWeekNo(wk), line, w: isFinite(w) ? w : null });
+    }
+  }
+  return out;
+}
 function ckStrengthLine(wk, ex){
   const w = ckGet(wk, 'strength.' + ex + '.w').trim();
   const rir = ckGet(wk, 'strength.' + ex + '.rir').trim();
@@ -2436,10 +2481,12 @@ function ckStrengthLine(wk, ex){
     if (v) sets.push(v);
   }
   const r = sets.length ? sets.join('/') : ckGet(wk, 'strength.' + ex + '.r').trim();
-  if (!w && !r && !rir) return '__';
+  const note = ckGet(wk, 'strength.' + ex + '.note').trim();
+  if (!w && !r && !rir) return note ? '__ — ' + note : '__';
   let out = w ? w + ': ' : '';
   out += r;
   if (rir) out += (out.trim() ? ', ' : '') + 'RIR ' + rir;
+  if (note) out += ' — ' + note;
   return out.trim();
 }
 function checkinText(wk){
@@ -3684,6 +3731,29 @@ function ckPlanFill(t){
   }
   return out;
 }
+let ckHistOpen = false;
+function ckExHistHtml(wk, t){
+  const ex = ckExKeyOf(t);
+  if (!ex) return '';
+  const h = ckExHistory(ex, wk, 6);
+  if (!h.length) return '';
+  let out = '<button class="ck-hist-b" data-action="ckHist">'
+    + '<span class="ck-hist-l">Minule</span><span class="ck-hist-v">' + esc(h[0].line) + '</span>'
+    + '<span class="ck-hist-a">' + (ckHistOpen ? '⌃' : '⌄') + '</span></button>';
+  if (ckHistOpen){
+    const ws = h.map(x => x.w).filter(x => x !== null);
+    const max = ws.length ? Math.max.apply(null, ws) : 0;
+    const min = ws.length ? Math.min.apply(null, ws) : 0;
+    const rows = h.slice().reverse().map(x => {
+      const pct = (max > min && x.w !== null) ? 22 + 78 * (x.w - min) / (max - min) : (x.w !== null ? 100 : 12);
+      return '<div class="ck-hrow"><span class="ck-hw">' + (x.no ? 't' + x.no : x.wk.slice(5)) + '</span>'
+        + '<span class="ck-hbar"><i style="width:' + pct.toFixed(0) + '%"></i></span>'
+        + '<span class="ck-hv">' + esc(x.line) + '</span></div>';
+    }).join('');
+    out += '<div class="ck-hist">' + rows + '</div>';
+  }
+  return '<div class="ck-hist-w">' + out + '</div>';
+}
 function ckField(wk, f){
   let ctrl;
   if (f.kind === 'done'){
@@ -3763,12 +3833,16 @@ function renderCheckin(){
     + '<span class="ck-step-tt"><strong>' + esc(t.title) + '</strong>'
     + '<span>' + (ckStep + 1) + '. otázka ze ' + T.length + ' · ' + (t.sub ? esc(t.sub) : 'týden ' + range) + '</span></span></div>'
     + (isFut ? '<div class="ck-fut">Náhled — zapisovat půjde v ten den</div>' : '')
+    + ckExHistHtml(wk, t)
     + (t.pre ? '<div class="ck-pre"><span class="ck-pre-l">Zadání</span>' + esc(t.pre).replace(/\n/g, '<br>')
         + (!isFut && ckPlanFill(t).length ? '<button class="linklike ck-fill" data-action="ckFill">Vyplnit podle zadání</button>' : '')
         + '</div>' : '')
     + (isFut ? '<div class="ck-preview">' : '')
     + t.fields.map(f => ckField(wk, f)).join('')
     + (isFut ? '</div>' : '')
+    + '</span>'
+    + (ckExKeyOf(t) && !isFut ? '<button class="ck-note-b" data-action="ckNote" data-p="strength.' + ckExKeyOf(t) + '.note" data-w="' + wk + '" aria-label="Poznámka ke cviku">'
+        + (ckGet(wk, 'strength.' + ckExKeyOf(t) + '.note') ? '✎' : '+') + '</button>' : '')
     + '</div>';
 
   $('#view-checkin').innerHTML = html;
@@ -4358,6 +4432,25 @@ document.addEventListener('click', ev => {
       const p = el.dataset.p, w = el.dataset.w;
       ckSet(w, p, ckGet(w, p) === '\u2713' ? '' : '\u2713');
       nextSyncFast = true;
+      renderCheckin();
+      break;
+    }
+    case 'ckHist': ckHistOpen = !ckHistOpen; renderCheckin(); break;
+    case 'ckNote': {
+      const p = el.dataset.p;
+      const wk = el.dataset.w;
+      const cur = ckGet(wk, p);
+      openModal('<div class="sheet-title">Poznámka ke cviku</div>'
+        + '<textarea id="ck-note-ta" class="ta" rows="4" placeholder="např. poslední série kolena dovnitř">' + esc(cur) + '</textarea>'
+        + '<input type="hidden" id="ck-note-p" value="' + esc(p) + '"><input type="hidden" id="ck-note-w" value="' + wk + '">'
+        + '<div class="modal-actions"><button class="btn" data-action="closeModal">Zrušit</button>'
+        + '<button class="btn primary" data-action="ckNoteSave">Uložit</button></div>');
+      break;
+    }
+    case 'ckNoteSave': {
+      const p = $('#ck-note-p').value, wkn = $('#ck-note-w').value;
+      ckSet(wkn, p, ($('#ck-note-ta').value || '').trim());
+      closeModal();
       renderCheckin();
       break;
     }
