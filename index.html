@@ -920,25 +920,41 @@ input,textarea,select,.meal-f,.ck-in{border-radius:13px;}
 }
 .ck-daybtn-a{color:var(--muted);font-size:15px;line-height:1;}
 .day-pick{max-height:52vh;overflow-y:auto;-webkit-overflow-scrolling:touch;margin:2px 0 4px;}
-.dp-row{
-  display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;
-  padding:13px 14px;border-radius:13px;margin-bottom:7px;background:var(--card2);color:var(--text);text-align:left;
-}
-.dp-row.cur{box-shadow:inset 0 0 0 1.5px var(--accent);}
-.dp-n{display:flex;flex-direction:column;gap:2px;font-size:15.5px;font-weight:700;}
-.dp-d{font-size:12px;font-weight:500;color:var(--muted);}
-.dp-c{font-size:13px;font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums;}
-.dp-row.done .dp-c{color:var(--accent);}
 
-.dp-head{font-size:10.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:6px 2px 7px;}
-.dp-row.fut .dp-n{color:var(--muted);}
-.dp-row.fut .dp-c{color:var(--accent);}
+
+
 .ck-fut{
   background:var(--btn-bg);border-radius:11px;padding:9px 12px;margin:0 0 13px;
   font-size:13px;font-weight:600;color:var(--muted);
 }
 .ck-preview{pointer-events:none;opacity:.5;}
 .ck-daybtn-c.fut{color:var(--muted);background:var(--btn-bg);}
+
+.day-pick{max-height:none;overflow:visible;margin:4px 0 2px;}
+.dp-wk{margin-bottom:16px;}
+.dp-wl{font-size:10.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 2px 9px;}
+.dp-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;}
+.dp-t{
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  padding:9px 0 8px;border-radius:12px;background:var(--card2);color:var(--muted);min-height:62px;
+}
+.dp-wd{font-size:10.5px;font-weight:700;letter-spacing:.04em;}
+.dp-num{font-size:16.5px;font-weight:700;color:var(--text);font-variant-numeric:tabular-nums;line-height:1.1;}
+.dp-dot{width:6px;height:6px;border-radius:50%;background:transparent;box-shadow:inset 0 0 0 1.5px var(--line);}
+.dp-t.full .dp-dot{background:var(--accent);box-shadow:none;}
+.dp-t.part .dp-dot{background:linear-gradient(90deg,var(--accent) 50%,transparent 50%);box-shadow:inset 0 0 0 1.5px var(--accent);}
+.dp-t.fut .dp-dot{box-shadow:inset 0 0 0 1.5px var(--accent);}
+.dp-t.off{opacity:.42;}
+.dp-t.off .dp-dot{display:none;}
+.dp-t.tdy .dp-num{color:var(--accent);}
+.dp-t.cur{box-shadow:inset 0 0 0 1.5px var(--accent);}
+.dp-leg{display:flex;flex-wrap:wrap;gap:12px;margin:2px 2px 0;font-size:11.5px;color:var(--muted);}
+.dp-leg span{display:inline-flex;align-items:center;gap:5px;}
+.dp-leg .lg{width:7px;height:7px;border-radius:50%;display:inline-block;}
+.dp-leg .lg.full{background:var(--accent);}
+.dp-leg .lg.part{background:linear-gradient(90deg,var(--accent) 50%,transparent 50%);box-shadow:inset 0 0 0 1.5px var(--accent);}
+.dp-leg .lg.none{box-shadow:inset 0 0 0 1.5px var(--line);}
+.dp-leg .lg.fut{box-shadow:inset 0 0 0 1.5px var(--accent);}
 </style>
 </head>
 <body>
@@ -1078,7 +1094,7 @@ function pushSaveRemote(retry){
       return false;
     });
 }
-const APP_VERSION = 'v64';
+const APP_VERSION = 'v65';
 const STORAGE_KEY = 'habit-tracker-data-v1';
 const WD = ['Po','Út','St','Čt','Pá','So','Ne'];
 const EMOJI_PICKS = ['✅','💪','🏃','🚶','🧘','😴','📖','✍️','📓','💧','🥗','🍎','🚫','💊','🦉','🎓','💼','🎸','🧹','🧠'];
@@ -4209,29 +4225,32 @@ document.addEventListener('click', ev => {
       break;
     }
     case 'ckPickDay': {
-      const WDN2 = ['Pondělí', 'Úterý', 'Středa', 'Čtvrtek', 'Pátek', 'Sobota', 'Nedělě'];
-      let rows = '';
+      const WDL = ['P', 'Ú', 'S', 'Č', 'P', 'S', 'N'];
       const mon0 = startOfWeek(today());
-      const days = [];
-      for (let i = 0; i < 7; i++) days.push({ d: addDays(mon0, i), wk: true });      // tento týden celý
-      for (let i = 1; i <= 14; i++) days.push({ d: addDays(mon0, -i), wk: false });  // dva týdny zpět
-      let lastHead = '';
-      for (const it of days){
-        const dd = it.d, k = dateKey(dd);
-        const nT = ckTopics(dd).length;
-        const fil = nT ? ckDayFilledCount(dateKey(startOfWeek(dd)), dd) : 0;
-        const isFut = dd > today();
-        const head = it.wk ? 'Tento týden' : 'Dříve';
-        if (head !== lastHead){ rows += '<div class="dp-head">' + head + '</div>'; lastHead = head; }
-        const cls = 'dp-row' + (k === dateKey(ckDay()) ? ' cur' : '') + (isFut ? ' fut' : '')
-          + (!isFut && nT && fil >= nT ? ' done' : '');
-        const nm = sameDay(dd, today()) ? 'Dnes' : sameDay(dd, addDays(today(), -1)) ? 'Včera'
-          : sameDay(dd, addDays(today(), 1)) ? 'Zítra' : WDN2[weekdayIdx(dd)];
-        rows += '<button class="' + cls + '" data-action="ckGoDay" data-key="' + k + '">'
-          + '<span class="dp-n">' + nm + '<span class="dp-d">' + dd.getDate() + '. ' + (dd.getMonth() + 1) + '.</span></span>'
-          + '<span class="dp-c">' + (!nT ? 'volno' : isFut ? nT + ' \u00fakol' + (nT > 4 ? '\u016f' : nT > 1 ? 'y' : '') : fil + '/' + nT) + '</span></button>';
+      let weeks = '';
+      for (let wi = 0; wi < 3; wi++){
+        const mon = addDays(mon0, -7 * wi);
+        let tiles = '';
+        for (let i = 0; i < 7; i++){
+          const dd = addDays(mon, i);
+          const k = dateKey(dd);
+          const nT = ckTopics(dd).length;
+          const fil = nT ? ckDayFilledCount(dateKey(mon), dd) : 0;
+          const fut = dd > today();
+          const state = !nT ? 'off' : fut ? 'fut' : fil >= nT ? 'full' : fil ? 'part' : 'none';
+          tiles += '<button class="dp-t ' + state + (k === dateKey(ckDay()) ? ' cur' : '')
+            + (sameDay(dd, today()) ? ' tdy' : '') + '" data-action="ckGoDay" data-key="' + k + '">'
+            + '<span class="dp-wd">' + WDL[i] + '</span>'
+            + '<span class="dp-num">' + dd.getDate() + '</span>'
+            + '<span class="dp-dot"></span></button>';
+        }
+        const lbl = wi === 0 ? 'Tento týden' : wi === 1 ? 'Minulý týden'
+          : mon.getDate() + '. ' + (mon.getMonth() + 1) + '. – ' + addDays(mon, 6).getDate() + '. ' + (addDays(mon, 6).getMonth() + 1) + '.';
+        weeks += '<div class="dp-wk"><div class="dp-wl">' + lbl + '</div><div class="dp-grid">' + tiles + '</div></div>';
       }
-      openModal('<div class="sheet-title">Vyber den</div><div class="day-pick">' + rows + '</div>'
+      openModal('<div class="sheet-title">Vyber den</div><div class="day-pick">' + weeks
+        + '<div class="dp-leg"><span><i class="lg full"></i>hotovo</span><span><i class="lg part"></i>rozdělané</span>'
+        + '<span><i class="lg none"></i>nic</span><span><i class="lg fut"></i>čeká</span></div></div>'
         + '<div class="modal-actions"><button class="btn" data-action="closeModal">Zavřít</button>'
         + '<button class="btn primary" data-action="exportCheckin">' + uiIco('clipboard', 'ui-ico sm') + ' Zkopírovat týden</button></div>');
       break;
