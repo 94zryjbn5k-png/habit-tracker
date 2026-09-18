@@ -1,5 +1,5 @@
 'use strict';
-const CACHE = 'habit-tracker-v70';
+const CACHE = 'habit-tracker-v71';
 const ASSETS = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
 
 self.addEventListener('install', e => {
