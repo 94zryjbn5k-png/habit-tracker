@@ -929,6 +929,16 @@ input,textarea,select,.meal-f,.ck-in{border-radius:13px;}
 .dp-d{font-size:12px;font-weight:500;color:var(--muted);}
 .dp-c{font-size:13px;font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums;}
 .dp-row.done .dp-c{color:var(--accent);}
+
+.dp-head{font-size:10.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:6px 2px 7px;}
+.dp-row.fut .dp-n{color:var(--muted);}
+.dp-row.fut .dp-c{color:var(--accent);}
+.ck-fut{
+  background:var(--btn-bg);border-radius:11px;padding:9px 12px;margin:0 0 13px;
+  font-size:13px;font-weight:600;color:var(--muted);
+}
+.ck-preview{pointer-events:none;opacity:.5;}
+.ck-daybtn-c.fut{color:var(--muted);background:var(--btn-bg);}
 </style>
 </head>
 <body>
@@ -1068,7 +1078,7 @@ function pushSaveRemote(retry){
       return false;
     });
 }
-const APP_VERSION = 'v63';
+const APP_VERSION = 'v64';
 const STORAGE_KEY = 'habit-tracker-data-v1';
 const WD = ['Po','Út','St','Čt','Pá','So','Ne'];
 const EMOJI_PICKS = ['✅','💪','🏃','🚶','🧘','😴','📖','✍️','📓','💧','🥗','🍎','🚫','💊','🦉','🎓','💼','🎸','🧹','🧠'];
@@ -3580,6 +3590,7 @@ function renderCheckin(){
   const no = ckWeekNo(wk);
   const range = mon.getDate() + '. ' + (mon.getMonth() + 1) + '. – ' + sun.getDate() + '. ' + (sun.getMonth() + 1) + '.';
   const T = ckTopics(d);
+  const isFut = d > today();
   if (ckStep >= T.length) ckStep = Math.max(0, T.length - 1);
 
   let html = '<div class="ck-tools">'
@@ -3594,7 +3605,7 @@ function renderCheckin(){
   html += '<div class="ck-daynav">'
     + '<button class="ck-daybtn" data-action="ckPickDay">'
     + '<span class="ck-daybtn-t">' + (isToday ? 'Dnes' : WDN[weekdayIdx(d)] + ' ' + d.getDate() + '. ' + (d.getMonth() + 1) + '.') + '</span>'
-    + (nToday ? '<span class="ck-daybtn-c">' + ckDayFilledCount(wk, d) + '/' + nToday + '</span>' : '')
+    + (nToday ? '<span class="ck-daybtn-c' + (isFut ? ' fut' : '') + '">' + (isFut ? 'napřed' : ckDayFilledCount(wk, d) + '/' + nToday) + '</span>' : '')
     + '<span class="ck-daybtn-a">⌄</span></button>'
     + (isToday ? '' : '<button class="linklike ck-back" data-action="ckToday">Na dnešek</button>')
     + '</div>';
@@ -3623,10 +3634,13 @@ function renderCheckin(){
     + '<div class="ck-step-h"><span class="ck-step-i">' + uiIco(t.ico, 'ui-ico') + '</span>'
     + '<span class="ck-step-tt"><strong>' + esc(t.title) + '</strong>'
     + '<span>' + (ckStep + 1) + '. otázka ze ' + T.length + ' · ' + (t.sub ? esc(t.sub) : 'týden ' + range) + '</span></span></div>'
+    + (isFut ? '<div class="ck-fut">Náhled — zapisovat půjde v ten den</div>' : '')
     + (t.pre ? '<div class="ck-pre"><span class="ck-pre-l">Zadání</span>' + esc(t.pre).replace(/\n/g, '<br>')
-        + (ckPlanFill(t).length ? '<button class="linklike ck-fill" data-action="ckFill">Vyplnit podle zadání</button>' : '')
+        + (!isFut && ckPlanFill(t).length ? '<button class="linklike ck-fill" data-action="ckFill">Vyplnit podle zadání</button>' : '')
         + '</div>' : '')
+    + (isFut ? '<div class="ck-preview">' : '')
     + t.fields.map(f => ckField(wk, f)).join('')
+    + (isFut ? '</div>' : '')
     + '</div>';
 
   $('#view-checkin').innerHTML = html;
@@ -4197,16 +4211,25 @@ document.addEventListener('click', ev => {
     case 'ckPickDay': {
       const WDN2 = ['Pondělí', 'Úterý', 'Středa', 'Čtvrtek', 'Pátek', 'Sobota', 'Nedělě'];
       let rows = '';
-      for (let i = 0; i < 21; i++){
-        const dd = addDays(today(), -i);
-        const k = dateKey(dd);
+      const mon0 = startOfWeek(today());
+      const days = [];
+      for (let i = 0; i < 7; i++) days.push({ d: addDays(mon0, i), wk: true });      // tento týden celý
+      for (let i = 1; i <= 14; i++) days.push({ d: addDays(mon0, -i), wk: false });  // dva týdny zpět
+      let lastHead = '';
+      for (const it of days){
+        const dd = it.d, k = dateKey(dd);
         const nT = ckTopics(dd).length;
         const fil = nT ? ckDayFilledCount(dateKey(startOfWeek(dd)), dd) : 0;
-        const cls = 'dp-row' + (k === dateKey(ckDay()) ? ' cur' : '') + (nT && fil >= nT ? ' done' : '');
+        const isFut = dd > today();
+        const head = it.wk ? 'Tento týden' : 'Dříve';
+        if (head !== lastHead){ rows += '<div class="dp-head">' + head + '</div>'; lastHead = head; }
+        const cls = 'dp-row' + (k === dateKey(ckDay()) ? ' cur' : '') + (isFut ? ' fut' : '')
+          + (!isFut && nT && fil >= nT ? ' done' : '');
+        const nm = sameDay(dd, today()) ? 'Dnes' : sameDay(dd, addDays(today(), -1)) ? 'Včera'
+          : sameDay(dd, addDays(today(), 1)) ? 'Zítra' : WDN2[weekdayIdx(dd)];
         rows += '<button class="' + cls + '" data-action="ckGoDay" data-key="' + k + '">'
-          + '<span class="dp-n">' + (i === 0 ? 'Dnes' : i === 1 ? 'Včera' : WDN2[weekdayIdx(dd)])
-          + '<span class="dp-d">' + dd.getDate() + '. ' + (dd.getMonth() + 1) + '.</span></span>'
-          + '<span class="dp-c">' + (nT ? fil + '/' + nT : 'volno') + '</span></button>';
+          + '<span class="dp-n">' + nm + '<span class="dp-d">' + dd.getDate() + '. ' + (dd.getMonth() + 1) + '.</span></span>'
+          + '<span class="dp-c">' + (!nT ? 'volno' : isFut ? nT + ' \u00fakol' + (nT > 4 ? '\u016f' : nT > 1 ? 'y' : '') : fil + '/' + nT) + '</span></button>';
       }
       openModal('<div class="sheet-title">Vyber den</div><div class="day-pick">' + rows + '</div>'
         + '<div class="modal-actions"><button class="btn" data-action="closeModal">Zavřít</button>'
