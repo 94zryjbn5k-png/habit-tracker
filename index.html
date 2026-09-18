@@ -1121,7 +1121,7 @@ function pushSaveRemote(retry){
       return false;
     });
 }
-const APP_VERSION = 'v68';
+const APP_VERSION = 'v69';
 const STORAGE_KEY = 'habit-tracker-data-v1';
 const WD = ['Po','Út','St','Čt','Pá','So','Ne'];
 const EMOJI_PICKS = ['✅','💪','🏃','🚶','🧘','😴','📖','✍️','📓','💧','🥗','🍎','🚫','💊','🦉','🎓','💼','🎸','🧹','🧠'];
@@ -1898,7 +1898,11 @@ function syncPut(retry){
   };
   const sha = (syncRepo() || {}).sha;
   if (sha) body.sha = sha;
-  return fetch(ghApi('/contents/' + SYNC_FILE), { method: 'PUT', headers: ghHeaders(), body: JSON.stringify(body), keepalive: true })
+  const payload = JSON.stringify(body);
+  // keepalive (odeslání i po zavření appky) má limit 64 kB — u větších dat se nesmí použít
+  const opts = { method: 'PUT', headers: ghHeaders(), body: payload };
+  if (payload.length < 55000) opts.keepalive = true;
+  return fetch(ghApi('/contents/' + SYNC_FILE), opts)
     .then(r => {
       if (r.ok) return r.json().then(j => {
         setSyncRepo({ sha: j.content && j.content.sha });
