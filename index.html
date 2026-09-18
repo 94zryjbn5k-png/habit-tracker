@@ -1017,6 +1017,16 @@ input,textarea,select,.meal-f,.ck-in{border-radius:13px;}
 .ck-cr{font-size:10.5px;color:var(--muted);font-variant-numeric:tabular-nums;line-height:1.25;
   text-align:center;word-break:break-all;}
 .ck-cw{font-size:10px;font-weight:800;color:var(--muted);opacity:.65;letter-spacing:.03em;}
+
+.ck-seg{align-items:stretch;}
+.seg-hit{
+  flex:1;padding:11px 0;background:transparent;display:flex;align-items:center;min-width:0;
+  -webkit-tap-highlight-color:transparent;
+}
+.seg-hit span{display:block;width:100%;height:4px;border-radius:2px;background:var(--btn-bg);transition:background .15s;}
+.seg-hit span.on{background:var(--accent-ring);}
+.seg-hit span.cur{background:var(--accent);height:5px;border-radius:3px;}
+.ck-nav{padding-top:2px;}
 </style>
 </head>
 <body>
@@ -1156,7 +1166,7 @@ function pushSaveRemote(retry){
       return false;
     });
 }
-const APP_VERSION = 'v75';
+const APP_VERSION = 'v76';
 const STORAGE_KEY = 'habit-tracker-data-v1';
 const WD = ['Po','Út','St','Čt','Pá','So','Ne'];
 const EMOJI_PICKS = ['✅','💪','🏃','🚶','🧘','😴','📖','✍️','📓','💧','🥗','🍎','🚫','💊','🦉','🎓','💼','🎸','🧹','🧠'];
@@ -3856,7 +3866,11 @@ function renderCheckin(){
   }
 
   let segs = '';
-  if (T.length > 1) for (let i = 0; i < T.length; i++) segs += '<span class="' + (i === ckStep ? 'cur' : (ckTopicFilled(wk, T[i]) ? 'on' : '')) + '"></span>';
+  if (T.length > 1) for (let i = 0; i < T.length; i++){
+    const cls = i === ckStep ? 'cur' : (ckTopicFilled(wk, T[i]) ? 'on' : '');
+    segs += '<button class="seg-hit" data-action="ckGoStep" data-i="' + i + '" aria-label="' + esc(T[i].title) + '">'
+      + '<span class="' + cls + '"></span></button>';
+  }
   html += '<div class="ck-nav">'
     + '<div class="segbar ck-seg">' + segs + '</div>'
     + (T.length > 1
@@ -4475,6 +4489,11 @@ document.addEventListener('click', ev => {
       break;
     }
     case 'ckHist': ckHistOpen = !ckHistOpen; renderCheckin(); break;
+    case 'ckGoStep': {
+      const i = Number(el.dataset.i);
+      if (isFinite(i)){ ckStep = i; ckNoteOpen = false; renderCheckin(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+      break;
+    }
     case 'ckNoteOpen':
       ckNoteOpen = true;
       renderCheckin();
