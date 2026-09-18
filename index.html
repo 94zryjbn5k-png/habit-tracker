@@ -1117,7 +1117,7 @@ function pushSaveRemote(retry){
       return false;
     });
 }
-const APP_VERSION = 'v66';
+const APP_VERSION = 'v67';
 const STORAGE_KEY = 'habit-tracker-data-v1';
 const WD = ['Po','Út','St','Čt','Pá','So','Ne'];
 const EMOJI_PICKS = ['✅','💪','🏃','🚶','🧘','😴','📖','✍️','📓','💧','🥗','🍎','🚫','💊','🦉','🎓','💼','🎸','🧹','🧠'];
@@ -3587,17 +3587,12 @@ function openDayPick(){
   const mon0 = startOfWeek(today());
   let html;
   if (!dpArchive){
-    const prev = addDays(mon0, -7);
-    const s0 = dpWeekStats(mon0), s1 = dpWeekStats(prev);
+    const s0 = dpWeekStats(mon0);
     html = '<div class="sheet-title">Vyber den</div>'
       + '<div class="dp-wk cur-wk"><div class="dp-wl"><span class="dp-wl-n">Týden č. ' + (ckWeekNo(dateKey(mon0)) || '—') + '</span>'
       + '<span class="dp-wl-r">' + dpRange(mon0) + '</span>'
       + (s0.all ? '<span class="dp-wl-c">' + s0.done + '/' + s0.all + '</span>' : '') + '</div>'
       + dpWeekTiles(mon0, true) + '</div>'
-      + '<div class="dp-wk"><div class="dp-wl"><span class="dp-wl-n">Minulý týden</span>'
-      + '<span class="dp-wl-r">' + dpRange(prev) + '</span>'
-      + (s1.all ? '<span class="dp-wl-c">' + s1.done + '/' + s1.all + '</span>' : '') + '</div>'
-      + dpWeekTiles(prev, false) + '</div>'
       + '<button class="dp-arch-btn" data-action="dpArchive">Archiv všech týdnů ›</button>';
   } else {
     let rows = '';
