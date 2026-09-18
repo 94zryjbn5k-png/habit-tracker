@@ -978,6 +978,10 @@ input,textarea,select,.meal-f,.ck-in{border-radius:13px;}
 .dp-ar{font-size:12px;font-weight:500;color:var(--muted);}
 .dp-ac{font-size:13px;font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums;}
 .dp-back{margin-right:10px;font-size:14px;}
+
+.next-wk{margin-top:2px;}
+.dp-wl-c.wait{color:var(--muted);font-weight:600;}
+.dp-note{font-size:13px;color:var(--muted);background:var(--card2);border-radius:12px;padding:12px 13px;line-height:1.45;}
 </style>
 </head>
 <body>
@@ -1117,7 +1121,7 @@ function pushSaveRemote(retry){
       return false;
     });
 }
-const APP_VERSION = 'v67';
+const APP_VERSION = 'v68';
 const STORAGE_KEY = 'habit-tracker-data-v1';
 const WD = ['Po','Út','St','Čt','Pá','So','Ne'];
 const EMOJI_PICKS = ['✅','💪','🏃','🚶','🧘','😴','📖','✍️','📓','💧','🥗','🍎','🚫','💊','🦉','🎓','💼','🎸','🧹','🧠'];
@@ -3592,8 +3596,21 @@ function openDayPick(){
       + '<div class="dp-wk cur-wk"><div class="dp-wl"><span class="dp-wl-n">Týden č. ' + (ckWeekNo(dateKey(mon0)) || '—') + '</span>'
       + '<span class="dp-wl-r">' + dpRange(mon0) + '</span>'
       + (s0.all ? '<span class="dp-wl-c">' + s0.done + '/' + s0.all + '</span>' : '') + '</div>'
-      + dpWeekTiles(mon0, true) + '</div>'
-      + '<button class="dp-arch-btn" data-action="dpArchive">Archiv všech týdnů ›</button>';
+      + dpWeekTiles(mon0, true) + '</div>';
+    if (weekdayIdx(today()) === 6){  // v neděli ukázat i plán na příští týden
+      const nm = addDays(mon0, 7);
+      const nk = dateKey(nm);
+      const hasPlan = ckPlansAll().some(p => p.from === nk);
+      let tasks = 0;
+      for (let i = 0; i < 7; i++) tasks += ckTopics(addDays(nm, i)).length;
+      html += '<div class="dp-wk next-wk"><div class="dp-wl"><span class="dp-wl-n">Příští týden</span>'
+        + '<span class="dp-wl-r">' + dpRange(nm) + '</span>'
+        + '<span class="dp-wl-c' + (hasPlan ? '' : ' wait') + '">' + (hasPlan ? tasks + ' úkolů' : 'čeká na trenéra') + '</span></div>'
+        + (hasPlan ? dpWeekTiles(nm, false)
+                   : '<div class="dp-note">Plán zatím nedorazil — ukáže se sám, jakmile ho trenér zadá.</div>')
+        + '</div>';
+    }
+    html += '<button class="dp-arch-btn" data-action="dpArchive">Archiv všech týdnů ›</button>';
   } else {
     let rows = '';
     for (let mon = new Date(mon0); ; mon = addDays(mon, -7)){
