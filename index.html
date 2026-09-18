@@ -985,10 +985,7 @@ input,textarea,select,.meal-f,.ck-in{border-radius:13px;}
 
 .dp-now{font-size:12.5px;font-weight:700;}
 
-.ck-note-b{
-  width:30px;height:30px;flex:0 0 auto;border-radius:10px;background:var(--btn-bg);color:var(--accent);
-  font-size:16px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;margin-right:2px;
-}
+
 
 
 .ck-hist-w{margin:2px 0 15px;}
@@ -1003,14 +1000,23 @@ input,textarea,select,.meal-f,.ck-in{border-radius:13px;}
 .ck-hd.up{color:#30d158;background:rgba(48,209,88,.13);}
 .ck-hd.down{color:#ff9f0a;background:rgba(255,159,10,.13);}
 .ck-hist-a{color:var(--muted);font-size:13px;flex:0 0 auto;}
-.ck-hist{background:var(--card2);border-radius:0 0 13px 13px;padding:2px 13px 13px;display:flex;flex-direction:column;gap:9px;}
-.ck-hrow{display:flex;align-items:center;gap:10px;}
-.ck-hw{font-size:10.5px;font-weight:800;color:var(--muted);width:30px;flex:0 0 auto;}
-.ck-hbar{flex:0 0 64px;height:8px;border-radius:5px;background:rgba(128,128,128,.16);overflow:hidden;}
-.ck-hbar i{display:block;height:100%;background:var(--accent);opacity:.5;border-radius:5px;}
-.ck-hrow.now .ck-hbar i{opacity:1;}
-.ck-hrow.now .ck-hv{color:var(--text);font-weight:700;}
+
 .ck-hv{flex:1;min-width:0;font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+
+.ck-hist{background:var(--card2);border-radius:0 0 13px 13px;padding:14px 13px 11px;}
+.ck-chart{display:flex;align-items:flex-end;gap:7px;height:126px;}
+.ck-col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:5px;height:100%;}
+.ck-cv{font-size:11.5px;font-weight:800;color:var(--muted);font-variant-numeric:tabular-nums;}
+.ck-cbar{width:100%;max-width:34px;background:var(--accent);opacity:.32;border-radius:7px 7px 3px 3px;min-height:6px;}
+.ck-col.now .ck-cbar{opacity:1;}
+.ck-col.now .ck-cv{color:var(--accent);}
+.ck-cr{font-size:10px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap;
+  max-width:100%;overflow:hidden;text-overflow:ellipsis;}
+.ck-cw{font-size:10px;font-weight:700;color:var(--muted);opacity:.7;}
+.ck-note-add{
+  display:inline-flex;align-items:center;gap:7px;padding:10px 13px;border-radius:12px;
+  background:var(--btn-bg);color:var(--accent);font-size:13.5px;font-weight:700;margin-top:4px;
+}
 </style>
 </head>
 <body>
@@ -1150,7 +1156,7 @@ function pushSaveRemote(retry){
       return false;
     });
 }
-const APP_VERSION = 'v72';
+const APP_VERSION = 'v73';
 const STORAGE_KEY = 'habit-tracker-data-v1';
 const WD = ['Po','Út','St','Čt','Pá','So','Ne'];
 const EMOJI_PICKS = ['✅','💪','🏃','🚶','🧘','😴','📖','✍️','📓','💧','🥗','🍎','🚫','💊','🦉','🎓','💼','🎸','🧹','🧠'];
@@ -3742,6 +3748,18 @@ function ckPlanFill(t){
   return out;
 }
 let ckHistOpen = false;
+let ckNoteOpen = false;
+function ckNoteRow(wk, t, isFut){
+  const ex = ckExKeyOf(t);
+  if (!ex || isFut) return '';
+  const p = 'strength.' + ex + '.note';
+  const val = ckGet(wk, p);
+  if (!val && !ckNoteOpen){
+    return '<button class="ck-note-add" data-action="ckNoteOpen">' + uiIco('plus', 'ui-ico sm') + ' Přidat poznámku</button>';
+  }
+  return '<div class="ck-q"><div class="ck-qlbl">Poznámka</div>'
+    + '<textarea class="ck-in ck-area" data-ck="' + p + '" data-w="' + wk + '" rows="2" maxlength="300" placeholder="co se povedlo, co drhlo">' + esc(val) + '</textarea></div>';
+}
 function ckExHistHtml(wk, t){
   const ex = ckExKeyOf(t);
   if (!ex) return '';
@@ -3759,19 +3777,27 @@ function ckExHistHtml(wk, t){
     + '<span class="ck-hist-v">' + esc(last.line) + '</span>' + delta
     + '<span class="ck-hist-a">' + (ckHistOpen ? '\u2303' : '\u2304') + '</span></button>';
   if (ckHistOpen){
-    const ws = h.map(x => x.w).filter(x => x !== null);
+    const arr = h.slice().reverse();
+    const ws = arr.map(x => x.w).filter(x => x !== null);
     const max = ws.length ? Math.max.apply(null, ws) : 0;
     const min = ws.length ? Math.min.apply(null, ws) : 0;
-    const arr = h.slice().reverse();
-    const rows = arr.map((x, i) => {
+    const base = min > 0 ? min * 0.94 : 0;
+    const cols = arr.map((x, i) => {
       const isLast = i === arr.length - 1;
-      const pct = (max > min && x.w !== null) ? 16 + 84 * (x.w - min) / (max - min) : (x.w !== null ? 100 : 10);
-      return '<div class="ck-hrow' + (isLast ? ' now' : '') + '">'
-        + '<span class="ck-hw">' + (x.no ? 't' + x.no : x.wk.slice(8) + '.' + x.wk.slice(5, 7)) + '</span>'
-        + '<span class="ck-hbar"><i style="width:' + pct.toFixed(0) + '%"></i></span>'
-        + '<span class="ck-hv">' + esc(x.line) + '</span></div>';
+      const pct = (x.w !== null && max > base) ? 18 + 82 * (x.w - base) / (max - base) : (x.w !== null ? 100 : 14);
+      const reps = [];
+      for (let k = 1; k <= 12; k++){
+        const v = ckGet(x.wk, 'strength.' + ex + '.s' + k).trim();
+        if (v) reps.push(v);
+      }
+      return '<div class="ck-col' + (isLast ? ' now' : '') + '">'
+        + '<span class="ck-cv">' + (x.w !== null ? esc(fmtNum(x.w)) : '·') + '</span>'
+        + '<span class="ck-cbar" style="height:' + pct.toFixed(0) + '%"></span>'
+        + '<span class="ck-cr">' + esc(reps.join('/') || '—') + '</span>'
+        + '<span class="ck-cw">' + (x.no ? 't' + x.no : x.wk.slice(8)) + '</span>'
+        + '</div>';
     }).join('');
-    out += '<div class="ck-hist">' + rows + '</div>';
+    out += '<div class="ck-hist"><div class="ck-chart">' + cols + '</div></div>';
   }
   return '<div class="ck-hist-w">' + out + '</div>';
 }
@@ -3860,10 +3886,8 @@ function renderCheckin(){
         + '</div>' : '')
     + (isFut ? '<div class="ck-preview">' : '')
     + t.fields.map(f => ckField(wk, f)).join('')
+    + ckNoteRow(wk, t, isFut)
     + (isFut ? '</div>' : '')
-    + '</span>'
-    + (ckExKeyOf(t) && !isFut ? '<button class="ck-note-b" data-action="ckNote" data-p="strength.' + ckExKeyOf(t) + '.note" data-w="' + wk + '" aria-label="Poznámka ke cviku">'
-        + (ckGet(wk, 'strength.' + ckExKeyOf(t) + '.note') ? '✎' : '+') + '</button>' : '')
     + '</div>';
 
   $('#view-checkin').innerHTML = html;
@@ -4448,7 +4472,7 @@ document.addEventListener('click', ev => {
       break;
     }
     case 'ckToday': ckDate = null; ckStep = 0; render(); break;
-    case 'ckNext': ckStep++; render(); window.scrollTo({ top: 0, behavior: 'smooth' }); break;
+    case 'ckNext': ckNoteOpen = false; ckStep++; render(); window.scrollTo({ top: 0, behavior: 'smooth' }); break;
     case 'ckDone': {
       const p = el.dataset.p, w = el.dataset.w;
       ckSet(w, p, ckGet(w, p) === '\u2713' ? '' : '\u2713');
@@ -4457,24 +4481,11 @@ document.addEventListener('click', ev => {
       break;
     }
     case 'ckHist': ckHistOpen = !ckHistOpen; renderCheckin(); break;
-    case 'ckNote': {
-      const p = el.dataset.p;
-      const wk = el.dataset.w;
-      const cur = ckGet(wk, p);
-      openModal('<div class="sheet-title">Poznámka ke cviku</div>'
-        + '<textarea id="ck-note-ta" class="ck-in ck-area" rows="4" maxlength="300" placeholder="např. poslední série kolena dovnitř">' + esc(cur) + '</textarea>'
-        + '<input type="hidden" id="ck-note-p" value="' + esc(p) + '"><input type="hidden" id="ck-note-w" value="' + wk + '">'
-        + '<div class="modal-actions"><button class="btn" data-action="closeModal">Zrušit</button>'
-        + '<button class="btn primary" data-action="ckNoteSave">Uložit</button></div>');
-      break;
-    }
-    case 'ckNoteSave': {
-      const p = $('#ck-note-p').value, wkn = $('#ck-note-w').value;
-      ckSet(wkn, p, ($('#ck-note-ta').value || '').trim());
-      closeModal();
+    case 'ckNoteOpen':
+      ckNoteOpen = true;
       renderCheckin();
+      setTimeout(() => { const a = document.querySelector('#view-checkin .ck-area'); if (a) a.focus(); }, 60);
       break;
-    }
     case 'ckFill': {
       const T = ckTopics(ckDay());
       const t = T[ckStep];
