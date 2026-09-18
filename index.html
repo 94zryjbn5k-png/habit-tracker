@@ -989,20 +989,28 @@ input,textarea,select,.meal-f,.ck-in{border-radius:13px;}
   width:30px;height:30px;flex:0 0 auto;border-radius:10px;background:var(--btn-bg);color:var(--accent);
   font-size:16px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;margin-right:2px;
 }
-.ck-hist-w{margin:0 0 14px;}
+
+
+.ck-hist-w{margin:2px 0 15px;}
 .ck-hist-b{
-  display:flex;align-items:center;gap:9px;width:100%;padding:10px 12px;border-radius:12px;
+  display:flex;align-items:center;gap:10px;width:100%;padding:11px 13px;border-radius:13px;
   background:var(--card2);color:var(--text);text-align:left;
 }
-.ck-hist-l{font-size:10.5px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);}
-.ck-hist-v{flex:1;font-size:14.5px;font-weight:700;font-variant-numeric:tabular-nums;}
-.ck-hist-a{color:var(--muted);font-size:14px;}
-.ck-hist{margin-top:8px;display:flex;flex-direction:column;gap:6px;}
-.ck-hrow{display:flex;align-items:center;gap:9px;}
-.ck-hw{font-size:11px;font-weight:700;color:var(--muted);width:26px;flex:0 0 auto;}
-.ck-hbar{flex:0 0 78px;height:7px;border-radius:4px;background:var(--btn-bg);overflow:hidden;}
-.ck-hbar i{display:block;height:100%;background:var(--accent);border-radius:4px;}
-.ck-hv{flex:1;font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums;}
+.ck-hist-b.open{border-radius:13px 13px 0 0;}
+.ck-hist-l{font-size:10px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);flex:0 0 auto;}
+.ck-hist-v{flex:1;min-width:0;font-size:14.5px;font-weight:700;font-variant-numeric:tabular-nums;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.ck-hd{font-size:11.5px;font-weight:800;padding:3px 7px;border-radius:7px;flex:0 0 auto;}
+.ck-hd.up{color:#30d158;background:rgba(48,209,88,.13);}
+.ck-hd.down{color:#ff9f0a;background:rgba(255,159,10,.13);}
+.ck-hist-a{color:var(--muted);font-size:13px;flex:0 0 auto;}
+.ck-hist{background:var(--card2);border-radius:0 0 13px 13px;padding:2px 13px 13px;display:flex;flex-direction:column;gap:9px;}
+.ck-hrow{display:flex;align-items:center;gap:10px;}
+.ck-hw{font-size:10.5px;font-weight:800;color:var(--muted);width:30px;flex:0 0 auto;}
+.ck-hbar{flex:0 0 64px;height:8px;border-radius:5px;background:rgba(128,128,128,.16);overflow:hidden;}
+.ck-hbar i{display:block;height:100%;background:var(--accent);opacity:.5;border-radius:5px;}
+.ck-hrow.now .ck-hbar i{opacity:1;}
+.ck-hrow.now .ck-hv{color:var(--text);font-weight:700;}
+.ck-hv{flex:1;min-width:0;font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 </style>
 </head>
 <body>
@@ -1142,7 +1150,7 @@ function pushSaveRemote(retry){
       return false;
     });
 }
-const APP_VERSION = 'v71';
+const APP_VERSION = 'v72';
 const STORAGE_KEY = 'habit-tracker-data-v1';
 const WD = ['Po','Út','St','Čt','Pá','So','Ne'];
 const EMOJI_PICKS = ['✅','💪','🏃','🚶','🧘','😴','📖','✍️','📓','💧','🥗','🍎','🚫','💊','🦉','🎓','💼','🎸','🧹','🧠'];
@@ -2482,8 +2490,10 @@ function ckStrengthLine(wk, ex){
   }
   const r = sets.length ? sets.join('/') : ckGet(wk, 'strength.' + ex + '.r').trim();
   const note = ckGet(wk, 'strength.' + ex + '.note').trim();
+  const wNum = parseFloat(String(w).replace(',', '.'));
+  const wShow = (w && !(isFinite(wNum) && wNum === 0)) ? w : '';
   if (!w && !r && !rir) return note ? '__ — ' + note : '__';
-  let out = w ? w + ': ' : '';
+  let out = wShow ? wShow + ': ' : '';
   out += r;
   if (rir) out += (out.trim() ? ', ' : '') + 'RIR ' + rir;
   if (note) out += ' — ' + note;
@@ -3737,16 +3747,27 @@ function ckExHistHtml(wk, t){
   if (!ex) return '';
   const h = ckExHistory(ex, wk, 6);
   if (!h.length) return '';
-  let out = '<button class="ck-hist-b" data-action="ckHist">'
-    + '<span class="ck-hist-l">Minule</span><span class="ck-hist-v">' + esc(h[0].line) + '</span>'
-    + '<span class="ck-hist-a">' + (ckHistOpen ? '⌃' : '⌄') + '</span></button>';
+  const last = h[0], prev = h[1];
+  let delta = '';
+  if (last.w !== null && prev && prev.w !== null && last.w !== prev.w){
+    const dv = last.w - prev.w;
+    delta = '<span class="ck-hd ' + (dv > 0 ? 'up' : 'down') + '">' + (dv > 0 ? '+' : '\u2212')
+      + String(Math.abs(dv)).replace('.', ',') + ' kg</span>';
+  }
+  let out = '<button class="ck-hist-b' + (ckHistOpen ? ' open' : '') + '" data-action="ckHist">'
+    + '<span class="ck-hist-l">Minule</span>'
+    + '<span class="ck-hist-v">' + esc(last.line) + '</span>' + delta
+    + '<span class="ck-hist-a">' + (ckHistOpen ? '\u2303' : '\u2304') + '</span></button>';
   if (ckHistOpen){
     const ws = h.map(x => x.w).filter(x => x !== null);
     const max = ws.length ? Math.max.apply(null, ws) : 0;
     const min = ws.length ? Math.min.apply(null, ws) : 0;
-    const rows = h.slice().reverse().map(x => {
-      const pct = (max > min && x.w !== null) ? 22 + 78 * (x.w - min) / (max - min) : (x.w !== null ? 100 : 12);
-      return '<div class="ck-hrow"><span class="ck-hw">' + (x.no ? 't' + x.no : x.wk.slice(5)) + '</span>'
+    const arr = h.slice().reverse();
+    const rows = arr.map((x, i) => {
+      const isLast = i === arr.length - 1;
+      const pct = (max > min && x.w !== null) ? 16 + 84 * (x.w - min) / (max - min) : (x.w !== null ? 100 : 10);
+      return '<div class="ck-hrow' + (isLast ? ' now' : '') + '">'
+        + '<span class="ck-hw">' + (x.no ? 't' + x.no : x.wk.slice(8) + '.' + x.wk.slice(5, 7)) + '</span>'
         + '<span class="ck-hbar"><i style="width:' + pct.toFixed(0) + '%"></i></span>'
         + '<span class="ck-hv">' + esc(x.line) + '</span></div>';
     }).join('');
@@ -4441,7 +4462,7 @@ document.addEventListener('click', ev => {
       const wk = el.dataset.w;
       const cur = ckGet(wk, p);
       openModal('<div class="sheet-title">Poznámka ke cviku</div>'
-        + '<textarea id="ck-note-ta" class="ta" rows="4" placeholder="např. poslední série kolena dovnitř">' + esc(cur) + '</textarea>'
+        + '<textarea id="ck-note-ta" class="ck-in ck-area" rows="4" maxlength="300" placeholder="např. poslední série kolena dovnitř">' + esc(cur) + '</textarea>'
         + '<input type="hidden" id="ck-note-p" value="' + esc(p) + '"><input type="hidden" id="ck-note-w" value="' + wk + '">'
         + '<div class="modal-actions"><button class="btn" data-action="closeModal">Zrušit</button>'
         + '<button class="btn primary" data-action="ckNoteSave">Uložit</button></div>');
