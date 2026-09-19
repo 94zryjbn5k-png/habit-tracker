@@ -1778,7 +1778,7 @@
     },
     "lr": {
      "where": "venku",
-     "feel": "Jako neběželo se mi moc dobře, měl jsem vyšší tepovky"
+     "feel": "Jako neběželo se mi moc dobře, měl jsem vyšší tepovky, už jsem trošku takovej vyždímanej"
     }
    },
    "other": {
@@ -1966,7 +1966,7 @@
   "note": "hv b",
   "items": []
  },
- "updatedAt": 1789813370337,
+ "updatedAt": 1789813383090,
  "mods": {
   "entries": {
    "2026-09-16": 1789634996849,
@@ -1977,7 +1977,7 @@
    "2026-09-19": 1789813347357
   },
   "checkins": {
-   "2026-09-14": 1789813370337,
+   "2026-09-14": 1789813383090,
    "2026-08-31": 1789773654911
   },
   "ck": {
@@ -2067,7 +2067,7 @@
    "2026-09-14|strength.rdlb.note": 1789773570021,
    "2026-08-31|strength.calfsit.w": 1789773654911,
    "2026-09-14|runs.lr.where": 1789813347370,
-   "2026-09-14|runs.lr.feel": 1789813370337
+   "2026-09-14|runs.lr.feel": 1789813383090
   },
   "notes": {},
   "habits": 1789607353601,
