@@ -2223,6 +2223,1323 @@
         "── COKOLIV DALŠÍHO ──",
         "{extra.note|nic}"
       ]
+    },
+    {
+      "from": "2026-09-21",
+      "name": "Týden 8 (21.–27. 9.) — DELOAD + první týden v Praze",
+      "topics": [
+        {
+          "id": "wu-po",
+          "day": 0,
+          "icon": "run",
+          "title": "Aktivace před během",
+          "sub": "2 minuty, před výběhem",
+          "pre": "Glute bridge 1×10 · 4 výpady vpřed na nohu.",
+          "fields": [
+            {
+              "p": "extras.po.activation.done",
+              "q": "Aktivace hotová",
+              "kind": "done"
+            }
+          ]
+        },
+        {
+          "id": "e",
+          "day": 0,
+          "icon": "run",
+          "title": "E-běh · 40' (deload)",
+          "sub": "Běh · deload",
+          "pre": "40' @ 5:45–6:20/km, tep do 152, plné věty. Kratší než minule — tělo má vstřebat blok.",
+          "fields": [
+            {
+              "p": "runs.e.where",
+              "q": "Kde",
+              "kind": "chips",
+              "vals": [
+                "pás",
+                "venku"
+              ]
+            },
+            {
+              "p": "runs.e.feel",
+              "q": "Pocit, co se stalo",
+              "kind": "text",
+              "ph": "jednou větou"
+            }
+          ]
+        },
+        {
+          "id": "wu-la",
+          "day": 0,
+          "icon": "dumbbell",
+          "title": "Rozcvička před fitkem",
+          "sub": "Lower A",
+          "pre": "5' kolo · band walk 2×15/směr · dřep osa ×10, 40 ×6, 60 ×3 (podpatky).",
+          "fields": [
+            {
+              "p": "extras.la.warmup.done",
+              "q": "Rozcvička hotová",
+              "kind": "done"
+            }
+          ]
+        },
+        {
+          "id": "ex-sq",
+          "day": 0,
+          "icon": "dumbbell",
+          "title": "Dřep",
+          "sub": "Síla · Lower A · DELOAD",
+          "pre": "2 série po 6 · RIR 3 · 85 kg — stejná váha, poloviční objem. Deload, nepřidávat.",
+          "fields": [
+            {
+              "p": "strength.sq.w",
+              "q": "Váha (kg)",
+              "kind": "num",
+              "def": "85"
+            },
+            {
+              "p": "strength.sq",
+              "q": "Opakování jednotlivých sérií",
+              "kind": "sets",
+              "sets": 2,
+              "defs": [
+                "6",
+                "6"
+              ]
+            },
+            {
+              "p": "strength.sq.rir",
+              "q": "RIR poslední série",
+              "kind": "num",
+              "def": "3"
+            }
+          ]
+        },
+        {
+          "id": "ex-nordic",
+          "day": 0,
+          "icon": "dumbbell",
+          "title": "Nordic curl",
+          "sub": "Síla · Lower A · DELOAD",
+          "pre": "2 série po 5 · brzda 4–5 s dolů",
+          "fields": [
+            {
+              "p": "strength.nordic.w",
+              "q": "Váha (kg)",
+              "kind": "num",
+              "def": "0"
+            },
+            {
+              "p": "strength.nordic",
+              "q": "Opakování jednotlivých sérií",
+              "kind": "sets",
+              "sets": 2,
+              "defs": [
+                "5",
+                "5"
+              ]
+            },
+            {
+              "p": "strength.nordic.rir",
+              "q": "RIR poslední série",
+              "kind": "num",
+              "def": "3"
+            }
+          ]
+        },
+        {
+          "id": "ex-calf",
+          "day": 0,
+          "icon": "dumbbell",
+          "title": "Výpony ve stoje (jednonož)",
+          "sub": "Síla · Lower A · DELOAD",
+          "pre": "2 série po 12 na nohu · 30 kg · 3 s dolů",
+          "fields": [
+            {
+              "p": "strength.calf.w",
+              "q": "Váha (kg)",
+              "kind": "num",
+              "def": "30"
+            },
+            {
+              "p": "strength.calf",
+              "q": "Opakování jednotlivých sérií",
+              "kind": "sets",
+              "sets": 2,
+              "defs": [
+                "12",
+                "12"
+              ]
+            },
+            {
+              "p": "strength.calf.rir",
+              "q": "RIR poslední série",
+              "kind": "num",
+              "def": "3"
+            }
+          ]
+        },
+        {
+          "id": "extras-la",
+          "day": 0,
+          "icon": "dumbbell",
+          "title": "Doplňky na konec Lower A",
+          "sub": "bez vah",
+          "pre": "Prehab, v deloadu zůstává celý — je to jediná část, která se nezkracuje.",
+          "fields": [
+            {
+              "p": "extras.la.tibialis.done",
+              "q": "Tibialis raises 2×20",
+              "kind": "done"
+            },
+            {
+              "p": "extras.la.copenhagen.done",
+              "q": "Copenhagen 2×10/str",
+              "kind": "done"
+            }
+          ]
+        },
+        {
+          "id": "pelvis-0",
+          "day": 0,
+          "icon": "heart",
+          "title": "Pánev · 5 min (večer, poslední věc dne)",
+          "sub": "anterior pelvic tilt + SI oblast",
+          "pre": "Couch stretch je z toho nejdůležitější. Dělej to po večeři, ne až v posteli.",
+          "fields": [
+            {
+              "p": "extras.pelvis0.couch.done",
+              "q": "Couch stretch 2×45 s/noha — zadek zatnutý, bedra neprohýbat",
+              "kind": "done"
+            },
+            {
+              "p": "extras.pelvis0.bridge.done",
+              "q": "Glute bridge 2×12 — nahoře zatnout hýždě na 2 s",
+              "kind": "done"
+            },
+            {
+              "p": "extras.pelvis0.deadbug.done",
+              "q": "Dead bug 2×8/str — bedra přitisknutá k podlaze",
+              "kind": "done"
+            }
+          ]
+        },
+        {
+          "id": "sw1",
+          "day": 1,
+          "icon": "waves",
+          "title": "Plavání · první bazén v Praze",
+          "sub": "25–30 min",
+          "pre": "1) Výdechy u kraje 15× (nosem). 2) Splývání od stěny 6–8× — odraz, hrudník dolů, pohled kolmo na dno, klouzat co nejdál. 3) Kop s deskou 4×25 m — obličej ve vodě, kop z kyčlí, nádech po 4–6 kopech. 4) Záběry s deskou mezi stehny 4×25 m — nádech na každý 3. záběr. 5) Na konec 2–4×25 m celý kraul. Pauzy u stěny dlouhé.",
+          "fields": [
+            {
+              "p": "other.sw1was",
+              "q": "Byl jsem",
+              "kind": "chips",
+              "vals": [
+                "byl",
+                "nebyl"
+              ]
+            },
+            {
+              "p": "other.sw1",
+              "q": "Co šlo / co drhlo",
+              "kind": "text",
+              "ph": "nohy klesaly / dech OK…"
+            }
+          ]
+        },
+        {
+          "id": "z",
+          "day": 1,
+          "icon": "run",
+          "title": "Klus Z1 · 20' (deload)",
+          "sub": "Běh · deload",
+          "pre": "20' úplně volně, 8,5–9,5 km/h, nosní dech. Po škole, ať se rozhýbeš.",
+          "fields": [
+            {
+              "p": "runs.z.where",
+              "q": "Kde",
+              "kind": "chips",
+              "vals": [
+                "pás",
+                "venku"
+              ]
+            },
+            {
+              "p": "runs.z.feel",
+              "q": "Pocit, co se stalo",
+              "kind": "text",
+              "ph": "jednou větou"
+            }
+          ]
+        },
+        {
+          "id": "pelvis-1",
+          "day": 1,
+          "icon": "heart",
+          "title": "Pánev · 5 min (večer, poslední věc dne)",
+          "sub": "anterior pelvic tilt + SI oblast",
+          "pre": "Couch stretch je z toho nejdůležitější. Dělej to po večeři, ne až v posteli.",
+          "fields": [
+            {
+              "p": "extras.pelvis1.couch.done",
+              "q": "Couch stretch 2×45 s/noha — zadek zatnutý, bedra neprohýbat",
+              "kind": "done"
+            },
+            {
+              "p": "extras.pelvis1.bridge.done",
+              "q": "Glute bridge 2×12 — nahoře zatnout hýždě na 2 s",
+              "kind": "done"
+            },
+            {
+              "p": "extras.pelvis1.deadbug.done",
+              "q": "Dead bug 2×8/str — bedra přitisknutá k podlaze",
+              "kind": "done"
+            }
+          ]
+        },
+        {
+          "id": "wu-ua",
+          "day": 2,
+          "icon": "dumbbell",
+          "title": "Rozcvička před fitkem",
+          "sub": "Upper A",
+          "pre": "5' veslo · scap push-up 2×12 · YTWL 1×8 · 90/90 2×8/str.",
+          "fields": [
+            {
+              "p": "extras.ua.warmup.done",
+              "q": "Rozcvička hotová",
+              "kind": "done"
+            }
+          ]
+        },
+        {
+          "id": "ex-ia",
+          "day": 2,
+          "icon": "dumbbell",
+          "title": "Incline DB press",
+          "sub": "Síla · Upper A · DELOAD",
+          "pre": "2 série po 8–10 · RIR 3 · 32,5 kg",
+          "fields": [
+            {
+              "p": "strength.ia.w",
+              "q": "Váha (kg)",
+              "kind": "num",
+              "def": "32,5"
+            },
+            {
+              "p": "strength.ia",
+              "q": "Opakování jednotlivých sérií",
+              "kind": "sets",
+              "sets": 2,
+              "defs": [
+                "10",
+                "9"
+              ]
+            },
+            {
+              "p": "strength.ia.rir",
+              "q": "RIR poslední série",
+              "kind": "num",
+              "def": "3"
+            }
+          ]
+        },
+        {
+          "id": "ex-row",
+          "day": 2,
+          "icon": "dumbbell",
+          "title": "Chest-supported row",
+          "sub": "Síla · Upper A · DELOAD",
+          "pre": "2 série po 10–12 · RIR 3 · 67,5 kg ⬆️ (dal jsi 4×12 na 65)",
+          "fields": [
+            {
+              "p": "strength.row.w",
+              "q": "Váha (kg)",
+              "kind": "num",
+              "def": "67,5"
+            },
+            {
+              "p": "strength.row",
+              "q": "Opakování jednotlivých sérií",
+              "kind": "sets",
+              "sets": 2,
+              "defs": [
+                "12",
+                "12"
+              ]
+            },
+            {
+              "p": "strength.row.rir",
+              "q": "RIR poslední série",
+              "kind": "num",
+              "def": "3"
+            }
+          ]
+        },
+        {
+          "id": "ex-ohp",
+          "day": 2,
+          "icon": "dumbbell",
+          "title": "OHP ve stoje",
+          "sub": "Síla · Upper A · DELOAD",
+          "pre": "2 série po 8 · RIR 3 · 20 kg — čtyři týdny stojíš na 22,5, v deloadu ubereme a v t9 najedeš znovu",
+          "fields": [
+            {
+              "p": "strength.ohp.w",
+              "q": "Váha (kg)",
+              "kind": "num",
+              "def": "20"
+            },
+            {
+              "p": "strength.ohp",
+              "q": "Opakování jednotlivých sérií",
+              "kind": "sets",
+              "sets": 2,
+              "defs": [
+                "8",
+                "8"
+              ]
+            },
+            {
+              "p": "strength.ohp.rir",
+              "q": "RIR poslední série",
+              "kind": "num",
+              "def": "3"
+            }
+          ]
+        },
+        {
+          "id": "ex-latA",
+          "day": 2,
+          "icon": "dumbbell",
+          "title": "Lateral raise (kladka, 1 ruka)",
+          "sub": "Síla · Upper A · DELOAD",
+          "pre": "2 série po 12–15 na ruku · 10 kg ⬆️ (dal jsi 4×15 na 7,5)",
+          "fields": [
+            {
+              "p": "strength.latA.w",
+              "q": "Váha (kg)",
+              "kind": "num",
+              "def": "10"
+            },
+            {
+              "p": "strength.latA",
+              "q": "Opakování jednotlivých sérií",
+              "kind": "sets",
+              "sets": 2,
+              "defs": [
+                "15",
+                "15"
+              ]
+            },
+            {
+              "p": "strength.latA.rir",
+              "q": "RIR poslední série",
+              "kind": "num",
+              "def": "3"
+            }
+          ]
+        },
+        {
+          "id": "ex-face",
+          "day": 2,
+          "icon": "dumbbell",
+          "title": "Face pull",
+          "sub": "Síla · Upper A · DELOAD",
+          "pre": "2 série po 15–20 · 25 kg ⬆️",
+          "fields": [
+            {
+              "p": "strength.face.w",
+              "q": "Váha (kg)",
+              "kind": "num",
+              "def": "25"
+            },
+            {
+              "p": "strength.face",
+              "q": "Opakování jednotlivých sérií",
+              "kind": "sets",
+              "sets": 2,
+              "defs": [
+                "20",
+                "20"
+              ]
+            },
+            {
+              "p": "strength.face.rir",
+              "q": "RIR poslední série",
+              "kind": "num",
+              "def": "3"
+            }
+          ]
+        },
+        {
+          "id": "ex-bic",
+          "day": 2,
+          "icon": "dumbbell",
+          "title": "Biceps",
+          "sub": "Síla · Upper A · DELOAD",
+          "pre": "2 série po 10–12 · 30 kg ⬆️ (superset s tricepsem)",
+          "fields": [
+            {
+              "p": "strength.bic.w",
+              "q": "Váha (kg)",
+              "kind": "num",
+              "def": "30"
+            },
+            {
+              "p": "strength.bic",
+              "q": "Opakování jednotlivých sérií",
+              "kind": "sets",
+              "sets": 2,
+              "defs": [
+                "12",
+                "12"
+              ]
+            },
+            {
+              "p": "strength.bic.rir",
+              "q": "RIR poslední série",
+              "kind": "num",
+              "def": "3"
+            }
+          ]
+        },
+        {
+          "id": "ex-tri",
+          "day": 2,
+          "icon": "dumbbell",
+          "title": "Triceps",
+          "sub": "Síla · Upper A · DELOAD",
+          "pre": "2 série po 10–12 · 30 kg ⬆️",
+          "fields": [
+            {
+              "p": "strength.tri.w",
+              "q": "Váha (kg)",
+              "kind": "num",
+              "def": "30"
+            },
+            {
+              "p": "strength.tri",
+              "q": "Opakování jednotlivých sérií",
+              "kind": "sets",
+              "sets": 2,
+              "defs": [
+                "12",
+                "12"
+              ]
+            },
+            {
+              "p": "strength.tri.rir",
+              "q": "RIR poslední série",
+              "kind": "num",
+              "def": "3"
+            }
+          ]
+        },
+        {
+          "id": "extras-ua",
+          "day": 2,
+          "icon": "dumbbell",
+          "title": "Core na konec Upper A",
+          "sub": "bez vah",
+          "pre": "Zůstává celé.",
+          "fields": [
+            {
+              "p": "extras.ua.pallof.done",
+              "q": "Pallof press 3×10/str",
+              "kind": "done"
+            },
+            {
+              "p": "extras.ua.abwheel.done",
+              "q": "Ab wheel 3×8–12",
+              "kind": "done"
+            }
+          ]
+        },
+        {
+          "id": "pelvis-2",
+          "day": 2,
+          "icon": "heart",
+          "title": "Pánev · 5 min (večer, poslední věc dne)",
+          "sub": "anterior pelvic tilt + SI oblast",
+          "pre": "Couch stretch je z toho nejdůležitější. Dělej to po večeři, ne až v posteli.",
+          "fields": [
+            {
+              "p": "extras.pelvis2.couch.done",
+              "q": "Couch stretch 2×45 s/noha — zadek zatnutý, bedra neprohýbat",
+              "kind": "done"
+            },
+            {
+              "p": "extras.pelvis2.bridge.done",
+              "q": "Glute bridge 2×12 — nahoře zatnout hýždě na 2 s",
+              "kind": "done"
+            },
+            {
+              "p": "extras.pelvis2.deadbug.done",
+              "q": "Dead bug 2×8/str — bedra přitisknutá k podlaze",
+              "kind": "done"
+            }
+          ]
+        },
+        {
+          "id": "wu-ct",
+          "day": 3,
+          "icon": "run",
+          "title": "Aktivace před longrunem",
+          "sub": "2 minuty",
+          "pre": "Glute bridge 1×10 · 4 výpady vpřed na nohu.",
+          "fields": [
+            {
+              "p": "extras.ct.activation.done",
+              "q": "Aktivace hotová",
+              "kind": "done"
+            }
+          ]
+        },
+        {
+          "id": "lr",
+          "day": 3,
+          "icon": "run",
+          "title": "Longrun · 60' (deload)",
+          "sub": "Běh · deload",
+          "pre": "60' @ 5:45–6:20/km celé v Z2 — žádné zrychlení na konci. Venku, Vomero.",
+          "fields": [
+            {
+              "p": "runs.lr.where",
+              "q": "Kde",
+              "kind": "chips",
+              "vals": [
+                "pás",
+                "venku"
+              ]
+            },
+            {
+              "p": "runs.lr.feel",
+              "q": "Pocit, co se stalo",
+              "kind": "text",
+              "ph": "jednou větou"
+            }
+          ]
+        },
+        {
+          "id": "wu-lb",
+          "day": 3,
+          "icon": "dumbbell",
+          "title": "Rozcvička před fitkem",
+          "sub": "Lower B",
+          "pre": "5' kolo · band walk 2×15/směr · lehká série trap baru 60–70 kg.",
+          "fields": [
+            {
+              "p": "extras.lb.warmup.done",
+              "q": "Rozcvička hotová",
+              "kind": "done"
+            }
+          ]
+        },
+        {
+          "id": "ex-rdlb",
+          "day": 3,
+          "icon": "dumbbell",
+          "title": "Trap bar",
+          "sub": "Síla · Lower B · DELOAD",
+          "pre": "2 série po 8 · RIR 3 · 120 kg · VEZMI TRHAČKY — minule ti to padalo z rukou, úchyt nemá limitovat záda",
+          "fields": [
+            {
+              "p": "strength.rdlb.w",
+              "q": "Váha (kg)",
+              "kind": "num",
+              "def": "120"
+            },
+            {
+              "p": "strength.rdlb",
+              "q": "Opakování jednotlivých sérií",
+              "kind": "sets",
+              "sets": 2,
+              "defs": [
+                "8",
+                "8"
+              ]
+            },
+            {
+              "p": "strength.rdlb.rir",
+              "q": "RIR poslední série",
+              "kind": "num",
+              "def": "3"
+            }
+          ]
+        },
+        {
+          "id": "ex-bulg",
+          "day": 3,
+          "icon": "dumbbell",
+          "title": "Bulharský dřep",
+          "sub": "Síla · Lower B · DELOAD",
+          "pre": "2 série po 8–10 na nohu · RIR 3 · 2×22,5 kg",
+          "fields": [
+            {
+              "p": "strength.bulg.w",
+              "q": "Váha (kg)",
+              "kind": "num",
+              "def": "22,5"
+            },
+            {
+              "p": "strength.bulg",
+              "q": "Opakování jednotlivých sérií",
+              "kind": "sets",
+              "sets": 2,
+              "defs": [
+                "10",
+                "10"
+              ]
+            },
+            {
+              "p": "strength.bulg.rir",
+              "q": "RIR poslední série",
+              "kind": "num",
+              "def": "3"
+            }
+          ]
+        },
+        {
+          "id": "ex-rdl",
+          "day": 3,
+          "icon": "dumbbell",
+          "title": "RDL",
+          "sub": "Síla · Lower B · DELOAD",
+          "pre": "2 série po 8–10 · RIR 3 · 85 kg · trhačky — třetí série minule spadla na 5 kvůli úchytu",
+          "fields": [
+            {
+              "p": "strength.rdl.w",
+              "q": "Váha (kg)",
+              "kind": "num",
+              "def": "85"
+            },
+            {
+              "p": "strength.rdl",
+              "q": "Opakování jednotlivých sérií",
+              "kind": "sets",
+              "sets": 2,
+              "defs": [
+                "10",
+                "10"
+              ]
+            },
+            {
+              "p": "strength.rdl.rir",
+              "q": "RIR poslední série",
+              "kind": "num",
+              "def": "3"
+            }
+          ]
+        },
+        {
+          "id": "ex-calfsit",
+          "day": 3,
+          "icon": "dumbbell",
+          "title": "Výpony v sedu",
+          "sub": "Síla · Lower B · DELOAD",
+          "pre": "2 série po 12–15 · 40 kg",
+          "fields": [
+            {
+              "p": "strength.calfsit.w",
+              "q": "Váha (kg)",
+              "kind": "num",
+              "def": "40"
+            },
+            {
+              "p": "strength.calfsit",
+              "q": "Opakování jednotlivých sérií",
+              "kind": "sets",
+              "sets": 2,
+              "defs": [
+                "15",
+                "15"
+              ]
+            },
+            {
+              "p": "strength.calfsit.rir",
+              "q": "RIR poslední série",
+              "kind": "num",
+              "def": "3"
+            }
+          ]
+        },
+        {
+          "id": "pelvis-3",
+          "day": 3,
+          "icon": "heart",
+          "title": "Pánev · 5 min (večer, poslední věc dne)",
+          "sub": "anterior pelvic tilt + SI oblast",
+          "pre": "Couch stretch je z toho nejdůležitější. Dělej to po večeři, ne až v posteli.",
+          "fields": [
+            {
+              "p": "extras.pelvis3.couch.done",
+              "q": "Couch stretch 2×45 s/noha — zadek zatnutý, bedra neprohýbat",
+              "kind": "done"
+            },
+            {
+              "p": "extras.pelvis3.bridge.done",
+              "q": "Glute bridge 2×12 — nahoře zatnout hýždě na 2 s",
+              "kind": "done"
+            },
+            {
+              "p": "extras.pelvis3.deadbug.done",
+              "q": "Dead bug 2×8/str — bedra přitisknutá k podlaze",
+              "kind": "done"
+            }
+          ]
+        },
+        {
+          "id": "sw2",
+          "day": 4,
+          "icon": "waves",
+          "title": "Plavání (Pá)",
+          "sub": "25–30 min",
+          "pre": "Stejné drily jako v úterý. Když ti v úterý klesaly nohy: hlava níž, hrudník zatlačit do vody, zpevnit břicho a zadek.",
+          "fields": [
+            {
+              "p": "other.sw2was",
+              "q": "Byl jsem",
+              "kind": "chips",
+              "vals": [
+                "byl",
+                "nebyl"
+              ]
+            },
+            {
+              "p": "other.sw2",
+              "q": "Co šlo / co drhlo",
+              "kind": "text",
+              "ph": "jednou větou"
+            }
+          ]
+        },
+        {
+          "id": "pelvis-4",
+          "day": 4,
+          "icon": "heart",
+          "title": "Pánev · 5 min (večer, poslední věc dne)",
+          "sub": "anterior pelvic tilt + SI oblast",
+          "pre": "Couch stretch je z toho nejdůležitější. Dělej to po večeři, ne až v posteli.",
+          "fields": [
+            {
+              "p": "extras.pelvis4.couch.done",
+              "q": "Couch stretch 2×45 s/noha — zadek zatnutý, bedra neprohýbat",
+              "kind": "done"
+            },
+            {
+              "p": "extras.pelvis4.bridge.done",
+              "q": "Glute bridge 2×12 — nahoře zatnout hýždě na 2 s",
+              "kind": "done"
+            },
+            {
+              "p": "extras.pelvis4.deadbug.done",
+              "q": "Dead bug 2×8/str — bedra přitisknutá k podlaze",
+              "kind": "done"
+            }
+          ]
+        },
+        {
+          "id": "wu-so",
+          "day": 5,
+          "icon": "run",
+          "title": "Aktivace před během",
+          "sub": "2 minuty",
+          "pre": "Glute bridge 1×10 · 4 výpady vpřed na nohu.",
+          "fields": [
+            {
+              "p": "extras.so.activation.done",
+              "q": "Aktivace hotová",
+              "kind": "done"
+            }
+          ]
+        },
+        {
+          "id": "q",
+          "day": 5,
+          "icon": "run",
+          "title": "Q-běh lehký · 35' (deload)",
+          "sub": "Běh · deload",
+          "pre": "10' rozklus @ 9,5 → 6×20\" rovinky @ 15–16 km/h (mezi nimi 60–90\" chůze) → 10' vyklusání. Žádné prahové intervaly, deload.",
+          "fields": [
+            {
+              "p": "runs.q.where",
+              "q": "Kde",
+              "kind": "chips",
+              "vals": [
+                "pás",
+                "venku"
+              ]
+            },
+            {
+              "p": "runs.q.feel",
+              "q": "Pocit, co se stalo",
+              "kind": "text",
+              "ph": "jednou větou"
+            }
+          ]
+        },
+        {
+          "id": "wu-ub",
+          "day": 5,
+          "icon": "dumbbell",
+          "title": "Rozcvička před fitkem",
+          "sub": "Upper B",
+          "pre": "5' veslo · scap push-up 2×12 · YTWL 1×8 · lehká série shybů.",
+          "fields": [
+            {
+              "p": "extras.ub.warmup.done",
+              "q": "Rozcvička hotová",
+              "kind": "done"
+            }
+          ]
+        },
+        {
+          "id": "ex-pull",
+          "day": 5,
+          "icon": "dumbbell",
+          "title": "Shyby s přítěží",
+          "sub": "Síla · Upper B · DELOAD",
+          "pre": "2 série po 6 · RIR 3 · +12,5 kg ⬆️ (dal jsi 4×6 na +10 s RIR 2)",
+          "fields": [
+            {
+              "p": "strength.pull.w",
+              "q": "Váha (kg)",
+              "kind": "num",
+              "def": "12,5"
+            },
+            {
+              "p": "strength.pull",
+              "q": "Opakování jednotlivých sérií",
+              "kind": "sets",
+              "sets": 2,
+              "defs": [
+                "6",
+                "6"
+              ]
+            },
+            {
+              "p": "strength.pull.rir",
+              "q": "RIR poslední série",
+              "kind": "num",
+              "def": "3"
+            }
+          ]
+        },
+        {
+          "id": "ex-flat",
+          "day": 5,
+          "icon": "dumbbell",
+          "title": "Flat DB press",
+          "sub": "Síla · Upper B · DELOAD",
+          "pre": "2 série po 8–10 · RIR 3 · 32,5 kg",
+          "fields": [
+            {
+              "p": "strength.flat.w",
+              "q": "Váha (kg)",
+              "kind": "num",
+              "def": "32,5"
+            },
+            {
+              "p": "strength.flat",
+              "q": "Opakování jednotlivých sérií",
+              "kind": "sets",
+              "sets": 2,
+              "defs": [
+                "10",
+                "10"
+              ]
+            },
+            {
+              "p": "strength.flat.rir",
+              "q": "RIR poslední série",
+              "kind": "num",
+              "def": "3"
+            }
+          ]
+        },
+        {
+          "id": "ex-dips",
+          "day": 5,
+          "icon": "dumbbell",
+          "title": "Dipy s náklonem",
+          "sub": "Síla · Upper B · DELOAD",
+          "pre": "2 série po 8–12 · RIR 3 · +7,5 kg ⬆️ · rozsah po rovnoběžku paže se zemí",
+          "fields": [
+            {
+              "p": "strength.dips.w",
+              "q": "Váha (kg)",
+              "kind": "num",
+              "def": "7,5"
+            },
+            {
+              "p": "strength.dips",
+              "q": "Opakování jednotlivých sérií",
+              "kind": "sets",
+              "sets": 2,
+              "defs": [
+                "12",
+                "12"
+              ]
+            },
+            {
+              "p": "strength.dips.rir",
+              "q": "RIR poslední série",
+              "kind": "num",
+              "def": "3"
+            }
+          ]
+        },
+        {
+          "id": "ex-pullover",
+          "day": 5,
+          "icon": "dumbbell",
+          "title": "Pullover s jednoručkou (nový)",
+          "sub": "Síla · Upper B · DELOAD",
+          "pre": "2 série po 12–15 · RIR 3 · jednoručka 15 kg oběma rukama · paže zamčené v mírném pokrčení, spouštět za hlavu do protažení, bedra neprohýbat — nahrazuje straight-arm pulldown (dráždil triceps)",
+          "fields": [
+            {
+              "p": "strength.pullover.w",
+              "q": "Váha (kg)",
+              "kind": "num",
+              "def": "15"
+            },
+            {
+              "p": "strength.pullover",
+              "q": "Opakování jednotlivých sérií",
+              "kind": "sets",
+              "sets": 2,
+              "defs": [
+                "15",
+                "15"
+              ]
+            },
+            {
+              "p": "strength.pullover.rir",
+              "q": "RIR poslední série",
+              "kind": "num",
+              "def": "3"
+            }
+          ]
+        },
+        {
+          "id": "ex-rpd",
+          "day": 5,
+          "icon": "dumbbell",
+          "title": "Reverse pec deck",
+          "sub": "Síla · Upper B · DELOAD",
+          "pre": "2 série po 15 · 20 kg",
+          "fields": [
+            {
+              "p": "strength.rpd.w",
+              "q": "Váha (kg)",
+              "kind": "num",
+              "def": "20"
+            },
+            {
+              "p": "strength.rpd",
+              "q": "Opakování jednotlivých sérií",
+              "kind": "sets",
+              "sets": 2,
+              "defs": [
+                "15",
+                "15"
+              ]
+            },
+            {
+              "p": "strength.rpd.rir",
+              "q": "RIR poslední série",
+              "kind": "num",
+              "def": "3"
+            }
+          ]
+        },
+        {
+          "id": "ex-latB",
+          "day": 5,
+          "icon": "dumbbell",
+          "title": "Lateral raise (kladka, 1 ruka)",
+          "sub": "Síla · Upper B · DELOAD",
+          "pre": "2 série po 12–15 na ruku · 10 kg ⬆️",
+          "fields": [
+            {
+              "p": "strength.latB.w",
+              "q": "Váha (kg)",
+              "kind": "num",
+              "def": "10"
+            },
+            {
+              "p": "strength.latB",
+              "q": "Opakování jednotlivých sérií",
+              "kind": "sets",
+              "sets": 2,
+              "defs": [
+                "15",
+                "15"
+              ]
+            },
+            {
+              "p": "strength.latB.rir",
+              "q": "RIR poslední série",
+              "kind": "num",
+              "def": "3"
+            }
+          ]
+        },
+        {
+          "id": "ex-ypr",
+          "day": 5,
+          "icon": "dumbbell",
+          "title": "Prone Y",
+          "sub": "Síla · Upper B · DELOAD",
+          "pre": "2 série po 12 · 1,25 kg · vést lopatkami, ne pažemi",
+          "fields": [
+            {
+              "p": "strength.ypr.w",
+              "q": "Váha (kg)",
+              "kind": "num",
+              "def": "1,25"
+            },
+            {
+              "p": "strength.ypr",
+              "q": "Opakování jednotlivých sérií",
+              "kind": "sets",
+              "sets": 2,
+              "defs": [
+                "12",
+                "12"
+              ]
+            },
+            {
+              "p": "strength.ypr.rir",
+              "q": "RIR poslední série",
+              "kind": "num",
+              "def": "3"
+            }
+          ]
+        },
+        {
+          "id": "ex-crunch",
+          "day": 5,
+          "icon": "dumbbell",
+          "title": "Cable crunch",
+          "sub": "Síla · Upper B · DELOAD",
+          "pre": "2 série po 12–15 · 50 kg",
+          "fields": [
+            {
+              "p": "strength.crunch.w",
+              "q": "Váha (kg)",
+              "kind": "num",
+              "def": "50"
+            },
+            {
+              "p": "strength.crunch",
+              "q": "Opakování jednotlivých sérií",
+              "kind": "sets",
+              "sets": 2,
+              "defs": [
+                "15",
+                "12"
+              ]
+            },
+            {
+              "p": "strength.crunch.rir",
+              "q": "RIR poslední série",
+              "kind": "num",
+              "def": "3"
+            }
+          ]
+        },
+        {
+          "id": "pelvis-5",
+          "day": 5,
+          "icon": "heart",
+          "title": "Pánev · 5 min (večer, poslední věc dne)",
+          "sub": "anterior pelvic tilt + SI oblast",
+          "pre": "Couch stretch je z toho nejdůležitější. Dělej to po večeři, ne až v posteli.",
+          "fields": [
+            {
+              "p": "extras.pelvis5.couch.done",
+              "q": "Couch stretch 2×45 s/noha — zadek zatnutý, bedra neprohýbat",
+              "kind": "done"
+            },
+            {
+              "p": "extras.pelvis5.bridge.done",
+              "q": "Glute bridge 2×12 — nahoře zatnout hýždě na 2 s",
+              "kind": "done"
+            },
+            {
+              "p": "extras.pelvis5.deadbug.done",
+              "q": "Dead bug 2×8/str — bedra přitisknutá k podlaze",
+              "kind": "done"
+            }
+          ]
+        },
+        {
+          "id": "w-ne",
+          "day": 6,
+          "icon": "target2",
+          "title": "Váha",
+          "sub": "nalačno, po záchodě, před jídlem",
+          "pre": "Zvaž se hned po probuzení.",
+          "fields": [
+            {
+              "p": "weight.ne",
+              "q": "Váha (kg)",
+              "kind": "num",
+              "ph": "82,7"
+            }
+          ]
+        },
+        {
+          "id": "measures",
+          "day": 6,
+          "icon": "target2",
+          "title": "Míry (měsíční)",
+          "sub": "nalačno, ve stejném pořadí jako 31. 8.",
+          "pre": "Záchod → váha → míry → fotky → teprve snídaně. Pas přes pupek, hrudník přes bradavky, páska vodorovně a jen dotáhnout. Baseline 31. 8.: 85 · 100 · 118/125 · 38 · 57.",
+          "fields": [
+            {
+              "p": "measures.waist",
+              "q": "Pas přes pupek (cm)",
+              "kind": "num",
+              "ph": "85"
+            },
+            {
+              "p": "measures.chest",
+              "q": "Hrudník přes bradavky (cm)",
+              "kind": "num",
+              "ph": "100"
+            },
+            {
+              "p": "measures.shoulders",
+              "q": "Ramena volně (cm)",
+              "kind": "num",
+              "ph": "118"
+            },
+            {
+              "p": "measures.shouldersFlex",
+              "q": "Ramena zatnutá (cm)",
+              "kind": "num",
+              "ph": "125"
+            },
+            {
+              "p": "measures.arm",
+              "q": "Paže zatnutá (cm)",
+              "kind": "num",
+              "ph": "38"
+            },
+            {
+              "p": "measures.thigh",
+              "q": "Stehno (cm)",
+              "kind": "num",
+              "ph": "57"
+            },
+            {
+              "p": "measures.photos",
+              "q": "Fotky (čelně, bok, záda)",
+              "kind": "done"
+            }
+          ]
+        },
+        {
+          "id": "pain",
+          "day": 6,
+          "icon": "heart",
+          "title": "Bolesti",
+          "sub": "nic → nech prázdné",
+          "pre": "Holeně, rameno, SI oblast, kotníky — co a 0–10 a kdy.",
+          "fields": [
+            {
+              "p": "pain.note",
+              "q": "Co + 0–10 + kdy",
+              "kind": "text"
+            }
+          ]
+        },
+        {
+          "id": "extra",
+          "day": 6,
+          "icon": "clipboard",
+          "title": "Cokoliv dalšího",
+          "sub": "nic → nech prázdné",
+          "pre": "Jak sedl pražský rozvrh a první bazén? Co nešlo stihnout kvůli stěhování a škole? Trhačky — pomohly?",
+          "fields": [
+            {
+              "p": "extra.note",
+              "q": "Poznámka",
+              "kind": "text"
+            }
+          ]
+        },
+        {
+          "id": "pelvis-6",
+          "day": 6,
+          "icon": "heart",
+          "title": "Pánev · 5 min (večer, poslední věc dne)",
+          "sub": "anterior pelvic tilt + SI oblast",
+          "pre": "Couch stretch je z toho nejdůležitější. Dělej to po večeři, ne až v posteli.",
+          "fields": [
+            {
+              "p": "extras.pelvis6.couch.done",
+              "q": "Couch stretch 2×45 s/noha — zadek zatnutý, bedra neprohýbat",
+              "kind": "done"
+            },
+            {
+              "p": "extras.pelvis6.bridge.done",
+              "q": "Glute bridge 2×12 — nahoře zatnout hýždě na 2 s",
+              "kind": "done"
+            },
+            {
+              "p": "extras.pelvis6.deadbug.done",
+              "q": "Dead bug 2×8/str — bedra přitisknutá k podlaze",
+              "kind": "done"
+            }
+          ]
+        }
+      ],
+      "export": [
+        "TÝDEN Č.: 8 — DELOAD + Praha",
+        "",
+        "── VÁHA ──",
+        "Ne: {weight.ne|__}",
+        "",
+        "── MÍRY (4 týdny od 31. 8.) ──",
+        "pas {measures.waist|__} · hrudník {measures.chest|__} · ramena {measures.shoulders|__}/{measures.shouldersFlex|__} · paže {measures.arm|__} · stehno {measures.thigh|__} · fotky {measures.photos|—}",
+        "",
+        "── BOLESTI ──",
+        "{pain.note|nic}",
+        "",
+        "── SÍLA (deload: 2 série, stejné váhy) ──",
+        "",
+        "Po Lower A: dřep {s:sq} · nordic {s:nordic} · výpony {s:calf}",
+        "St Upper A: incline {s:ia} · row {s:row} · OHP {s:ohp} · lat {s:latA} · face {s:face} · bic {s:bic} · tri {s:tri}",
+        "Čt Lower B: trap bar {s:rdlb} · bulhar {s:bulg} · RDL {s:rdl} · výpony v sedu {s:calfsit}",
+        "So Upper B: shyby {s:pull} · flat {s:flat} · dipy {s:dips} · pullover {s:pullover} · rpd {s:rpd} · lat {s:latB} · prone Y {s:ypr} · crunch {s:crunch}",
+        "",
+        "── PLAVÁNÍ (první týden v bazénu) ──",
+        "Út: {other.sw1was|byl/nebyl} · {other.sw1|__}",
+        "Pá: {other.sw2was|byl/nebyl} · {other.sw2|__}",
+        "",
+        "── BĚHY ──",
+        "Po E 40': {runs.e.where|pás/venku} · {runs.e.feel|__}",
+        "Út klus 20': {runs.z.where|pás/venku} · {runs.z.feel|__}",
+        "Čt LR 60': {runs.lr.where|pás/venku} · {runs.lr.feel|__}",
+        "So Q 35' rovinky: {runs.q.where|pás/venku} · {runs.q.feel|__}",
+        "",
+        "── DOPLŇKY ──",
+        "Aktivace: po {extras.po.activation.done|—} · čt {extras.ct.activation.done|—} · so {extras.so.activation.done|—}",
+        "Rozcvičky: LA {extras.la.warmup.done|—} · UA {extras.ua.warmup.done|—} · LB {extras.lb.warmup.done|—} · UB {extras.ub.warmup.done|—}",
+        "Prehab: tibialis {extras.la.tibialis.done|—} · Copenhagen {extras.la.copenhagen.done|—} · Pallof {extras.ua.pallof.done|—} · ab wheel {extras.ua.abwheel.done|—}",
+        "",
+        "── PÁNEV (večer, 7 dní) ──",
+        "Po {extras.pelvis0.couch.done|—} · Út {extras.pelvis1.couch.done|—} · St {extras.pelvis2.couch.done|—} · Čt {extras.pelvis3.couch.done|—} · Pá {extras.pelvis4.couch.done|—} · So {extras.pelvis5.couch.done|—} · Ne {extras.pelvis6.couch.done|—}",
+        "",
+        "── COKOLIV DALŠÍHO ──",
+        "{extra.note|nic}"
+      ]
     }
   ]
 }
