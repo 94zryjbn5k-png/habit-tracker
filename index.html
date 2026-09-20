@@ -1027,6 +1027,18 @@ input,textarea,select,.meal-f,.ck-in{border-radius:13px;}
 .seg-hit span.on{background:var(--accent-ring);}
 .seg-hit span.cur{background:var(--accent);height:5px;border-radius:3px;}
 .ck-nav{padding-top:2px;}
+
+.ck-wchart{position:relative;height:104px;}
+.ck-wchart svg{width:100%;height:100%;overflow:visible;}
+.ck-wchart .wl{fill:none;stroke:var(--accent);stroke-width:1.6;opacity:.55;
+  stroke-linejoin:round;stroke-linecap:round;vector-effect:non-scaling-stroke;}
+.ck-wchart .wp{fill:var(--accent);opacity:.45;}
+.ck-wchart .wp.now{opacity:1;}
+.ck-wmax,.ck-wmin{position:absolute;right:0;font-size:10.5px;font-weight:700;color:var(--muted);opacity:.7;
+  font-variant-numeric:tabular-nums;background:var(--card2);padding:0 2px;}
+.ck-wmax{top:-2px;}
+.ck-wmin{bottom:16px;}
+.ck-wfoot{display:flex;justify-content:space-between;gap:8px;font-size:10.5px;color:var(--muted);opacity:.75;margin-top:2px;}
 </style>
 </head>
 <body>
@@ -1166,7 +1178,7 @@ function pushSaveRemote(retry){
       return false;
     });
 }
-const APP_VERSION = 'v76';
+const APP_VERSION = 'v77';
 const STORAGE_KEY = 'habit-tracker-data-v1';
 const WD = ['Po','Út','St','Čt','Pá','So','Ne'];
 const EMOJI_PICKS = ['✅','💪','🏃','🚶','🧘','😴','📖','✍️','📓','💧','🥗','🍎','🚫','💊','🦉','🎓','💼','🎸','🧹','🧠'];
@@ -3770,6 +3782,52 @@ function ckNoteRow(wk, t, isFut){
   return '<div class="ck-q"><div class="ck-qlbl">Poznámka</div>'
     + '<textarea class="ck-in ck-area" data-ck="' + p + '" data-w="' + wk + '" rows="2" maxlength="300" placeholder="co se povedlo, co drhlo">' + esc(val) + '</textarea></div>';
 }
+function ckWeightHistory(upToWk, weeks){
+  const out = [];
+  const offs = { st: 2, pa: 4, ne: 6 };
+  let mon = parseKey(upToWk);
+  for (let i = 0; i < (weeks || 8); i++){
+    const w = dateKey(mon);
+    for (const k of ['st', 'pa', 'ne']){
+      const v = parseFloat(String(ckGet(w, 'weight.' + k)).replace(',', '.'));
+      if (isFinite(v) && v > 0) out.push({ d: addDays(mon, offs[k]), v });
+    }
+    mon = addDays(mon, -7);
+  }
+  out.sort((a, b) => a.d - b.d);
+  return out;
+}
+function ckWeightHistHtml(wk, t){
+  if (!(t.fields || []).some(f => /^weight\./.test(f.p || ''))) return '';
+  const h = ckWeightHistory(wk, 8);
+  if (h.length < 2) return '';
+  const last = h[h.length - 1];
+  let out = '<button class="ck-hist-b' + (ckHistOpen ? ' open' : '') + '" data-action="ckHist">'
+    + '<span class="ck-hist-l">Poslední</span>'
+    + '<span class="ck-hist-v">' + fmtNum(last.v) + ' kg</span>'
+    + '<span class="ck-hist-a">' + (ckHistOpen ? '\u2303' : '\u2304') + '</span></button>';
+  if (ckHistOpen){
+    const vs = h.map(x => x.v);
+    const mn = Math.min.apply(null, vs), mx = Math.max.apply(null, vs);
+    const pad = (mx - mn) < 1 ? 0.6 : (mx - mn) * 0.18;
+    const lo = mn - pad, hi = mx + pad;
+    const W = 300, H = 96, L = 8, R = 8, T0 = 10, B = 18;
+    const x = i => L + (W - L - R) * (h.length === 1 ? 0.5 : i / (h.length - 1));
+    const y = v => T0 + (H - T0 - B) * (1 - (v - lo) / (hi - lo));
+    const pts = h.map((p, i) => x(i).toFixed(1) + ',' + y(p.v).toFixed(1)).join(' ');
+    const dots = h.map((p, i) => '<circle cx="' + x(i).toFixed(1) + '" cy="' + y(p.v).toFixed(1) + '" r="'
+      + (i === h.length - 1 ? 4 : 2.6) + '" class="' + (i === h.length - 1 ? 'wp now' : 'wp') + '"/>').join('');
+    const fmtD = d => d.getDate() + '.' + (d.getMonth() + 1) + '.';
+    out += '<div class="ck-hist"><div class="ck-wchart">'
+      + '<svg viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="none" aria-hidden="true">'
+      + '<polyline class="wl" points="' + pts + '"/>' + dots + '</svg>'
+      + '<span class="ck-wmax">' + fmtNum(mx) + '</span><span class="ck-wmin">' + fmtNum(mn) + '</span>'
+      + '</div><div class="ck-wfoot"><span>' + fmtD(h[0].d) + '</span>'
+      + '<span>' + h.length + ' ' + plural(h.length, 'vážení', 'vážení', 'vážení') + '</span>'
+      + '<span>' + fmtD(last.d) + '</span></div></div>';
+  }
+  return '<div class="ck-hist-w">' + out + '</div>';
+}
 function ckExHistHtml(wk, t){
   const ex = ckExKeyOf(t);
   if (!ex) return '';
@@ -3888,7 +3946,7 @@ function renderCheckin(){
     + '<span class="ck-step-tt"><strong>' + esc(t.title) + '</strong>'
     + '<span>' + (ckStep + 1) + '. otázka ze ' + T.length + ' · ' + (t.sub ? esc(t.sub) : 'týden ' + range) + '</span></span></div>'
     + (isFut ? '<div class="ck-fut">Náhled — zapisovat půjde v ten den</div>' : '')
-    + ckExHistHtml(wk, t)
+    + ckExHistHtml(wk, t) + ckWeightHistHtml(wk, t)
     + (t.pre ? '<div class="ck-pre"><span class="ck-pre-l">Zadání</span>' + esc(t.pre).replace(/\n/g, '<br>')
         + (!isFut && ckPlanFill(t).length ? '<button class="linklike ck-fill" data-action="ckFill">Vyplnit podle zadání</button>' : '')
         + '</div>' : '')
