@@ -2031,7 +2031,8 @@
     "sq": {
      "w": "85",
      "s1": "6",
-     "note": "tezsi, ale asi proto ze jsou to je. dva dny od minule"
+     "note": "tezsi, ale asi proto ze jsou to je. dva dny od minule",
+     "rir": "1,5"
     }
    }
   }
@@ -2040,7 +2041,7 @@
   "note": "hv b",
   "items": []
  },
- "updatedAt": 1789994683479,
+ "updatedAt": 1789994695681,
  "mods": {
   "entries": {
    "2026-09-16": 1789634996849,
@@ -2055,7 +2056,7 @@
   "checkins": {
    "2026-09-14": 1789888656441,
    "2026-08-31": 1789773654911,
-   "2026-09-21": 1789994683479
+   "2026-09-21": 1789994695681
   },
   "ck": {
    "2026-09-14|weight.st": 1789633985799,
@@ -2172,7 +2173,8 @@
    "2026-09-21|extras.la.warmup.done": 1789994656375,
    "2026-09-21|strength.sq.w": 1789994667953,
    "2026-09-21|strength.sq.s1": 1789994669305,
-   "2026-09-21|strength.sq.note": 1789994683479
+   "2026-09-21|strength.sq.note": 1789994683479,
+   "2026-09-21|strength.sq.rir": 1789994695681
   },
   "notes": {},
   "habits": 1789607353601,
