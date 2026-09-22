@@ -133,7 +133,7 @@
    "type": "check",
    "goal": null,
    "unit": "",
-   "archived": false,
+   "archived": true,
    "order": 14,
    "createdAt": 1784006508999,
    "freq": {
@@ -2075,7 +2075,7 @@
   "note": "hv b",
   "items": []
  },
- "updatedAt": 1790054902156,
+ "updatedAt": 1790072703294,
  "mods": {
   "entries": {
    "2026-09-16": 1789634996849,
@@ -2224,7 +2224,7 @@
    "2026-09-21|extras.pelvis0.bridge.done": 1789996503024
   },
   "notes": {},
-  "habits": 1789607353601,
+  "habits": 1790072703294,
   "shopping": 1789754151160
  },
  "hideDone": false,
