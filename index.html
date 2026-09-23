@@ -1083,6 +1083,9 @@ input,textarea,select,.meal-f,.ck-in{border-radius:13px;}
 .vol-exn{flex:0 0 34%;}
 .vol-col.part .vol-bar{opacity:.35;}
 .vol-note.warn{opacity:.9;background:rgba(128,128,128,.1);border-radius:10px;padding:9px 11px;margin-top:14px;}
+
+.cal-back{display:inline-block;font-size:15px;font-weight:600;margin:4px 0 2px;}
+.view-meta{font-size:15px;font-weight:700;color:var(--accent);}
 </style>
 </head>
 <body>
@@ -1092,6 +1095,7 @@ input,textarea,select,.meal-f,.ck-in{border-radius:13px;}
   <main>
     <section id="view-day"></section>
     <section id="view-cal" hidden></section>
+    <section id="view-train" hidden></section>
     <section id="view-meals" hidden></section>
     <section id="view-checkin" hidden></section>
     <section id="view-stats" hidden></section>
@@ -1100,7 +1104,7 @@ input,textarea,select,.meal-f,.ck-in{border-radius:13px;}
 </div>
 <nav class="tabbar">
   <div class="tabbar-inner">
-    <button class="tab-btn" data-action="tab" data-tab="cal"><span class="tab-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="3.5"/><path d="M8 3v4M16 3v4M3.5 10h17"/></svg></span><span class="tab-lbl">Kalendář</span></button>
+    <button class="tab-btn" data-action="tab" data-tab="train"><span class="tab-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 8v8M17.5 8v8M3.5 10v4M20.5 10v4M6.5 12h11"/></svg></span><span class="tab-lbl">Trénink</span></button>
     <button class="tab-btn" data-action="tab" data-tab="meals"><span class="tab-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="19.5" r="1.4"/><circle cx="17" cy="19.5" r="1.4"/><path d="M3 4h2.2l2.4 11.2h10.1L20 7.5H6.1"/></svg></span><span class="tab-lbl">Nákup</span></button>
     <button class="tab-btn on" data-action="tab" data-tab="day"><span class="tab-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="8.2"/><circle cx="12" cy="12" r="3.2"/></svg></span><span class="tab-lbl">Dnes</span></button>
     <button class="tab-btn" data-action="tab" data-tab="checkin"><span class="tab-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.6"/><path d="M8.4 12.3l2.6 2.6 4.6-5.2"/></svg></span><span class="tab-lbl">Check-in</span></button>
@@ -1222,7 +1226,7 @@ function pushSaveRemote(retry){
       return false;
     });
 }
-const APP_VERSION = 'v83';
+const APP_VERSION = 'v84';
 const STORAGE_KEY = 'habit-tracker-data-v1';
 const WD = ['Po','Út','St','Čt','Pá','So','Ne'];
 const EMOJI_PICKS = ['✅','💪','🏃','🚶','🧘','😴','📖','✍️','📓','💧','🥗','🍎','🚫','💊','🦉','🎓','💼','🎸','🧹','🧠'];
@@ -3186,6 +3190,7 @@ function habitRate(habit){
 
 /* ============ Render: Dnes ============ */
 const UI_SVG = {
+  'cal': '<rect x="3" y="5" width="18" height="16" rx="3.5"/><path d="M8 3v4M16 3v4M3.5 10h17"/>',
   flame: '<path d="M12 21c3.5 0 6-2.3 6-5.6 0-4.2-4.2-5.8-3.4-10.4-2.6.9-4.4 3.2-4.4 5.6 0 1-.6 1.7-1.3 1.7-.8 0-1.3-.7-1.2-1.8C6.6 12 6 13.6 6 15.4 6 18.7 8.5 21 12 21Z"/>',
   trophy: '<path d="M8 4h8v5.5a4 4 0 0 1-8 0Z"/><path d="M8 5.5H5.5v1.8A3.2 3.2 0 0 0 8.7 10.5M16 5.5h2.5v1.8a3.2 3.2 0 0 1-3.2 3.2"/><path d="M12 13.5V17M9 20h6"/>',
   target2: '<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4.4"/><circle cx="12" cy="12" r="1.2"/>',
@@ -3427,6 +3432,7 @@ function editRow(h, idx, count){
 }
 function dayTools(){
   return '<span class="day-tools">'
+    + '<button class="mini-btn" data-action="tab" data-tab="cal" aria-label="Kalendář" title="Kalendář">' + uiIco('cal', 'ui-ico sm2') + '</button>'
     + '<button class="mini-btn" data-action="vacAll" aria-label="Hromadné prázdniny" title="Hromadné prázdniny">' + uiIco('beach', 'ui-ico sm2') + '</button>'
     + '<button class="mini-btn' + (editMode ? ' on' : '') + '" data-action="toggleEdit" aria-label="' + (editMode ? 'Hotovo' : 'Upravit') + '" title="' + (editMode ? 'Hotovo' : 'Upravit') + '">' + uiIco(editMode ? 'check2' : 'pencil', 'ui-ico sm2') + '</button>'
     + '<button class="mini-btn" data-action="addHabit" aria-label="Přidat návyk" title="Přidat návyk">' + uiIco('plus', 'ui-ico sm2') + '</button>'
@@ -3642,12 +3648,22 @@ function monthHtml(){
     + '<p class="hint">Barva dne odpovídá podílu splněných návyků. Klepnutím den otevřete.</p></div>';
   return html;
 }
+function renderTrain(){
+  const mon0 = startOfWeek(today());
+  const no = ckWeekNo(dateKey(mon0));
+  let html = '<div class="view-head"><span class="view-title">Trénink</span>'
+    + (no ? '<span class="view-meta">týden č. ' + no + '</span>' : '') + '</div>';
+  const vol = volCardHtml();
+  html += vol || '<div class="card"><p class="muted" style="margin:4px 0">Zatím tu nejsou žádné zápisy síly. Objeví se, jakmile vyplníš cviky v check-inu.</p></div>';
+  $('#view-train').innerHTML = html;
+}
 function renderCal(){
   const seg = '<div class="cal-seg"><div class="seg">'
     + '<button class="seg-btn' + (calView === 'week' ? ' on' : '') + '" data-action="calWeek">Týden</button>'
     + '<button class="seg-btn' + (calView === 'month' ? ' on' : '') + '" data-action="calMonth">Měsíc</button>'
     + '</div></div>';
-  const head = '<div class="view-head"><span class="view-title">Kalendář</span></div>';
+  const head = '<button class="linklike cal-back" data-action="tab" data-tab="day">‹ Dnes</button>'
+    + '<div class="view-head"><span class="view-title">Kalendář</span></div>';
   $('#view-cal').innerHTML = head + seg + (calView === 'week' ? weekHtml() : monthHtml());
 }
 
@@ -4207,7 +4223,6 @@ function renderStats(){
     + '<span class="rem-d">' + (r.days && r.days.length === 7 ? 'každý den' : (r.days || []).map(d => WDS2[d]).join(' · ')) + '</span></span>'
     + '<button class="icon-btn rem-del" data-action="remDel" data-id="' + esc(r.id) + '" aria-label="Smazat">✕</button>'
     + '</div>').join('');
-  html += volCardHtml();
   html += '<div class="card"><div class="sec-title" style="margin-top:0">Oznámení</div>'
     + (pon
       ? '<p class="muted" style="margin:6px 0 10px">' + (po.err
@@ -5303,10 +5318,13 @@ function render(){
   applyTheme();
   const td = document.querySelector('.tab-day');
   if (td) td.textContent = WD[weekdayIdx(today())];
-  ['day', 'cal', 'meals', 'stats', 'plan', 'checkin'].forEach(v => { $('#view-' + v).hidden = v !== tab; });
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('on', b.dataset.tab === tab));
+  ['day', 'cal', 'meals', 'stats', 'plan', 'checkin', 'train'].forEach(v => { $('#view-' + v).hidden = v !== tab; });
+  // kalendář je podstránka Dnes → v liště svítí Dnes
+  const barTab = tab === 'cal' ? 'day' : tab;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('on', b.dataset.tab === barTab));
   if (tab === 'day') renderDay();
   else if (tab === 'cal') renderCal();
+  else if (tab === 'train') renderTrain();
   else if (tab === 'meals') renderMeals();
   else if (tab === 'plan') renderPlan();
   else if (tab === 'checkin') renderCheckin();
