@@ -1216,7 +1216,7 @@ function pushSaveRemote(retry){
       return false;
     });
 }
-const APP_VERSION = 'v81';
+const APP_VERSION = 'v82';
 const STORAGE_KEY = 'habit-tracker-data-v1';
 const WD = ['Po','Út','St','Čt','Pá','So','Ne'];
 const EMOJI_PICKS = ['✅','💪','🏃','🚶','🧘','😴','📖','✍️','📓','💧','🥗','🍎','🚫','💊','🦉','🎓','💼','🎸','🧹','🧠'];
@@ -1766,9 +1766,15 @@ function normalizeData(obj){
       if (st && typeof st === 'object'){
         for (const ex of Object.keys(st)){
           const v = st[ex];
-          if (!v || typeof v !== 'object' || typeof v.r !== 'string' || !v.r.trim()) continue;
+          if (!v || typeof v !== 'object') continue;
+          // „8,8,8" omylem v první kolonce → rozdělit
+          if (typeof v.s1 === 'string' && /^\d+(\s*,\s*\d+)+$/.test(v.s1.trim()) && !v.s2){
+            v.s1.split(',').map(x => x.trim()).filter(Boolean).slice(0, 12).forEach((p, i) => { v['s' + (i + 1)] = p; });
+            continue;
+          }
+          if (typeof v.r !== 'string' || !v.r.trim()) continue;
           if (v.s1) continue;
-          const parts = v.r.split('/').map(x => x.trim()).filter(Boolean).slice(0, 12);
+          const parts = v.r.split(/[\/,]/).map(x => x.trim()).filter(Boolean).slice(0, 12);
           parts.forEach((p, i) => { v['s' + (i + 1)] = p; });
         }
       }
@@ -3878,11 +3884,13 @@ function volParseWeights(w){
 function volWeek(wk){
   // objem jednoho týdne: tonáž, série, RIR, rozdělení podle tréninku a cviků
   const plan = ckPlanFor(parseKey(wk));
-  const blockOf = {}, nameOf = {};
+  const blockOf = {}, nameOf = {}, noLoad = { box: 1, broad: 1 };
   for (const t of (plan.topics || [])){
     const f = (t.fields || []).find(x => /^strength\./.test(x.p || ''));
     if (!f) continue;
     const ex = /^strength\.([a-z0-9_]+)/i.exec(f.p)[1];
+    const wf = (t.fields || []).find(x => x.p === 'strength.' + ex + '.w');
+    if (wf && /cm|výšk|vzdál/i.test(wf.q || '')) noLoad[ex] = 1;   // skoky: v poli není váha
     const m = /(upper|lower)\s*([ab])/i.exec((t.sub || '') + ' ' + (t.title || ''));
     blockOf[ex] = m ? (m[1][0].toUpperCase() + m[1].slice(1).toLowerCase() + ' ' + m[2].toUpperCase()) : 'Ostatní';
     nameOf[ex] = t.title || ex;
@@ -3893,10 +3901,11 @@ function volWeek(wk){
   for (const ex of Object.keys(st)){
     const v = st[ex] || {};
     const reps = [];
-    for (let k = 1; k <= 12; k++){ const r = parseFloat(String(v['s' + k] || '').replace(',', '.')); if (isFinite(r) && r > 0) reps.push(r); }
-    if (!reps.length && v.r) String(v.r).split('/').forEach(x => { const r = parseFloat(x); if (isFinite(r) && r > 0) reps.push(r); });
+    const pushReps = txt => String(txt || '').split(/[\/,;\s]+/).forEach(x => { const r = parseFloat(x); if (isFinite(r) && r > 0) reps.push(r); });
+    for (let k = 1; k <= 12; k++) pushReps(v['s' + k]);
+    if (!reps.length) pushReps(v.r);
     if (!reps.length) continue;
-    const ws = volParseWeights(v.w);
+    const ws = noLoad[ex] ? [] : volParseWeights(v.w);
     let t = 0;
     reps.forEach((r, i) => { const wv = ws.length ? (ws[i] !== undefined ? ws[i] : ws[ws.length - 1]) : 0; t += wv * r; });
     tons += t; sets += reps.length;
