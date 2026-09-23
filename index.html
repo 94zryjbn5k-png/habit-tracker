@@ -1086,6 +1086,17 @@ input,textarea,select,.meal-f,.ck-in{border-radius:13px;}
 
 .cal-back{display:inline-block;font-size:15px;font-weight:600;margin:4px 0 2px;}
 .view-meta{font-size:15px;font-weight:700;color:var(--accent);}
+
+.vol-mus{width:100%;background:transparent;color:var(--text);text-align:left;padding:3px 0;}
+.vol-chev{flex:0 0 auto;color:var(--muted);font-size:12px;width:14px;text-align:center;}
+.vol-mus.open .vol-exn{color:var(--accent);}
+.vol-det{background:var(--card2);border-radius:12px;padding:4px 12px;margin:-2px 0 4px;}
+.vol-it{padding:9px 0;border-bottom:1px solid var(--line);}
+.vol-it:last-child{border-bottom:0;}
+.vol-it-h{display:flex;justify-content:space-between;align-items:baseline;gap:10px;}
+.vol-it-n{font-size:14px;font-weight:700;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.vol-it-v{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;flex:0 0 auto;}
+.vol-it-l{font-size:12.5px;color:var(--muted);margin-top:3px;font-variant-numeric:tabular-nums;}
 </style>
 </head>
 <body>
@@ -1226,7 +1237,7 @@ function pushSaveRemote(retry){
       return false;
     });
 }
-const APP_VERSION = 'v84';
+const APP_VERSION = 'v85';
 const STORAGE_KEY = 'habit-tracker-data-v1';
 const WD = ['Po','Út','St','Čt','Pá','So','Ne'];
 const EMOJI_PICKS = ['✅','💪','🏃','🚶','🧘','😴','📖','✍️','📓','💧','🥗','🍎','🚫','💊','🦉','🎓','💼','🎸','🧹','🧠'];
@@ -3976,6 +3987,7 @@ function muscleOf(ex, name){
   return MUSCLE_KEY[ex] || 'Ostatní';
 }
 let volSel = null;
+let volMusOpen = null;
 const VOL_BLOCKS = ['Upper A', 'Lower A', 'Upper B', 'Lower B', 'Ostatní'];
 function fmtTons(t){ return t >= 10000 ? (t / 1000).toFixed(1).replace('.', ',') + ' t' : Math.round(t).toLocaleString('cs-CZ') + ' kg'; }
 function volCardHtml(){
@@ -4009,11 +4021,24 @@ function volCardHtml(){
   });
   const mlist = Object.keys(mus).map(k => ({ k, sets: mus[k].sets, tons: mus[k].tons })).sort((a, b) => b.sets - a.sets);
   const mmax = mlist.length ? mlist[0].sets : 1;
-  const top = mlist.map(m =>
-    '<div class="vol-ex"><span class="vol-exn">' + esc(m.k) + '</span>'
-    + '<span class="vol-exb"><i style="width:' + (100 * m.sets / mmax).toFixed(0) + '%"></i></span>'
-    + '<span class="vol-exv"><b>' + m.sets + '</b> ' + plural(m.sets, 'série', 'série', 'sérií')
-    + (m.tons ? ' · ' + fmtTons(m.tons) : '') + '</span></div>').join('');
+  const top = mlist.map(m => {
+    const open = volMusOpen === m.k;
+    let row = '<button class="vol-ex vol-mus' + (open ? ' open' : '') + '" data-action="volMus" data-m="' + esc(m.k) + '">'
+      + '<span class="vol-exn">' + esc(m.k) + '</span>'
+      + '<span class="vol-exb"><i style="width:' + (100 * m.sets / mmax).toFixed(0) + '%"></i></span>'
+      + '<span class="vol-exv"><b>' + m.sets + '</b> ' + plural(m.sets, 'série', 'série', 'sérií')
+      + (m.tons ? ' · ' + fmtTons(m.tons) : '') + '</span>'
+      + '<span class="vol-chev">' + (open ? '\u2303' : '\u2304') + '</span></button>';
+    if (open){
+      const items = sel.exs.filter(e => muscleOf(e.ex, e.name) === m.k).map(e =>
+        '<div class="vol-it"><div class="vol-it-h"><span class="vol-it-n">' + esc(e.name) + '</span>'
+        + '<span class="vol-it-v">' + e.sets + ' ' + plural(e.sets, 'série', 'série', 'sérií')
+        + (e.tons ? ' · ' + fmtTons(e.tons) : '') + '</span></div>'
+        + '<div class="vol-it-l">' + esc(ckStrengthLine(sel.wk, e.ex)) + '</div></div>').join('');
+      row += '<div class="vol-det">' + items + '</div>';
+    }
+    return row;
+  }).join('');
   return '<div class="card vol-card"><div class="sec-title" style="margin-top:0">Objem tréninku</div>'
     + '<div class="vol-head"><div><span class="vol-big">' + fmtTons(sel.tons) + '</span>'
     + '<span class="vol-sub">' + (sel.no ? 'týden č. ' + sel.no : '') + (sel.wk === dateKey(mon0) ? ' · probíhá' : '') + '</span></div>'
@@ -4757,6 +4782,7 @@ document.addEventListener('click', ev => {
     }
     case 'ckHist': ckHistOpen = !ckHistOpen; renderCheckin(); break;
     case 'volSel': volSel = el.dataset.key; render(); break;
+    case 'volMus': volMusOpen = volMusOpen === el.dataset.m ? null : el.dataset.m; render(); break;
     case 'ckGoStep': {
       const i = Number(el.dataset.i);
       if (isFinite(i)){ ckStep = i; ckNoteOpen = false; renderCheckin(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
