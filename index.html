@@ -1097,6 +1097,16 @@ input,textarea,select,.meal-f,.ck-in{border-radius:13px;}
 .vol-it-n{font-size:14px;font-weight:700;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .vol-it-v{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;flex:0 0 auto;}
 .vol-it-l{font-size:12.5px;color:var(--muted);margin-top:3px;font-variant-numeric:tabular-nums;}
+
+.coll-h{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;
+  background:transparent;color:inherit;padding:2px 0;text-align:left;min-height:32px;}
+.coll-h .sec-title{flex:1;}
+.coll-c{color:var(--muted);font-size:13px;flex:0 0 auto;}
+.coll:not(.closed) > .coll-h{margin-bottom:10px;}
+.coll.closed > *:not(.coll-h){display:none !important;}
+.coll.closed{padding-top:12px;padding-bottom:12px;}
+.table-card.coll > .coll-h{padding:0 2px;}
+.coll-hint{margin:12px 2px 0;}
 </style>
 </head>
 <body>
@@ -1237,7 +1247,7 @@ function pushSaveRemote(retry){
       return false;
     });
 }
-const APP_VERSION = 'v85';
+const APP_VERSION = 'v86';
 const STORAGE_KEY = 'habit-tracker-data-v1';
 const WD = ['Po','Út','St','Čt','Pá','So','Ne'];
 const EMOJI_PICKS = ['✅','💪','🏃','🚶','🧘','😴','📖','✍️','📓','💧','🥗','🍎','🚫','💊','🦉','🎓','💼','🎸','🧹','🧠'];
@@ -4192,6 +4202,21 @@ function renderCheckin(){
 
   $('#view-checkin').innerHTML = html;
 }
+const COLL_DEFAULT = { rates: false, miles: true, theme: false, notif: true, sync: true };
+function collState(){
+  try { return JSON.parse(localStorage.getItem('ht-collapse')) || {}; } catch (e) { return {}; }
+}
+function collOpen(id){
+  const st = collState();
+  return st[id] !== undefined ? !!st[id] : COLL_DEFAULT[id] !== false;
+}
+function collHead(id, title, extraCls){
+  const open = collOpen(id);
+  return '<div class="card coll' + (extraCls ? ' ' + extraCls : '') + (open ? '' : ' closed') + '">'
+    + '<button class="coll-h" data-action="stToggle" data-id="' + id + '" aria-expanded="' + open + '">'
+    + '<span class="sec-title" style="margin:0">' + esc(title) + '</span>'
+    + '<span class="coll-c">' + (open ? '\u2303' : '\u2304') + '</span></button>';
+}
 function renderStats(){
   const hs = activeHabits();
   const arch = archivedHabits();
@@ -4217,11 +4242,14 @@ function renderStats(){
         + '<td>' + currentStreak(h) + '</td><td class="dimnum">' + longestStreak(h) + '</td>'
         + '<td><span class="rate"><span class="rate-bar"><i style="width:' + habitRate(h) + '%"></i></span><span class="rate-n">' + habitRate(h) + ' %</span></span></td></tr>';
     };
-    html += '<div class="card table-card"><table class="stat-table"><thead><tr><th>Návyk</th><th>Teď</th><th>Max</th><th>Úspěšnost</th></tr></thead><tbody>'
+    html += collHead('rates', 'Úspěšnost návyků', 'table-card')
+      + '<table class="stat-table"><thead><tr><th>Návyk</th><th>Teď</th><th>Max</th><th>Úspěšnost</th></tr></thead><tbody>'
       + hs.map(h => row(h, false)).join('') + arch.map(h => row(h, true)).join('')
-      + '</tbody></table></div>'
-      + '<div class="sec-title">Milníky</div>'
-      + '<div class="card"><div class="mile-grid">'
+      + '</tbody></table>'
+      + '<p class="hint coll-hint">Streak i úspěšnost respektují nastavenou frekvenci — u „vybraných dnů" se počítají jen naplánované dny, u týdenních/měsíčních celé týdny či měsíce (úspěšnost z posledních 4 týdnů, resp. 3 měsíců).</p>'
+      + '</div>'
+      + collHead('miles', 'Milníky')
+      + '<div class="mile-grid">'
       + MILESTONES.map(m => {
           const got = data.milestones[m.id];
           return '<div class="mile' + (got ? ' got' : '') + '" title="' + (got ? 'Získáno ' + fmtKeyShort(got) : 'Zatím nezískáno') + '">'
@@ -4229,12 +4257,11 @@ function renderStats(){
             + (got ? '<span class="mile-d">' + fmtKeyShort(got) + '</span>' : '<span class="mile-d">—</span>')
             + '</div>';
         }).join('')
-      + '</div></div>'
-      + '<p class="hint">Streak i úspěšnost respektují nastavenou frekvenci — u „vybraných dnů“ se počítají jen naplánované dny, u týdenních/měsíčních celé týdny či měsíce (úspěšnost z posledních 4 týdnů, resp. 3 měsíců).</p>';
+      + '</div></div>';
   }
 
-  html += '<div class="sec-title">Vzhled</div>'
-    + '<div class="card"><div class="row-btns"><button class="btn" data-action="openTheme">' + uiIco('palette', 'ui-ico sm') + ' Přizpůsobit vzhled</button></div>'
+  html += collHead('theme', 'Vzhled')
+    + '<div class="row-btns"><button class="btn" data-action="openTheme">' + uiIco('palette', 'ui-ico sm') + ' Přizpůsobit vzhled</button></div>'
     + '<p class="muted" style="margin:10px 0 0;font-size:13.5px">Pozadí, barva karet i textu. Změny se přenáší v záloze.</p></div>';
 
   const po = pushLocal();
@@ -4248,7 +4275,7 @@ function renderStats(){
     + '<span class="rem-d">' + (r.days && r.days.length === 7 ? 'každý den' : (r.days || []).map(d => WDS2[d]).join(' · ')) + '</span></span>'
     + '<button class="icon-btn rem-del" data-action="remDel" data-id="' + esc(r.id) + '" aria-label="Smazat">✕</button>'
     + '</div>').join('');
-  html += '<div class="card"><div class="sec-title" style="margin-top:0">Oznámení</div>'
+  html += collHead('notif', 'Oznámení')
     + (pon
       ? '<p class="muted" style="margin:6px 0 10px">' + (po.err
           ? '⚠️ Nastavení se neuložilo do cloudu (' + esc(String(po.err)) + ') — ťukni na Odeslat nastavení.'
@@ -4268,7 +4295,7 @@ function renderStats(){
   else if (sm.pending) syncStatus = 'Změny čekají na nahrání…';
   else if (sm.lastAt) syncStatus = 'Zálohováno ' + new Date(sm.lastAt).toLocaleString('cs-CZ', { day: 'numeric', month: 'numeric', hour: '2-digit', minute: '2-digit' });
   else syncStatus = '—';
-  html += '<div class="card"><div class="sec-title" style="margin-top:0">Synchronizace pro Clauda</div>'
+  html += collHead('sync', 'Synchronizace pro Clauda')
     + (syncConfigured()
       ? '<p class="muted" style="margin:6px 0 12px">' + syncStatus + ' Změny se nahrají do pár vteřin a appka si každé 2–3 s sama stahuje novinky z druhého zařízení.</p>'
         + '<div class="row-btns"><button class="btn" data-action="syncPullNow">' + uiIco('down', 'ui-ico sm') + ' Načíst z cloudu</button>'
@@ -4782,6 +4809,13 @@ document.addEventListener('click', ev => {
     }
     case 'ckHist': ckHistOpen = !ckHistOpen; renderCheckin(); break;
     case 'volSel': volSel = el.dataset.key; render(); break;
+    case 'stToggle': {
+      const st = collState();
+      st[el.dataset.id] = !collOpen(el.dataset.id);
+      try { localStorage.setItem('ht-collapse', JSON.stringify(st)); } catch (e) {}
+      render();
+      break;
+    }
     case 'volMus': volMusOpen = volMusOpen === el.dataset.m ? null : el.dataset.m; render(); break;
     case 'ckGoStep': {
       const i = Number(el.dataset.i);
