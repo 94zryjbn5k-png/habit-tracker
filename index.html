@@ -1077,6 +1077,12 @@ input,textarea,select,.meal-f,.ck-in{border-radius:13px;}
 .vol-exb i{display:block;height:100%;background:var(--accent);border-radius:4px;}
 .vol-exv{flex:0 0 auto;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;min-width:58px;text-align:right;}
 .vol-note{font-size:11px;color:var(--muted);opacity:.7;margin:12px 0 0;line-height:1.4;}
+
+.vol-mh{font-size:10.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:16px 0 -4px;}
+.vol-exv b{color:var(--text);font-weight:800;}
+.vol-exn{flex:0 0 34%;}
+.vol-col.part .vol-bar{opacity:.35;}
+.vol-note.warn{opacity:.9;background:rgba(128,128,128,.1);border-radius:10px;padding:9px 11px;margin-top:14px;}
 </style>
 </head>
 <body>
@@ -1216,7 +1222,7 @@ function pushSaveRemote(retry){
       return false;
     });
 }
-const APP_VERSION = 'v82';
+const APP_VERSION = 'v83';
 const STORAGE_KEY = 'habit-tracker-data-v1';
 const WD = ['Po','Út','St','Čt','Pá','So','Ne'];
 const EMOJI_PICKS = ['✅','💪','🏃','🚶','🧘','😴','📖','✍️','📓','💧','🥗','🍎','🚫','💊','🦉','🎓','💼','🎸','🧹','🧠'];
@@ -2537,13 +2543,24 @@ function ckExKeyOf(t){
   }
   return null;
 }
+function ckExTitleIn(wk, ex){
+  const plan = ckPlanFor(parseKey(wk));
+  for (const t of (plan.topics || [])){
+    if ((t.fields || []).some(f => (f.p || '').indexOf('strength.' + ex + '.') === 0 || f.p === 'strength.' + ex)) return t.title || '';
+  }
+  return '';
+}
+function ckTitleNorm(t){ return String(t || '').toLowerCase().replace(/[^a-z0-9á-ž]+/gi, ' ').trim(); }
 function ckExHistory(ex, upToWk, n){
-  // posledních n týdnů, kde je u cviku zápis (bez aktuálního)
+  // stejný klíč i stejný název v plánu — jednonož ≠ obounož
   const out = [];
+  const myTitle = ckTitleNorm(ckExTitleIn(upToWk, ex));
   let mon = parseKey(upToWk);
   for (let i = 0; i < 40 && out.length < (n || 6); i++){
     mon = addDays(mon, -7);
     const wk = dateKey(mon);
+    const tt = ckTitleNorm(ckExTitleIn(wk, ex));
+    if (myTitle && tt && tt !== myTitle) continue;
     const line = ckStrengthLine(wk, ex);
     if (line !== '__'){
       const w = parseFloat(String(ckGet(wk, 'strength.' + ex + '.w')).replace(',', '.'));
@@ -3918,6 +3935,30 @@ function volWeek(wk){
   exs.sort((a, b) => b.tons - a.tons);
   return { wk, no: ckWeekNo(wk), tons, sets, rir: rirN ? rirSum / rirN : null, blocks, exs };
 }
+const MUSCLE_KEY = {
+  ia: 'Hrudník', flat: 'Hrudník', dips: 'Hrudník',
+  row: 'Záda', pull: 'Záda', sap: 'Záda',
+  ohp: 'Ramena', latA: 'Ramena', latB: 'Ramena', face: 'Ramena', rpd: 'Ramena', ypr: 'Ramena',
+  bic: 'Paže', tri: 'Paže', crunch: 'Břicho',
+  sq: 'Přední stehna', bulg: 'Přední stehna',
+  rdl: 'Zadní stehna a hýždě', rdlb: 'Zadní stehna a hýždě', nordic: 'Zadní stehna a hýždě',
+  calf: 'Lýtka', calfsit: 'Lýtka', box: 'Výbušnost', broad: 'Výbušnost'
+};
+const MUSCLE_RE = [
+  [/výpon|calf|lýtk/i, 'Lýtka'],
+  [/rdl|mrtv|deadlift|nordic|hamstring|trap bar|hip thrust|glute|hýžd/i, 'Zadní stehna a hýždě'],
+  [/dřep|squat|leg press|bulhar|výpad|lunge|step.?up/i, 'Přední stehna'],
+  [/bic|tric|curl|extenz/i, 'Paže'],
+  [/crunch|plank|core|břich|dead bug|pallof/i, 'Břicho'],
+  [/lateral|ohp|overhead|face pull|pec deck|rear|delt|prone y|rozpaž/i, 'Ramena'],
+  [/row|přítah|shyb|pulldown|stahov/i, 'Záda'],
+  [/press|bench|tlak|dip|klik|fly/i, 'Hrudník'],
+  [/jump|skok|výskok/i, 'Výbušnost']
+];
+function muscleOf(ex, name){
+  for (const r of MUSCLE_RE) if (r[0].test(name || '')) return r[1];
+  return MUSCLE_KEY[ex] || 'Ostatní';
+}
 let volSel = null;
 const VOL_BLOCKS = ['Upper A', 'Lower A', 'Upper B', 'Lower B', 'Ostatní'];
 function fmtTons(t){ return t >= 10000 ? (t / 1000).toFixed(1).replace('.', ',') + ' t' : Math.round(t).toLocaleString('cs-CZ') + ' kg'; }
@@ -3928,22 +3969,35 @@ function volCardHtml(){
   if (!weeks.some(w => w.tons > 0)) return '';
   const max = Math.max.apply(null, weeks.map(w => w.tons)) || 1;
   const sel = weeks.find(w => w.wk === volSel) || weeks[weeks.length - 1];
+  const exMax = Math.max.apply(null, weeks.map(w => w.exs.length)) || 1;
+  const curWk = dateKey(mon0);
+  weeks.forEach(w => { w.partial = w.wk !== curWk && w.exs.length > 0 && w.exs.length < exMax * 0.7; });
+  const partialNos = weeks.filter(w => w.partial && w.no).map(w => 't' + w.no);
   const bars = weeks.map(w => {
     const segs = VOL_BLOCKS.map((b, bi) => {
       const v = w.blocks[b] || 0;
       if (!v) return '';
       return '<i class="vb' + bi + '" style="height:' + (100 * v / max).toFixed(1) + '%"></i>';
     }).join('');
-    return '<button class="vol-col' + (w.wk === sel.wk ? ' sel' : '') + '" data-action="volSel" data-key="' + w.wk + '">'
+    return '<button class="vol-col' + (w.wk === sel.wk ? ' sel' : '') + (w.partial ? ' part' : '') + '" data-action="volSel" data-key="' + w.wk + '">'
       + '<span class="vol-bar">' + segs + '</span>'
-      + '<span class="vol-wk">' + (w.no ? 't' + w.no : '') + '</span></button>';
+      + '<span class="vol-wk">' + (w.no ? 't' + w.no : '') + (w.partial ? '*' : '') + '</span></button>';
   }).join('');
   const used = VOL_BLOCKS.filter(b => weeks.some(w => w.blocks[b]));
   const legend = used.map(b => '<span><i class="vb' + VOL_BLOCKS.indexOf(b) + '"></i>' + b + '</span>').join('');
-  const top = sel.exs.slice(0, 6).map(e =>
-    '<div class="vol-ex"><span class="vol-exn">' + esc(e.name) + '</span>'
-    + '<span class="vol-exb"><i style="width:' + (sel.tons ? (100 * e.tons / sel.tons).toFixed(0) : 0) + '%"></i></span>'
-    + '<span class="vol-exv">' + (e.tons ? fmtTons(e.tons) : e.sets + ' sérií') + '</span></div>').join('');
+  const mus = {};
+  sel.exs.forEach(e => {
+    const m = muscleOf(e.ex, e.name);
+    if (!mus[m]) mus[m] = { sets: 0, tons: 0 };
+    mus[m].sets += e.sets; mus[m].tons += e.tons;
+  });
+  const mlist = Object.keys(mus).map(k => ({ k, sets: mus[k].sets, tons: mus[k].tons })).sort((a, b) => b.sets - a.sets);
+  const mmax = mlist.length ? mlist[0].sets : 1;
+  const top = mlist.map(m =>
+    '<div class="vol-ex"><span class="vol-exn">' + esc(m.k) + '</span>'
+    + '<span class="vol-exb"><i style="width:' + (100 * m.sets / mmax).toFixed(0) + '%"></i></span>'
+    + '<span class="vol-exv"><b>' + m.sets + '</b> ' + plural(m.sets, 'série', 'série', 'sérií')
+    + (m.tons ? ' · ' + fmtTons(m.tons) : '') + '</span></div>').join('');
   return '<div class="card vol-card"><div class="sec-title" style="margin-top:0">Objem tréninku</div>'
     + '<div class="vol-head"><div><span class="vol-big">' + fmtTons(sel.tons) + '</span>'
     + '<span class="vol-sub">' + (sel.no ? 'týden č. ' + sel.no : '') + (sel.wk === dateKey(mon0) ? ' · probíhá' : '') + '</span></div>'
@@ -3951,8 +4005,10 @@ function volCardHtml(){
     + '<span><b>' + (sel.rir !== null ? sel.rir.toFixed(1).replace('.', ',') : '—') + '</b>ø RIR</span></div></div>'
     + '<div class="vol-chart">' + bars + '</div>'
     + '<div class="vol-leg">' + legend + '</div>'
-    + (top ? '<div class="vol-top">' + top + '</div>' : '')
-    + '<p class="vol-note">Váha × opakování přes všechny série. Cviky s vlastní váhou se do tonáže nepočítají.</p>'
+    + (top ? '<div class="vol-mh">Podle svalů</div><div class="vol-top">' + top + '</div>' : '')
+    + (partialNos.length ? '<p class="vol-note warn">* ' + partialNos.join(', ') + ' — v check-inu jsou zapsané jen hlavní cviky, '
+        + 'doplňky se tehdy nezapisovaly. Objem je proto nižší, než jsi doopravdy odcvičil; srovnávej až od dalších týdnů.</p>' : '')
+    + '<p class="vol-note">Tonáž = váha × opakování přes všechny série. Cviky s vlastní váhou a skoky se do tonáže nepočítají, jen do sérií.</p>'
     + '</div>';
 }
 function ckExHistHtml(wk, t){
