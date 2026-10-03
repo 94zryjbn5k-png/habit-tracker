@@ -1107,9 +1107,110 @@ input,textarea,select,.meal-f,.ck-in{border-radius:13px;}
 .coll.closed{padding-top:12px;padding-bottom:12px;}
 .table-card.coll > .coll-h{padding:0 2px;}
 .coll-hint{margin:12px 2px 0;}
+
+/* ===================== iOS vzhled ===================== */
+body.ios{
+  --ios-bg:#000; --ios-group:#1c1c1e; --ios-group2:#2c2c2e;
+  --ios-sep:rgba(84,84,88,.6); --ios-lbl2:rgba(235,235,245,.6); --ios-lbl3:rgba(235,235,245,.3);
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display","Helvetica Neue",Arial,sans-serif;
+  -webkit-font-smoothing:antialiased;letter-spacing:-.01em;
+}
+/* kompaktní titulek při scrollu */
+#ios-nav{
+  position:fixed;top:0;left:0;right:0;z-index:40;pointer-events:none;
+  padding:env(safe-area-inset-top,0) 0 0;height:calc(44px + env(safe-area-inset-top,0));
+  display:flex;align-items:flex-end;justify-content:center;
+  background:rgba(18,18,20,.72);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);
+  border-bottom:.5px solid var(--ios-sep);opacity:0;transform:translateY(-4px);transition:opacity .18s,transform .18s;
+}
+#ios-nav-t{font-size:17px;font-weight:600;color:var(--text);padding-bottom:11px;}
+body.ios.scrolled #ios-nav{opacity:1;transform:none;}
+
+/* Dnes: velký titulek vlevo, šipky vpravo */
+body.ios #view-day .daynav{display:flex;align-items:flex-end;gap:4px;margin:6px 0 14px;padding:0 4px;}
+body.ios #view-day .daynav-mid{order:-1;flex:1;text-align:left;min-width:0;}
+body.ios #view-day .daynav-date{font-size:34px;font-weight:700;letter-spacing:.01em;line-height:1.1;}
+body.ios #view-day .daynav-sub{font-size:15px;color:var(--ios-lbl2);margin-top:2px;font-weight:400;}
+body.ios #view-day .daynav .icon-btn{
+  background:transparent;box-shadow:none;color:var(--accent);font-size:26px;font-weight:400;
+  min-width:36px;min-height:36px;padding:0;
+}
+body.ios #view-day .daynav .icon-btn:disabled{color:var(--ios-lbl3);opacity:1;}
+
+/* karta postupu: seskupený blok s kroužkem */
+body.ios .progress-card{
+  background:var(--ios-group);border-radius:12px;padding:14px 16px 12px;margin:0 0 24px;
+  display:grid;grid-template-columns:54px 1fr;column-gap:14px;align-items:center;box-shadow:none;border:0;
+}
+body.ios .pc-ring{grid-row:1 / span 2;width:54px;height:54px;}
+body.ios .pc-ring svg{width:54px;height:54px;transform:rotate(-90deg);}
+body.ios .rg-bg{fill:none;stroke:color-mix(in srgb, var(--accent) 22%, transparent);stroke-width:7;}
+body.ios .rg-fg{fill:none;stroke:var(--accent);stroke-width:7;stroke-linecap:round;transition:stroke-dashoffset .5s;}
+body.ios .progress-card .progress-txt{display:flex;flex-direction:column;gap:1px;margin:0;}
+body.ios .progress-card .progress-txt strong{font-size:20px;font-weight:700;}
+body.ios .progress-card .progress-txt .muted{font-size:15px;color:var(--ios-lbl2);}
+body.ios .progress-card .segbar{display:none;}
+body.ios .progress-card .pc-tools{
+  grid-column:1 / -1;display:flex;align-items:center;justify-content:space-between;
+  border-top:.5px solid var(--ios-sep);margin:12px -16px 0;padding:10px 16px 0;
+}
+body.ios .progress-card .pc-tools .linklike{font-size:15px;font-weight:400;color:var(--accent);}
+body.ios .progress-card .mini-btn{background:transparent;box-shadow:none;color:var(--accent);min-width:34px;min-height:34px;}
+
+/* sekce jako seskupené seznamy */
+body.ios .day-track::before, body.ios .day-track .tl-dot, body.ios .day-track .habit-row::before{display:none !important;}
+body.ios .day-track{padding-left:0 !important;}
+body.ios #view-day .sec-title{
+  font-size:13px;font-weight:400;letter-spacing:0;text-transform:uppercase;color:var(--ios-lbl2);
+  margin:22px 0 7px 16px !important;padding:0;background:none;
+}
+body.ios #view-day .sec-title::after{display:none;}
+body.ios .habit-list{background:var(--ios-group);border-radius:12px;overflow:hidden;gap:0 !important;display:block;}
+body.ios .habit-list > .habit-row{
+  background:transparent !important;border-radius:0 !important;box-shadow:none !important;border:0 !important;
+  margin:0 !important;min-height:52px;padding:8px 14px 8px 16px;position:relative;gap:12px;
+}
+body.ios .habit-list > .habit-row + .habit-row::after{
+  content:'';position:absolute;top:0;left:58px;right:0;height:.5px;background:var(--ios-sep);
+}
+body.ios .habit-row .h-emoji{
+  width:30px;height:30px;border-radius:7px;background:var(--hc, var(--accent));color:#fff;
+  display:flex;align-items:center;justify-content:center;font-size:17px;
+}
+body.ios .habit-row .h-emoji svg{width:19px;height:19px;stroke:#fff;}
+body.ios .habit-row .h-name{font-size:17px;font-weight:400;letter-spacing:-.02em;}
+body.ios .habit-row .h-meta, body.ios .habit-row .h-goal{font-size:13px;color:var(--ios-lbl2);}
+body.ios .habit-row .h-streak{font-size:15px;color:var(--ios-lbl2);font-weight:400;}
+body.ios .habit-row .h-streak.zero{color:var(--ios-lbl3);}
+body.ios .habit-row .lnk{background:transparent;box-shadow:none;color:var(--ios-lbl3);min-width:26px;font-size:15px;}
+/* zaškrtávátko jako v Připomínkách */
+body.ios .habit-row .checkbox{
+  width:26px;height:26px;border-radius:50%;border:1.6px solid var(--ios-lbl3);background:transparent;
+  box-shadow:none;flex:0 0 26px;
+}
+body.ios .habit-row .checkbox svg{width:14px;height:14px;opacity:0;}
+body.ios .habit-row.done .checkbox{background:var(--hc, var(--accent));border-color:var(--hc, var(--accent));}
+body.ios .habit-row.done .checkbox svg{opacity:1;stroke:var(--hc-text, #fff);}
+body.ios .habit-row.done .h-name{color:var(--ios-lbl2);}
+/* číselné návyky: krokovač jako v iOS */
+body.ios .habit-row .stepper{background:var(--ios-group2);border-radius:9px;padding:0;gap:0;overflow:hidden;}
+body.ios .habit-row .step-btn{background:transparent;box-shadow:none;min-width:38px;min-height:32px;font-size:20px;color:var(--text);border-radius:0;}
+body.ios .habit-row .step-btn + .num-input, body.ios .habit-row .num-input + .step-btn{border-left:.5px solid var(--ios-sep);}
+body.ios .habit-row .num-input{background:transparent;border:0;min-width:34px;font-size:16px;text-align:center;}
+body.ios .habit-row .mini-bar{height:3px;margin-top:5px;background:var(--ios-group2);}
+
+/* spodní lišta jako v iOS */
+body.ios .tabbar{
+  background:rgba(22,22,24,.78);-webkit-backdrop-filter:saturate(180%) blur(22px);backdrop-filter:saturate(180%) blur(22px);
+  border-top:.5px solid var(--ios-sep);box-shadow:none;
+}
+body.ios .tab-btn{color:rgba(235,235,245,.45);}
+body.ios .tab-btn.on{color:var(--accent);}
+body.ios .tab-lbl{font-size:10px;font-weight:500;letter-spacing:.01em;}
+body.ios .tab-ico svg{width:26px;height:26px;stroke-width:1.6;}
 </style>
 </head>
-<body>
+<body class="ios">
 <div id="app">
   <header class="app-top"><span class="app-title">Habit Tracker</span></header>
   <div id="storage-banner" hidden>⚠️ Ukládání dat tu není dostupné — změny se po zavření neuloží. Otevřete tracker z jeho webové adresy v Safari, nejlépe z ikony přidané na plochu.</div>
@@ -1123,6 +1224,7 @@ input,textarea,select,.meal-f,.ck-in{border-radius:13px;}
     <section id="view-plan" hidden></section>
   </main>
 </div>
+<div id="ios-nav" aria-hidden="true"><span id="ios-nav-t"></span></div>
 <nav class="tabbar">
   <div class="tabbar-inner">
     <button class="tab-btn" data-action="tab" data-tab="train"><span class="tab-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 8v8M17.5 8v8M3.5 10v4M20.5 10v4M6.5 12h11"/></svg></span><span class="tab-lbl">Trénink</span></button>
@@ -1247,7 +1349,7 @@ function pushSaveRemote(retry){
       return false;
     });
 }
-const APP_VERSION = 'v86';
+const APP_VERSION = 'v87';
 const STORAGE_KEY = 'habit-tracker-data-v1';
 const WD = ['Po','Út','St','Čt','Pá','So','Ne'];
 const EMOJI_PICKS = ['✅','💪','🏃','🚶','🧘','😴','📖','✍️','📓','💧','🥗','🍎','🚫','💊','🦉','🎓','💼','🎸','🧹','🧠'];
@@ -3492,7 +3594,12 @@ function renderDay(){
   if (dayHs.length){
     let segs = '';
     for (let i = 0; i < st.total; i++) segs += '<span' + (i < st.done ? ' class="on"' : '') + '></span>';
-    html += '<div class="progress-card"><div class="progress-txt"><strong>' + st.done + ' z ' + st.total + ' hotovo</strong><span class="muted">' + st.pct + ' %</span></div>'
+    const ringC = 2 * Math.PI * 22;
+    html += '<div class="progress-card">'
+      + '<div class="pc-ring"><svg viewBox="0 0 54 54" aria-hidden="true"><circle class="rg-bg" cx="27" cy="27" r="22"/>'
+      + '<circle class="rg-fg" cx="27" cy="27" r="22" stroke-dasharray="' + ringC.toFixed(1) + '" stroke-dashoffset="'
+      + (ringC * (1 - st.pct / 100)).toFixed(1) + '"/></svg></div>'
+      + '<div class="progress-txt"><strong>' + st.done + ' z ' + st.total + ' hotovo</strong><span class="muted">' + st.pct + ' %</span></div>'
       + '<div class="segbar">' + segs + '</div>'
       + '<div class="pc-tools"><button class="linklike" data-action="toggleHide">' + (hide ? 'Zobrazit i splněné' : 'Skrýt splněné') + '</button>' + dayTools() + '</div>'
       + '</div>';
@@ -5409,6 +5516,26 @@ storageOk = checkStorage();
 data = load();
 if (!storageOk) $('#storage-banner').hidden = false;
 render();
+(function(){
+  const nav = document.getElementById('ios-nav');
+  const t = document.getElementById('ios-nav-t');
+  if (!nav) return;
+  let on = false;
+  const upd = () => {
+    const y = window.scrollY || document.documentElement.scrollTop || 0;
+    const want = y > 56;
+    if (want !== on){
+      on = want;
+      document.body.classList.toggle('scrolled', on);
+    }
+    if (on){
+      const v = document.querySelector('section:not([hidden])');
+      const ti = v && (v.querySelector('.daynav-date') || v.querySelector('.view-title'));
+      t.textContent = ti ? ti.textContent : '';
+    }
+  };
+  window.addEventListener('scroll', upd, { passive: true });
+})();
 // po startu appky zkusit stáhnout novější data z cloudu
 if (typeof syncConfigured === 'function' && syncConfigured()){
   setTimeout(() => syncPullMerge(false), 600);
